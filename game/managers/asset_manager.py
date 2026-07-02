@@ -1,6 +1,6 @@
 import os
 import pygame
-from game.animation.sprite_sheet import SpriteSheet
+from game.animation.spritesheet import SpriteSheet
 
 class AssetManager:
     _image_cache = {}

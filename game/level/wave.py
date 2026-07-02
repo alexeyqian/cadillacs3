@@ -2,6 +2,7 @@ from dataclasses import dataclass
 import random
 from typing import Optional
 
+from game.settings import SCREEN_WIDTH
 from game.factories.enemy_factory import EnemyFactory
 
 
@@ -9,12 +10,6 @@ from game.factories.enemy_factory import EnemyFactory
 class SpawnInstruction:
     enemy_type: str
     side: str = "right"
-    delay_min: int = 60
-    delay_max: int = 120
-    y_min: int = 700
-    y_max: int = 800
-    enter_offset: int = -50  # how far offscreen the enemy starts
-    min_player_distance: int = 100
     capability_overrides: Optional[dict] = None
 
 
@@ -22,8 +17,8 @@ class SpawnInstruction:
 class PendingSpawn:
     enemy_type: str
     x: int
-    y: int
-    delay: int
+    y: int = 540
+    delay: int = 60
     capability_overrides: Optional[dict] = None
 
 
@@ -37,37 +32,25 @@ class Wave:
         self.pending_spawns = []
         self.spawn_timer = 0
 
-    def start(self, camera_x=0, lane_top, lane_bottom, player_x=None):
+    def start(self, camera_x=0):
         self.started = True
         self.spawn_timer = 0
         self.pending_spawns = []
 
         viewport_left = camera_x
         viewport_right = camera_x + SCREEN_WIDTH
-
-        spawn_inset = 100  # pixels inside the viewport edge
+        spawn_inset = 50  # pixels inside the viewport edge
         for instruction in self.spawn_instructions:
             if instruction.side == "left":
                 spawn_x = viewport_left + spawn_inset
-                if player_x is not None:
-                    spawn_x = min(spawn_x, player_x - instruction.min_player_distance)
             else:
                 spawn_x = viewport_right - spawn_inset
-                if player_x is not None:
-                    spawn_x = max(spawn_x, player_x + instruction.min_player_distance)
-
-            y_min = instruction.y_min if instruction.y_min is not None else lane_top + 40
-            y_max = instruction.y_max if instruction.y_max is not None else lane_bottom - 40
-            y_min = max(lane_top, y_min)
-            y_max = min(lane_bottom, y_max)
-            if y_min > y_max:
-                y_min = y_max
 
             self.pending_spawns.append(PendingSpawn(
                 enemy_type=instruction.enemy_type,
                 x=spawn_x,
-                y=random.randint(y_min, y_max),
-                delay=random.randint(instruction.delay_min, instruction.delay_max),
+                y=instruction.y if instruction.y is not None else 540,
+                delay=instruction.delay if instruction.delay is not None else 60,
                 capability_overrides=instruction.capability_overrides,
             ))
 

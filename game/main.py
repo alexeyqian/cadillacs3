@@ -1,11 +1,13 @@
 import pygame
 
+from game.settings import FPS
 from game.display import create_display, present_screen
-from game import draw
 from game.game_state import GameState
-from game.player import Player
+from game.entities.player import Player
 
-FPS = 60
+from game import draw
+
+# os.environ["SDL_VIDEO_WINDOW_POS"] = "0,0"
 
 def create_game_state(screen, clock):
     player = Player("Player1")

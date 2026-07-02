@@ -1,5 +1,5 @@
 from game.level.lane import Lane
-from game.wave import SpawnInstruction, Wave
+from game.level.wave import SpawnInstruction, Wave
 from game.level.background import Background
 
 class Level:
@@ -35,12 +35,6 @@ class Level:
                     spawn_instructions.append(SpawnInstruction(
                         enemy_type=spawn_config["enemy_type"],
                         side=spawn_config.get("side", "right"),
-                        delay_min=spawn_config.get("delay_min", 60),
-                        delay_max=spawn_config.get("delay_max", 120),
-                        y_min=spawn_config.get("y_min"),
-                        y_max=spawn_config.get("y_max"),
-                        enter_offset=spawn_config.get("enter_offset", -100),
-                        min_player_distance=spawn_config.get("min_player_distance", 360),
                         capability_overrides=spawn_config.get("capability_overrides"),
                     ))
 
