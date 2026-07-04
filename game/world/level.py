@@ -1,10 +1,9 @@
 from game.entities.breakable_object import BreakableObject
-from game.entities.explosive_barrel import ExplosiveBarrel
+# from game.entities.explosive_barrel import ExplosiveBarrel
 from game.entities.weapon import Weapon
-from game.level.level import Level
-from game.level.stage_config import STAGES
+from game.world.level_config import STAGES
 
-class StageManager:
+class Level:
     def __init__(self, start_stage_id=None):
         self.stages = STAGES
         self.current_stage_index = self._find_stage_index(start_stage_id)
@@ -74,6 +73,6 @@ class StageManager:
             kind = oc["kind"]
             if kind == "breakable":
                 objects.append(BreakableObject(oc["x"], oc["y"], loot_type=oc.get("loot_type")))
-            elif kind == "barrel":
-                objects.append(ExplosiveBarrel(oc["x"], oc["y"]))
+            #elif kind == "barrel":
+            #    objects.append(ExplosiveBarrel(oc["x"], oc["y"]))
         return objects

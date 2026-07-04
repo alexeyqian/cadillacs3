@@ -1,8 +1,3 @@
-# frame_rect format: (x, y, width, height) -  x, y is the left top location in the png file
-# offset is derived from the frame size: (0, 0) means the character's bottom-center anchor.
-MUSTAPHA_DEFAULT_FRAME_SIZE = (256, 256)
-MUSTAPHA_DEFAULT_OFFSET = (-128, -256)
-
 MUSTAPHA_ANIMATIONS = {
     "idle": {
         "file": "assets/player/mustapha_walk_3x.png",
@@ -133,17 +128,3 @@ MUSTAPHA_ANIMATIONS = {
         "frame_height": 384,
     },
 }
-
-for config in MUSTAPHA_ANIMATIONS.values():
-    if "scale" not in config:
-        config["scale"] = 1
-
-    if "frame_width" in config and "frame_height" in config:
-        config["default_frame_size"] = (config["frame_width"], config["frame_height"])
-    elif "frames" not in config:
-        config["default_frame_size"] = MUSTAPHA_DEFAULT_FRAME_SIZE
-
-    if "frames" not in config:
-        frame_width, frame_height = config["default_frame_size"]
-        config["default_offset"] = (-frame_width / 2, -frame_height)
-

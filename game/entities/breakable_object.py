@@ -1,29 +1,37 @@
 import random
 import pygame
-from game.managers.asset_manager import AssetManager
-from game.entities.loot import Loot
 
-class BreakableObject:
-    def __init__(self, x, y, loot_type=None):
-        self.x = x
-        self.y = y
-        self.width = 150
-        self.height = 150
-        self.hp = 10
-        self.destroyed = False
-        self.loot_generated = False
-        self.explosive = False
-        self.exploded = False
-        self.box_image_file = "assets/objects/box.png"
-        self.loot_type = loot_type
+#from game.managers.asset_manager import AssetManager
+from game.entities.loot import Loot
+from game.entities.game_object import GameObject
+from game.components.health_component import HealthComponent
+from game.components.hurtbox_component import HurtboxComponent
+from game.controllers.loot_drop_controller import LootDropController
+
+class BreakableObject(GameObject):
+    """Crates, barrels, etc. Inherits from GameObject."""
+    def __init__(self, x: float, z: float):
+        super().__init__(x, z)
+        self.width, self.height = 40, 40
+        self.tags.add("Breakable")
+        self.add_component(HealthComponent(20))
+        self.add_component(HurtboxComponent())
+        self.add_component(LootDropController())
+
+        #self.destroyed = False
+        #self.explosive = False
+        #self.exploded = False
+        #self.box_image_file = "assets/objects/box.png"
     
     def draw(self, screen, camera_x):
         if self.destroyed:
             return
         screen_x = self.get_left() - camera_x
         screen_y = self.get_top()
-        box_image = AssetManager.load_scaled_image(self.box_image_file,
-                        (self.width, self.height), alpha=True, smooth=True)
+        
+        box_image = None # for debug
+        #box_image = AssetManager.load_scaled_image(self.box_image_file,
+        #                (self.width, self.height), alpha=True, smooth=True)
 
         if box_image:
             screen.blit(box_image, (screen_x, screen_y))

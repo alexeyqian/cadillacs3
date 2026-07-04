@@ -2,28 +2,27 @@ import pygame
 import game.settings as settings
 
 class PlayerRenderer:
-    def draw(self, owner, screen, camera_x):
-        frame = owner.animation_controller.get_current_frame()
-        image = owner.animation_controller.get_image()
-        scale = frame.get_scale(owner.sprite_scale)
-        image = pygame.transform.scale(
-            image,
-            (int(image.get_width() * scale), int(image.get_height() * scale))
-        )
+    def __init__(self, owner):
+        self.owner = owner
 
-        if not owner.facing_right:
+    def draw(self, screen, camera_x):
+        current_frame = self.owner.animation_manager.get_current_frame()
+        image = current_frame.image
+        offset_x, offset_y = current_frame.offset
+
+        if not self.facing_right:
             image = pygame.transform.flip(image, True, False)
 
-        offset_x, offset_y = frame.offset
-        offset_x *= scale
-        offset_y *= scale
+        player_x = self.owner.x
+        player_y = self.owner.y
 
-        if owner.facing_right:
-            sprite_world_x = owner.x + offset_x
+        if self.owner.facing_right:
+            sprite_world_x = player_x + offset_x
         else:
-            sprite_world_x = owner.x - image.get_width() - offset_x
+            sprite_world_x = player_x - image.get_width() - offset_x
 
-        visual_y = owner.movement.air.get_visual_y(owner.y) if owner.movement.air else owner.y
+        #visual_y = self.owner.movement.air.get_visual_y(owner.y) if owner.movement.air else owner.y
+        visual_y = player_y
         sprite_y = visual_y + offset_y
         screen.blit(image, (sprite_world_x - camera_x, sprite_y))
 

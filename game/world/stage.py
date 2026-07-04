@@ -1,8 +1,8 @@
-from game.level.lane import Lane
-from game.level.wave import SpawnInstruction, Wave
-from game.level.background import Background
+from game.world.lane import Lane
+from game.world.wave import SpawnInstruction, Wave
+from game.world.background import Background
 
-class Level:
+class Stage:
     def __init__(self, stage_data):
         self.stage_id = stage_data["id"]
         self.stage_name = stage_data["name"]

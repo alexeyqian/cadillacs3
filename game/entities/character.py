@@ -1,19 +1,22 @@
 import pygame
 from game.colors import *
-class Character:
-    def __init__(self):
-        self.name = "unknown"
+from game.entities.game_object import GameObject
+from game.components.stats_component import StatsComponent
+from game.components.health_component import HealthComponent
+from game.components.hurtbox_component import HurtboxComponent
+from game.components.status_effect_component import StatusEffectComponent
 
-        self.hp = 100
-        self.speed = 5
-        self.attack_power = 10
-        
-        self.x = 0
-        self.y = 0
-        self.facing_right = True
-        self.state = None
 
-        self.sprite_scale = 1.0
+class Character(GameObject):
+    def __init__(self, x, z):
+        super().__init__(x, z)
+        self.width, self.height = 40, 80
+        self.alive = True
+        self.add_component(StatsComponent())
+        self.add_component(HealthComponent(100))
+        self.add_component(HurtboxComponent())
+        self.add_component(StatusEffectComponent())
+        #self.add_component(CharacterController()) # The Master State Machine
 
     def update(self):
         pass
@@ -21,15 +24,6 @@ class Character:
     def draw(self, screen, camera_x):
         pass
 
-    def is_alive(self):
-        return self.hp > 0
-
-    def take_damage(self, amount):
-        pass
-
-    def attack(self, target):
-        pass
-    
     def get_frame_rect(self):
         pass
     

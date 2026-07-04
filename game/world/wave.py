@@ -1,7 +1,5 @@
-from dataclasses import dataclass
-import random
 from typing import Optional
-
+from dataclasses import dataclass
 from game.settings import SCREEN_WIDTH
 from game.factories.enemy_factory import EnemyFactory
 
