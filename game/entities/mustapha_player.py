@@ -3,8 +3,7 @@ from game.entities.player import Player
 
 
 class MustaphaPlayer(Player):
-    def __init__(self):
+    def __init__(self, x, z):
         super().__init__(
-            player_type="mustapha",
-            animation_data=MUSTAPHA_ANIMATIONS,
-        )
+            x, z, player_type="mustapha",
+            animation_data=MUSTAPHA_ANIMATIONS)

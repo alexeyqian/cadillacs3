@@ -23,7 +23,7 @@ def main():
     clock = pygame.time.Clock()
 
     camera = Camera()
-    player = MustaphaPlayer()
+    player = MustaphaPlayer(500, 500)
     level = Level(player)
     level.load_current_stage()
 

@@ -5,7 +5,7 @@ from game.components.stats_component import StatsComponent
 from game.components.health_component import HealthComponent
 from game.components.hurtbox_component import HurtboxComponent
 from game.components.status_effect_component import StatusEffectComponent
-
+from game.controllers.character_controller import CharacterController
 
 class Character(GameObject):
     def __init__(self, x, z):
@@ -16,7 +16,7 @@ class Character(GameObject):
         self.add_component(HealthComponent(100))
         self.add_component(HurtboxComponent())
         self.add_component(StatusEffectComponent())
-        #self.add_component(CharacterController()) # The Master State Machine
+        self.add_component(CharacterController()) # The Master State Machine
 
     def update(self):
         pass

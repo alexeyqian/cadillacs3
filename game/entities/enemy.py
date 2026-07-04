@@ -20,6 +20,7 @@ class Enemy(Character):
         self.width = 40
         self.height = 80
         self.tags.add("enemy")
+
         self.add_component(AIController(target))
         self.add_component(MovementController(move_speed=120))
         self.add_component(AttackController())

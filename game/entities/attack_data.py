@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
+from game.settings import *
 
 
 class AttackPhase(Enum):
@@ -11,13 +12,62 @@ class AttackPhase(Enum):
 
 @dataclass
 class AttackData:
-    name: str
-    windup_dur: float
-    active_dur: float
-    recovery_dur: float
-    damage: float
-    knockback: tuple
+    name: str = 'unknown'
+    delay: float = 0 #deprecated
+    windup: float = 0
+    active: float = 0
+    recovery: float = 0
+    cooldown: float = 0 # deprecated
+    combo_window: float = 0
+    damage: float = 10
+    knockback: tuple = ()
+
     hitbox_offset_x: int = 0 # deprecated
     hitbox_offset_y: int = 0 # deprecated
-    hitbox_width: int = 50
-    hitbox_height: int = 60
+    hitbox_w: int = 50
+    hitbox_h: int = 60
+    
+    hit_stun_duration: float = 0 # deprecated
+    knockback_velocity: float = 0 # deprecated
+    lane_reach: int = 0 # deprecated
+    max_targets: int = 0 # deprecated
+    combo_window: int = 0 # deprecated
+
+
+DEFAULT_PLAYER_ATTACK_DATA = AttackData(
+    hitbox_offset_x=PLAYER_HIT_BOX_OFFSET_X,
+    hitbox_offset_y=PLAYER_HIT_BOX_OFFSET_Y,
+    hitbox_w=PLAYER_HITBOX_W,
+    hitbox_h=PLAYER_HITBOX_H,
+
+    delay=0,
+    damage=ATTACK_1_DAMAGE,
+    windup=ATTACK_1_WINDUP_DURATION,
+    active=ATTACK_1_ACTIVE_DURATION,
+    recovery=ATTACK_1_RECOVERY_DURATION,
+    cooldown=0,
+    hit_stun_duration=ATTACK_1_HIT_STUN_DURATION,
+    knockback_velocity=ATTACK_1_KNOCKBACK_VELOCITY,
+    lane_reach=1,
+    max_targets=1,
+    combo_window=0,
+)
+
+
+DEFAULT_ENEMY_ATTACK_DATA = AttackData(
+    hitbox_offset_x=ENEMY_HITBOX_OFFSET_X,
+    hitbox_offset_y=ENEMY_HITBOX_OFFSET_Y,
+    hitbox_w=ENEMY_HITBOX_W,
+    hitbox_h=ENEMY_HITBOX_H,
+    delay=ENEMY_ATTACK_DELAY,
+    damage=ENEMY_ATTACK_DAMAGE,
+    windup=ENEMY_ATTACK_WINDUP,
+    active=ENEMY_ATTACK_ACTIVE,
+    recovery=ENEMY_ATTACK_RECOVERY,
+    cooldown=ENEMY_ATTACK_COOLDOWN,
+    hit_stun_duration=ENEMY_ATTACK_HIT_STUN_DURATION,
+    knockback_velocity=ENEMY_ATTACK_KNOCKBACK_VELOCITY,
+    lane_reach=0,
+    max_targets=1,
+    combo_window=0,
+)
