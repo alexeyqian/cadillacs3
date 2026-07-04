@@ -1,5 +1,8 @@
 # cadillacs3
 
+A a 2D side-scrolling beat-em-up based on game: cadillacs and dinosaurs.
+using pygame.
+
 1. Components (Data & Passive Logic)
 2. Controllers (Active Logic & State Machines)
 3. Managers (Global Systems)

@@ -12,7 +12,7 @@ class PlayerConfig:
     jump_power: float = 12
     air_move_speed: float = PLAYER_AIR_MOVE_SPEED
 
-    animation_data = None
+    animation_data: dict = None
     sprite_scale: int = 1
 
 

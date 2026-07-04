@@ -2,12 +2,14 @@ from game.entities.breakable_object import BreakableObject
 # from game.entities.explosive_barrel import ExplosiveBarrel
 from game.entities.weapon import Weapon
 from game.world.level_config import STAGES
+from game.world.stage import Stage
 
 class Level:
     def __init__(self, player, start_stage_id=None):
         self.player = player
         self.stages = STAGES
         self.current_stage_index = self._find_stage_index(start_stage_id)
+        self.current_stage: Stage = None
 
     def load_current_stage(self, game_state):
         current_stage_data = self.stages[self.current_stage_index]
@@ -62,6 +64,8 @@ class Level:
 
         # todo: should be removed, and set false as default
         #game_state.announcement_manager.active = False
+
+        self.current_stage = Stage(stage_data)
 
     def _create_weapons(self, stage_data):
         return [
