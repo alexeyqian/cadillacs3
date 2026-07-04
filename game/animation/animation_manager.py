@@ -61,7 +61,7 @@ class AnimationManager:
         
     def _load_animations(self, animation_data):
         animations = {}
-        for name, config in animation_data:
+        for name, config in animation_data.items():
             sheet = pygame.image.load(config["file"]).convert_alpha()
             frames = []
             frame_count = config["frames_count"]
@@ -69,8 +69,8 @@ class AnimationManager:
             frame_height = config.get("frame_height", 384)
             offset = (-frame_width / 2, -frame_height)
 
-            for frame_index in frame_count:
-                frame_rect = (frame_index * frame_w, 0, frame_w, frame_h),
+            for frame_index in range(frame_count):
+                frame_rect = (frame_index * frame_width, 0, frame_width, frame_height)
                 frame_x, frame_y, frame_w, frame_h = frame_rect
                 image = pygame.Surface((frame_w, frame_h), pygame.SRCALPHA)
                 image.blit(sheet, (0,0),(frame_x, frame_y, frame_w, frame_h))
@@ -81,6 +81,8 @@ class AnimationManager:
                     hitbox=config.get("hitbox"),
                 ))
             animations[name] = Animation(name, frames)
+
+        return animations
 
     def get_current_frame(self):
         return self.current_animation.get_current_frame()

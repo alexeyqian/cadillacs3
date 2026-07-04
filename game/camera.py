@@ -1,11 +1,14 @@
+from game.settings import SCREEN_WIDTH
+
 class Camera:
     def __init__(self):
         self.x = 0
+        self.locked = False
+        self.locked_x = 0
 
-    def update(self, game_state):
+    def update(self, player):
         if self.locked:
             self.x = self.locked_x
         else:
             # follow player
-            player = game_state.player
-            self.x = player.x - game_state.screen.get_width() // 2
+            self.x = player.x - SCREEN_WIDTH // 2

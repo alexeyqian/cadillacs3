@@ -2,7 +2,8 @@ import pygame
 from engine.timer_manager import TimerManager
 from game.camera import Camera
 from game.entities.mustapha_player import MustaphaPlayer
-from game.world.level import Level
+from game.world.stage import Stage
+from game.world.stage_manager import StageManager
 from game.managers.combat_manager import CombatManager
 
 
@@ -24,8 +25,8 @@ def main():
 
     camera = Camera()
     player = MustaphaPlayer(500, 500)
-    level = Level(player)
-    level.load_current_stage()
+    stage_manager = StageManager(camera, player)
+    stage = stage_manager.load_current_stage()
 
     combat_manager = CombatManager()
 
@@ -42,7 +43,7 @@ def main():
         # Update game state
         # per entity update
         # player.get_component(InputController).handle_input(keys)?
-        entities = level.get_all_entities()
+        entities = stage.get_all_entities()
         for entity in entities:
             entity.update(dt)
         
@@ -50,12 +51,9 @@ def main():
         combat_manager.update(dt, entities)
         
         # world progression (wave spawns, stage clears).
-        level.update(dt)
+        #stage.update(dt)
 
-        # camera follow, locked during an active encounter.
-        stage = level.current_stage if not level.is_complete else None
-        if stage:
-            camera.follow(player, stage.scroll_bounds, stage.is_locked)
+        camera.update(player)
 
         # timers.
         TimerManager.update(dt)
