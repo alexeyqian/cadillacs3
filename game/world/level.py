@@ -4,7 +4,8 @@ from game.entities.weapon import Weapon
 from game.world.level_config import STAGES
 
 class Level:
-    def __init__(self, start_stage_id=None):
+    def __init__(self, player, start_stage_id=None):
+        self.player = player
         self.stages = STAGES
         self.current_stage_index = self._find_stage_index(start_stage_id)
 
@@ -31,35 +32,36 @@ class Level:
         raise ValueError(f"Unknown start stage id: {stage_id}")
 
     def _load_stage_from_data(self, game_state, stage_data):
-        game_state.level = Level(stage_data)
+        #game_state.level = Level(stage_data)
 
         # Do not create a new Player. Keep the same player so lives, score,
         # and weapon behavior can be decided intentionally later.
-        start_x, start_y = stage_data["player_start"]
-        game_state.player.reset_for_stage_start(start_x, start_y)
+        start_x, start_z = stage_data["player_start"]
+        game_state.player.x = start_x
+        game_state.player.z = start_z
 
         game_state.camera.x = 0
 
-        game_state.enemies.clear()
-        game_state.weapons.clear()
-        game_state.projectiles.clear()
-        game_state.enemy_projectiles.clear()
-        game_state.objects.clear()
-        game_state.loot_items.clear()
-        game_state.hit_sparks.clear()
-        game_state.floating_texts.clear()
-        game_state.explosions.clear()
+        #game_state.enemies.clear()
+        #game_state.weapons.clear()
+        #game_state.projectiles.clear()
+        #game_state.enemy_projectiles.clear()
+        #game_state.objects.clear()
+        #game_state.loot_items.clear()
+        #game_state.hit_sparks.clear()
+        #game_state.floating_texts.clear()
+        #game_state.explosions.clear()
 
-        game_state.weapons.extend(self._create_weapons(stage_data))
-        game_state.objects.extend(self._create_objects(stage_data))
+        #game_state.weapons.extend(self._create_weapons(stage_data))
+        #game_state.objects.extend(self._create_objects(stage_data))
 
         # todo: should call stage manager function
-        game_state.stage_clear_manager.active = False
-        game_state.stage_clear_manager.timer = 0
-        game_state.stage_clear_manager.bonus_applied = False
+        #game_state.stage_clear_manager.active = False
+        #game_state.stage_clear_manager.timer = 0
+        #game_state.stage_clear_manager.bonus_applied = False
 
         # todo: should be removed, and set false as default
-        game_state.announcement_manager.active = False
+        #game_state.announcement_manager.active = False
 
     def _create_weapons(self, stage_data):
         return [

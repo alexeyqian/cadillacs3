@@ -20,10 +20,10 @@ from game.animation.animation_manager import AnimationManager
 class Player(Character):
     def __init__(self, x, z, player_type, animation_data):
         super().__init__(x, z)
-        self.color = (0, 150, 255)
+
         self.width = PLAYER_W
         self.height = PLAYER_H
-        self.tags.add("Player")
+        self.tags.add("player")
         self.add_component(InteractionComponent())
         self.add_component(InventoryComponent())
 
@@ -52,9 +52,9 @@ class Player(Character):
 
     def update(self, game_state):
         super().update()
-        self.update_movement(game_state.keys)
+        #self.update_movement(game_state.keys)
         # ...
-        self.animation_manager.update(self.state)
+        #self.animation_manager.update(self.state)
 
     def draw(self, screen, camera_x):
         super().draw(screen)

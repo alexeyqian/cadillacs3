@@ -10,9 +10,9 @@ class MovementController:
     """
     Active component: Handles input/AI translation to physics velocity.
     """
-    def __init__(self, move_speed=250, jump_force=600):
+    def __init__(self, move_speed=250, jump_power=600):
         self.move_speed = move_speed
-        self.jump_force = jump_force
+        self.jump_power = jump_power
         self.is_jumping = False
 
     def move(self, dx, dz):
@@ -32,7 +32,7 @@ class MovementController:
 
     def jump(self):
         if self.owner.y == 0:
-            self.owner.vy = self.jump_force
+            self.owner.vy = self.jump_power
             self.is_jumping = True
 
     def update(self, dt):
