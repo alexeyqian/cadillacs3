@@ -10,6 +10,7 @@ from game.components.hurtbox_component import HurtboxComponent
 from game.components.hitbox_component import HitboxComponent
 from game.components.status_effect_component import StatusEffectComponent
 from game.entities.attack_data import AttackData, AttackPhase
+from game.animation.animation_manager import AnimationManager
 
 
 @dataclass
@@ -37,10 +38,11 @@ class Character(GameObject):
     # stun or death naturally overrides whatever the player/AI is asking for.
     ACTIONABLE_STATES = {"idle", "walk", "run", "jump", "attack", "chase"}
 
-    def __init__(self, x, z):
+    def __init__(self, x, z, animation_data):
         super().__init__(x, z)
         self.width, self.height = PLAYER_W, PLAYER_H
         self.alive = True
+        self.animation_manager = AnimationManager(animation_data)
 
         # State machine: gates which actions are currently allowed.
         self.state = "idle"
@@ -104,8 +106,7 @@ class Character(GameObject):
             self.set_state("attack")
 
     def update_animation(self, dt):
-        pass
-        #self.animation_manager.update(self.state)
+        self.animation_manager.update(self.state)
 
     def draw(self, screen, camera_x):
         pass

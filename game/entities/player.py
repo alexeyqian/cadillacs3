@@ -9,12 +9,10 @@ from game.components.interaction_component import InteractionComponent
 from game.components.inventory_component import InventoryComponent
 from game.controllers.grab_controller import GrabController
 
-from game.animation.animation_manager import AnimationManager
-
 
 class Player(Character):
     def __init__(self, x, z, player_type, animation_data):
-        super().__init__(x, z)
+        super().__init__(x, z, animation_data)
 
         self.width = PLAYER_W
         self.height = PLAYER_H
@@ -26,7 +24,6 @@ class Player(Character):
 
         config = get_player_config(player_type)
         self._load_from_config(config)
-        self.animation_manager = AnimationManager(animation_data)
         self.renderer = PlayerRenderer(self)
 
     def _load_from_config(self, config):
@@ -47,9 +44,6 @@ class Player(Character):
         self.intent.running = input.shift
         self.intent.wants_jump = input.jump_pressed
         self.intent.wants_attack = input.attack_pressed
-
-    def update_animation(self, dt):
-        self.animation_manager.update(self.state)
 
     def draw(self, screen, camera_x):
         self.renderer.draw(screen, camera_x)
