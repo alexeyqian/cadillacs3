@@ -7,7 +7,11 @@ from game.controllers.character_controller import CharacterController
 #from game.components.debug_renderer import CharacterDebugRenderer
 
 class EnemyRenderer:
-    def draw(self, owner, screen, camera_x):
+    def __init__(self, owner):
+        self.owner = owner
+
+    def draw(self, screen, camera_x):
+        owner = self.owner
         current_frame = owner.animation_manager.get_current_frame()
         if not current_frame:
             state = owner.get_component(CharacterController).state

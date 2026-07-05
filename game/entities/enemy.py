@@ -28,13 +28,13 @@ class Enemy(Character):
         self.renderer = EnemyRenderer(self)
 
     def _load_from_config(self, config):
-        self.player_id = config.player_id
+        self.enemy_id = config.enemy_id
         self.display_name = config.display_name
 
-        self.speed = config.speed
+        self.move_speed = config.speed
         self.run_speed = config.run_speed
-        self.jump_power = config.jump_power
-        self.air_move_speed = config.air_move_speed
+        self.attack_range = config.attack_range
+        self.attack_data = config.attack
 
         self.sprite_scale = config.sprite_scale
 

@@ -14,7 +14,7 @@ class HealthComponent:
             return
 
         stats = self.owner.get_component(StatsComponent)
-        actual_damage = max(1, amount - (stats.base_defanse if stats else 0))
+        actual_damage = max(1, amount - (stats.base_defense if stats else 0))
         self.health -= actual_damage
         EventBus.publish("health_changed", self.owner, self.health, self.max_health)
         EventBus.publish("hit_landed", self.owner, actual_damage, knockback)

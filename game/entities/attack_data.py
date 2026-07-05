@@ -42,9 +42,11 @@ DEFAULT_PLAYER_ATTACK_DATA = AttackData(
 
     delay=0,
     damage=ATTACK_1_DAMAGE,
-    windup=ATTACK_1_WINDUP_DURATION,
-    active=ATTACK_1_ACTIVE_DURATION,
-    recovery=ATTACK_1_RECOVERY_DURATION,
+    # *_DURATION constants are frame counts (fighting-game style frame data);
+    # AttackController ticks phase_timer in real seconds, so convert here.
+    windup=ATTACK_1_WINDUP_DURATION / FPS,
+    active=ATTACK_1_ACTIVE_DURATION / FPS,
+    recovery=ATTACK_1_RECOVERY_DURATION / FPS,
     cooldown=0,
     hit_stun_duration=ATTACK_1_HIT_STUN_DURATION,
     knockback_velocity=ATTACK_1_KNOCKBACK_VELOCITY,
@@ -61,9 +63,9 @@ DEFAULT_ENEMY_ATTACK_DATA = AttackData(
     hitbox_h=ENEMY_HITBOX_H,
     delay=ENEMY_ATTACK_DELAY,
     damage=ENEMY_ATTACK_DAMAGE,
-    windup=ENEMY_ATTACK_WINDUP,
-    active=ENEMY_ATTACK_ACTIVE,
-    recovery=ENEMY_ATTACK_RECOVERY,
+    windup=ENEMY_ATTACK_WINDUP / FPS,
+    active=ENEMY_ATTACK_ACTIVE / FPS,
+    recovery=ENEMY_ATTACK_RECOVERY / FPS,
     cooldown=ENEMY_ATTACK_COOLDOWN,
     hit_stun_duration=ENEMY_ATTACK_HIT_STUN_DURATION,
     knockback_velocity=ENEMY_ATTACK_KNOCKBACK_VELOCITY,

@@ -5,9 +5,11 @@ from game.entities.game_object import GameObject
 from game.components.stats_component import StatsComponent
 from game.components.health_component import HealthComponent
 from game.components.hurtbox_component import HurtboxComponent
+from game.components.hitbox_component import HitboxComponent
 from game.components.status_effect_component import StatusEffectComponent
 from game.controllers.character_controller import CharacterController
-from game.controllers.movement_controller import MovementController
+from game.controllers.attack_controller import AttackController
+from game.entities.attack_data import AttackPhase
 
 @dataclass
 class Intent:
@@ -24,11 +26,13 @@ class Character(GameObject):
         self.alive = True
         self.move_speed = 200
         self.jump_power = 600
+        self.attack_data = None
         self.intent = Intent()
 
         self.add_component(StatsComponent())
         self.add_component(HealthComponent(100))
         self.add_component(HurtboxComponent())
+        self.add_component(HitboxComponent())
         self.add_component(StatusEffectComponent())
         self.add_component(CharacterController()) # The Master State Machine
 
@@ -36,25 +40,51 @@ class Character(GameObject):
         raise NotImplementedError
 
     def update_movement(self, dt):
-        speed = self.move_speed * (2 if self.intent.running else 1)
-        self.vx = self.intent.move_x * speed
-        self.vz = self.intent.move_z * speed
-        if self.intent.move_x != 0:
-            self.facing = 1 if self.intent.move_x > 0 else -1
+        char_ctrl = self.get_component(CharacterController)
+        attack_ctrl = self.get_component(AttackController)
+        attacking = attack_ctrl and attack_ctrl.phase != AttackPhase.FINISHED
+        locked = attacking or not char_ctrl.can_act()
 
-        if self.intent.wants_jump and self.y == 0:
-            self.vy = self.jump_power
+        if not locked:
+            speed = self.move_speed * (2 if self.intent.running else 1)
+            self.vx = self.intent.move_x * speed
+            self.vz = self.intent.move_z * speed
+            if self.intent.move_x != 0:
+                self.facing = 1 if self.intent.move_x > 0 else -1
+
+            if self.intent.wants_jump and self.y == 0:
+                self.vy = self.jump_power
+
         self.vy -= 1500 * dt
-
         self.x += self.vx * dt
         self.z += self.vz * dt
         self.y = max(0.0, self.y + self.vy * dt)
         if self.y == 0:
             self.vy = 0
 
-        #move_ctrl = self.get_component(MovementController)
-        #if move_ctrl:
-        #    move_ctrl.update(dt)
+        # Don't stomp "hit"/"dead" with a movement label - those states
+        # aren't in can_act()'s list, so this naturally skips them.
+        if char_ctrl.can_act():
+            if self.y > 0:
+                char_ctrl.set_state("jump")
+            elif self.intent.move_x != 0 or self.intent.move_z != 0:
+                char_ctrl.set_state("walk")
+            else:
+                char_ctrl.set_state("idle")
+
+    def update_attack(self, dt):
+        attack_ctrl = self.get_component(AttackController)
+        if not attack_ctrl:
+            return
+
+        if self.intent.wants_attack and self.attack_data:
+            attack_ctrl.start_attack(self.attack_data)
+        attack_ctrl.update(dt)
+
+        if attack_ctrl.phase != AttackPhase.FINISHED:
+            self.get_component(CharacterController).set_state("attack")
+
+    def update_animation(self, dt):
         self.animation_manager.update(self.get_component(CharacterController).state)
 
     def draw(self, screen, camera_x):

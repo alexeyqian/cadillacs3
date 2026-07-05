@@ -3,6 +3,7 @@ from game.settings import *
 from game.entities.character import Character
 from game.entities.player_config import get_player_config
 from game.entities.player_renderer import PlayerRenderer
+from game.entities.attack_data import DEFAULT_PLAYER_ATTACK_DATA
 
 from game.components.interaction_component import InteractionComponent
 from game.components.inventory_component import InventoryComponent
@@ -40,10 +41,11 @@ class Player(Character):
         self.player_id = config.player_id
         self.display_name = config.display_name
 
-        self.speed = config.speed
+        self.move_speed = config.speed
         self.run_speed = config.run_speed
         self.jump_power = config.jump_power
         self.air_move_speed = config.air_move_speed
+        self.attack_data = DEFAULT_PLAYER_ATTACK_DATA
 
         self.sprite_scale = config.sprite_scale
 
