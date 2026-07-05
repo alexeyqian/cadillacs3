@@ -54,17 +54,10 @@ def main():
         #stage.update(dt)
 
         camera.update(player)
-
-        # timers.
         TimerManager.update(dt)
-
-        # Draw everything
-        screen.fill(BLACK_COLOR)
         draw(stage, screen)
-        # Update the display
         pygame.display.flip()
 
-    # Clean up
     pygame.quit()
 
 if __name__ == "__main__":

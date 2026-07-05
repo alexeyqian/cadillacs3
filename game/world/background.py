@@ -1,4 +1,4 @@
-import pygame
+from game.colors import BLACK_COLOR
 from game.managers.asset_manager import AssetManager
 
 class Background:
@@ -8,6 +8,7 @@ class Background:
         self.front = AssetManager.load_image(front_file, alpha=True) if front_file else None
 
     def draw_far_and_mid(self, screen, camera_x):
+        screen.fill(BLACK_COLOR)
         screen.blit(self.far, (-camera_x, 0))
         if self.mid:
             screen.blit(self.mid, (-camera_x, 0))
