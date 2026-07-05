@@ -12,6 +12,11 @@ class Stage:
         self.enemies = []
         self._load_from_data(stage_data)
 
+    def get_all_entities(self):
+        return [self.player]
+        # todo: add others: weapons, projectiles, sparks, objects etc
+        #return [self.player] + self.enemies # plus others
+
     def _load_from_data(self, stage_data):
         self.stage_id = stage_data["id"]
         self.stage_name = stage_data["name"]

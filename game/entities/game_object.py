@@ -27,3 +27,6 @@ class GameObject:
     def update(self, dt):
         for c in self.components:
             c.update(dt)
+            
+    def draw(self, screen, camera_x):
+        pass

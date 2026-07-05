@@ -57,7 +57,7 @@ class Player(Character):
         #self.animation_manager.update(self.state)
 
     def draw(self, screen, camera_x):
-        super().draw(screen)
+        #super().draw(screen, camera_x)
         self.renderer.draw(screen, camera_x)
 
     def update_movement(self, game_state):

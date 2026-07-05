@@ -28,9 +28,6 @@ class StageManager:
     
     def get_current_stage(self):
         return self.current_stage
-    
-    def get_all_entities(self):
-        return [self.player] + self.enemies # plus others
 
     def _find_stage_index(self, stage_id):
         if stage_id is None:

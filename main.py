@@ -46,7 +46,7 @@ def main():
         # Update game state
         # per entity update
         # player.get_component(InputController).handle_input(keys)?
-        entities = stage_manager.get_all_entities()
+        entities = stage.get_all_entities()
         for entity in entities:
             entity.update(dt)
         
