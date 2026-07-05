@@ -1,5 +1,6 @@
 import pygame
 import game.settings as settings
+from game.camera import world_to_screen
 
 class PlayerRenderer:
     def __init__(self, owner):
@@ -18,10 +19,8 @@ class PlayerRenderer:
         else:
             sprite_world_x = self.owner.x - image.get_width() - offset_x
 
-        #visual_y = self.owner.movement.air.get_visual_y(owner.y) if owner.movement.air else owner.y
-        visual_y = self.owner.z - self.owner.y
-        sprite_y = visual_y + offset_y
-        screen.blit(image, (sprite_world_x - camera_x, sprite_y))
+        screen_x, screen_y = world_to_screen(sprite_world_x, self.owner.y, self.owner.z, camera_x)
+        screen.blit(image, (screen_x, screen_y + offset_y))
 
         #if settings.SHOW_COMBAT_BOXES:
         #    self.draw_debug_boxes(screen, camera_x)
