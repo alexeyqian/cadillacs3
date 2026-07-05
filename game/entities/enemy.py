@@ -12,13 +12,12 @@ from game.animation.animation_manager import AnimationManager
 class Enemy(Character):
     def __init__(self, x, z, enemy_type, animation_data, target): # target is Player
         super().__init__(x, z)
-        self.color = (200, 50, 50)
         self.width = 40
         self.height = 80
         self.tags.add("enemy")
 
-        self.add_component(AIController(target))
-        self.add_component(MovementController(move_speed=120))
+        #self.add_component(AIController(target))
+        #self.add_component(MovementController(move_speed=120))
         self.add_component(AttackController())
         self.add_component(LootDropController())
 
@@ -50,6 +49,3 @@ class Enemy(Character):
 
     def draw(self, screen, camera_x):
         self.renderer.draw(screen, camera_x)
-
-    def take_damage(self, amount):
-        return super().take_damage(amount)

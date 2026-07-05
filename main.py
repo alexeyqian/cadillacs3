@@ -42,13 +42,13 @@ def main():
                     running = False
 
         # Update game state
-        keys = read_input_snapshot(pygame.key.get_pressed())
+        input = read_input_snapshot(pygame.key.get_pressed())
         entities = stage.get_all_entities()
 
         # Phase 1: decide. Reads input/AI state only, nothing moves yet,
         # so order across entities doesn't matter.
         for entity in entities:
-            entity.update_intention(dt, keys, player.x, player.z)
+            entity.update_intention(dt, input, player.x, player.z)
 
         # Phase 2: act. Purely local physics per entity.
         for entity in entities:

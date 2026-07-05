@@ -12,6 +12,7 @@ class AIController:
         self.attack_range = 60
         self.attack_cooldown = None
     
+    # todo: deprecated
     def update(self, dt):
         if not self.target or not self.target.alive: return
 

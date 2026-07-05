@@ -26,8 +26,8 @@ class Player(Character):
         self.add_component(InteractionComponent())
         self.add_component(InventoryComponent())
 
-        self.add_component(InputController())
-        self.add_component(MovementController())
+        #self.add_component(InputController())
+        #self.add_component(MovementController())
         self.add_component(AttackController())
         self.add_component(GrabController())
         self.add_component(AnimationController())
@@ -49,16 +49,14 @@ class Player(Character):
 
         self.sprite_scale = config.sprite_scale
 
-    def update_intention(self, dt, keys, player_x, player_z):
-        self.intent.move_x = keys.right - keys.left
-        self.intent.move_z = keys.down - keys.up
-        self.intent.running = keys.shift
-        self.intent.wants_jump = keys.jump_pressed
-        self.intent.wants_attack = keys.attack_pressed
+    def update_intention(self, dt, input, player_x, player_z):
+        self.intent.move_x = input.right - input.left
+        self.intent.move_z = input.down - input.up
+        self.intent.running = input.shift
+        self.intent.wants_jump = input.jump_pressed
+        self.intent.wants_attack = input.attack_pressed
         #self.get_component(InputController).handle_input(keys)
 
     def draw(self, screen, camera_x):
         self.renderer.draw(screen, camera_x)
 
-    def take_damage(self, amount):
-        return super().take_damage(amount)

@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import pygame
+from game.settings import *
 from game.colors import *
 from game.entities.game_object import GameObject
 from game.components.stats_component import StatsComponent
@@ -22,10 +23,10 @@ class Intent:
 class Character(GameObject):
     def __init__(self, x, z):
         super().__init__(x, z)
-        self.width, self.height = 40, 80
+        self.width, self.height = PLAYER_W, PLAYER_H
         self.alive = True
-        self.move_speed = 200
-        self.jump_power = 600
+        self.move_speed = PLAYER_SPEED
+        self.jump_power = PLAYER_JUMP_POWER
         self.attack_data = None
         self.intent = Intent()
 

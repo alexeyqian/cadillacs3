@@ -10,6 +10,7 @@ class InputController:
     def __init__(self):
         self.input_buffer = [] # Stores recent inputs for buffering
     
+    # todo: deprecated
     # update intention
     def handle_input(self, keys):
         char_ctrl = self.owner.get_component(CharacterController)
