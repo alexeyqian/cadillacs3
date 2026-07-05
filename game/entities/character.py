@@ -9,8 +9,7 @@ from game.components.hurtbox_component import HurtboxComponent
 from game.components.hitbox_component import HitboxComponent
 from game.components.status_effect_component import StatusEffectComponent
 from game.controllers.character_state_machine import CharacterStateMachine
-from game.controllers.attack_controller import AttackController
-from game.entities.attack_data import AttackPhase
+from game.entities.attack_data import AttackData, AttackPhase
 
 @dataclass
 class Intent:
@@ -28,6 +27,9 @@ class Character(GameObject):
         self.move_speed = PLAYER_SPEED
         self.jump_power = PLAYER_JUMP_POWER
         self.attack_data = None
+        self.current_attack: AttackData = None
+        self.attack_phase = AttackPhase.FINISHED
+        self.attack_phase_timer = 0.0
         self.intent = Intent()
 
         self.add_component(StatsComponent())
@@ -42,8 +44,7 @@ class Character(GameObject):
 
     def update_movement(self, dt):
         state_machine = self.get_component(CharacterStateMachine)
-        attack_ctrl = self.get_component(AttackController)
-        attacking = attack_ctrl and attack_ctrl.phase != AttackPhase.FINISHED
+        attacking = self.attack_phase != AttackPhase.FINISHED
         locked = attacking or not state_machine.can_act()
 
         if not locked:
@@ -73,17 +74,57 @@ class Character(GameObject):
             else:
                 state_machine.set_state("idle")
 
-    def update_attack(self, dt):
-        attack_ctrl = self.get_component(AttackController)
-        if not attack_ctrl:
+    def start_attack(self, attack: AttackData):
+        state_machine = self.get_component(CharacterStateMachine)
+        if not state_machine.can_act():
+            return
+        if self.attack_phase != AttackPhase.FINISHED:
             return
 
-        if self.intent.wants_attack and self.attack_data:
-            attack_ctrl.start_attack(self.attack_data)
-        attack_ctrl.update(dt)
+        self.current_attack = attack
+        self.attack_phase = AttackPhase.WINDUP
+        self.attack_phase_timer = 0.0
+        self.vx = 0  # stop moving during attack
+        self.vz = 0
 
-        if attack_ctrl.phase != AttackPhase.FINISHED:
+    def update_attack(self, dt):
+        if self.intent.wants_attack and self.attack_data:
+            self.start_attack(self.attack_data)
+
+        if self.attack_phase == AttackPhase.FINISHED:
+            return
+
+        self.attack_phase_timer += dt
+        if self.attack_phase == AttackPhase.WINDUP and self.attack_phase_timer >= self.current_attack.windup:
+            self._enter_attack_phase(AttackPhase.ACTIVE)
+        elif self.attack_phase == AttackPhase.ACTIVE and self.attack_phase_timer >= self.current_attack.active:
+            self._enter_attack_phase(AttackPhase.RECOVERY)
+        elif self.attack_phase == AttackPhase.RECOVERY and self.attack_phase_timer >= self.current_attack.recovery:
+            self._enter_attack_phase(AttackPhase.FINISHED)
+
+        if self.attack_phase != AttackPhase.FINISHED:
             self.get_component(CharacterStateMachine).set_state("attack")
+
+    def _enter_attack_phase(self, new_phase):
+        self.attack_phase = new_phase
+        self.attack_phase_timer = 0.0
+
+        hitbox = self.get_component(HitboxComponent)
+        if new_phase == AttackPhase.ACTIVE and hitbox:
+            # knockback direction depends on the attacker's current facing,
+            # so it's computed here rather than stored statically on AttackData.
+            knockback = (self.current_attack.knockback_velocity * self.facing, 0)
+            hitbox.activate(
+                self.current_attack.damage,
+                knockback,
+                self.current_attack.hitbox_w,
+                self.current_attack.hitbox_h
+            )
+        elif new_phase != AttackPhase.ACTIVE and hitbox:
+            hitbox.deactivate()
+
+        if new_phase == AttackPhase.FINISHED:
+            self.current_attack = None
 
     def update_animation(self, dt):
         self.animation_manager.update(self.get_component(CharacterStateMachine).state)

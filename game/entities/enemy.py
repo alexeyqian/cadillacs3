@@ -3,7 +3,6 @@ from game.entities.enemy_config import get_enemy_config
 from game.entities.enemy_renderer import EnemyRenderer
 
 from game.settings import *
-from game.controllers.attack_controller import AttackController
 from game.controllers.loot_drop_controller import LootDropController
 from game.animation.animation_manager import AnimationManager
 
@@ -14,7 +13,6 @@ class Enemy(Character):
         self.height = 80
         self.tags.add("enemy")
 
-        self.add_component(AttackController())
         self.add_component(LootDropController())
 
         config = get_enemy_config(enemy_type)

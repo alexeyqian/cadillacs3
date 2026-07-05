@@ -28,4 +28,4 @@ class HitboxComponent:
         return pygame.Rect(x, y, self.width, self.height)
 
     def update(self, dt):
-        pass # Logic is driven by AttackController
+        pass # Logic is driven by Character.update_attack

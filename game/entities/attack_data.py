@@ -43,7 +43,7 @@ DEFAULT_PLAYER_ATTACK_DATA = AttackData(
     delay=0,
     damage=ATTACK_1_DAMAGE,
     # *_DURATION constants are frame counts (fighting-game style frame data);
-    # AttackController ticks phase_timer in real seconds, so convert here.
+    # Character.update_attack ticks phase_timer in real seconds, so convert here.
     windup=ATTACK_1_WINDUP_DURATION / FPS,
     active=ATTACK_1_ACTIVE_DURATION / FPS,
     recovery=ATTACK_1_RECOVERY_DURATION / FPS,
