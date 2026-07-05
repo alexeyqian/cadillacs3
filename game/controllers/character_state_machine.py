@@ -1,7 +1,7 @@
 from engine.timer_manager import TimerManager
 
 
-class CharacterController:
+class CharacterStateMachine:
     """The Master State Machine. Prevents illegal actions."""
     def __init__(self):
         self.state = "idle"

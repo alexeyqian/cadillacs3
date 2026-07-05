@@ -1,6 +1,6 @@
 from game.entities.attack_data import AttackData, AttackPhase
 from game.components.hitbox_component import HitboxComponent
-from game.controllers.character_controller import CharacterController
+from game.controllers.character_state_machine import CharacterStateMachine
 
 
 class AttackController:
@@ -11,7 +11,7 @@ class AttackController:
         self.phase_timer = 0.0
     
     def start_attack(self, attack: AttackData):
-        char_ctrl = self.owner.get_component(CharacterController)
+        char_ctrl = self.owner.get_component(CharacterStateMachine)
         if not char_ctrl.can_act(): return
 
         if self.phase != AttackPhase.FINISHED:

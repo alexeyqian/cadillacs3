@@ -3,9 +3,7 @@ from game.entities.enemy_config import get_enemy_config
 from game.entities.enemy_renderer import EnemyRenderer
 
 from game.settings import *
-from game.controllers.movement_controller import MovementController
 from game.controllers.attack_controller import AttackController
-from game.controllers.ai_controller import AIController
 from game.controllers.loot_drop_controller import LootDropController
 from game.animation.animation_manager import AnimationManager
 
@@ -16,8 +14,6 @@ class Enemy(Character):
         self.height = 80
         self.tags.add("enemy")
 
-        #self.add_component(AIController(target))
-        #self.add_component(MovementController(move_speed=120))
         self.add_component(AttackController())
         self.add_component(LootDropController())
 
@@ -45,7 +41,6 @@ class Enemy(Character):
         self.intent.move_x = 0 if in_range else (1 if dx > 0 else -1)
         self.intent.move_z = 0 if in_range else (1 if dz > 0 else -1)
         self.intent.wants_attack = in_range
-        #self.get_component(AIController).update(dt)
 
     def draw(self, screen, camera_x):
         self.renderer.draw(screen, camera_x)

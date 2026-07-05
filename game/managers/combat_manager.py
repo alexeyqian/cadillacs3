@@ -1,7 +1,7 @@
 from game.components.health_component import HealthComponent
 from game.components.hitbox_component import HitboxComponent
 from game.components.hurtbox_component import HurtboxComponent
-from game.controllers.character_controller import CharacterController
+from game.controllers.character_state_machine import CharacterStateMachine
 
 HIT_STUN_DURATION = 0.4  # seconds; matches HealthComponent's invulnerability window
 
@@ -33,7 +33,7 @@ class CombatManager:
                     self._react_to_hit(target)
 
     def _react_to_hit(self, target):
-        char_ctrl = target.get_component(CharacterController)
+        char_ctrl = target.get_component(CharacterStateMachine)
         if not target.alive:
             char_ctrl.set_state("dead")
         else:

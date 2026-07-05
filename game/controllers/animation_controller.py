@@ -1,4 +1,4 @@
-from game.controllers.character_controller import CharacterController
+from game.controllers.character_state_machine import CharacterStateMachine
 from game.controllers.attack_controller import AttackController
 
 
@@ -8,7 +8,7 @@ class AnimationController:
         self.current_frame = 0
         
     def update(self, dt):
-        char_ctrl = self.owner.get_component(CharacterController)
+        char_ctrl = self.owner.get_component(CharacterStateMachine)
         atk_ctrl = self.owner.get_component(AttackController)
         
         # Sync logic state to animation string

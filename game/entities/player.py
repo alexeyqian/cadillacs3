@@ -7,8 +7,6 @@ from game.entities.attack_data import DEFAULT_PLAYER_ATTACK_DATA
 
 from game.components.interaction_component import InteractionComponent
 from game.components.inventory_component import InventoryComponent
-from game.controllers.input_controller import InputController
-from game.controllers.movement_controller import MovementController
 from game.controllers.attack_controller import AttackController
 from game.controllers.grab_controller import GrabController
 from game.controllers.animation_controller import AnimationController
@@ -26,8 +24,6 @@ class Player(Character):
         self.add_component(InteractionComponent())
         self.add_component(InventoryComponent())
 
-        #self.add_component(InputController())
-        #self.add_component(MovementController())
         self.add_component(AttackController())
         self.add_component(GrabController())
         self.add_component(AnimationController())
@@ -55,7 +51,6 @@ class Player(Character):
         self.intent.running = input.shift
         self.intent.wants_jump = input.jump_pressed
         self.intent.wants_attack = input.attack_pressed
-        #self.get_component(InputController).handle_input(keys)
 
     def draw(self, screen, camera_x):
         self.renderer.draw(screen, camera_x)

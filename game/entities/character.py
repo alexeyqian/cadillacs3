@@ -8,7 +8,7 @@ from game.components.health_component import HealthComponent
 from game.components.hurtbox_component import HurtboxComponent
 from game.components.hitbox_component import HitboxComponent
 from game.components.status_effect_component import StatusEffectComponent
-from game.controllers.character_controller import CharacterController
+from game.controllers.character_state_machine import CharacterStateMachine
 from game.controllers.attack_controller import AttackController
 from game.entities.attack_data import AttackPhase
 
@@ -35,16 +35,16 @@ class Character(GameObject):
         self.add_component(HurtboxComponent())
         self.add_component(HitboxComponent())
         self.add_component(StatusEffectComponent())
-        self.add_component(CharacterController()) # The Master State Machine
+        self.add_component(CharacterStateMachine()) # The Master State Machine
 
     def update_intention(self, dt, keys, player_x, player_z):
         raise NotImplementedError
 
     def update_movement(self, dt):
-        char_ctrl = self.get_component(CharacterController)
+        state_machine = self.get_component(CharacterStateMachine)
         attack_ctrl = self.get_component(AttackController)
         attacking = attack_ctrl and attack_ctrl.phase != AttackPhase.FINISHED
-        locked = attacking or not char_ctrl.can_act()
+        locked = attacking or not state_machine.can_act()
 
         if not locked:
             speed = self.move_speed * (2 if self.intent.running else 1)
@@ -65,13 +65,13 @@ class Character(GameObject):
 
         # Don't stomp "hit"/"dead" with a movement label - those states
         # aren't in can_act()'s list, so this naturally skips them.
-        if char_ctrl.can_act():
+        if state_machine.can_act():
             if self.y > 0:
-                char_ctrl.set_state("jump")
+                state_machine.set_state("jump")
             elif self.intent.move_x != 0 or self.intent.move_z != 0:
-                char_ctrl.set_state("walk")
+                state_machine.set_state("walk")
             else:
-                char_ctrl.set_state("idle")
+                state_machine.set_state("idle")
 
     def update_attack(self, dt):
         attack_ctrl = self.get_component(AttackController)
@@ -83,10 +83,10 @@ class Character(GameObject):
         attack_ctrl.update(dt)
 
         if attack_ctrl.phase != AttackPhase.FINISHED:
-            self.get_component(CharacterController).set_state("attack")
+            self.get_component(CharacterStateMachine).set_state("attack")
 
     def update_animation(self, dt):
-        self.animation_manager.update(self.get_component(CharacterController).state)
+        self.animation_manager.update(self.get_component(CharacterStateMachine).state)
 
     def draw(self, screen, camera_x):
         pass
