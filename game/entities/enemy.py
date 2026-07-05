@@ -29,6 +29,7 @@ class Enemy(Character):
         config = get_enemy_config(enemy_type)
         self._load_from_config(config)
         self.state = EnemyState.IDLE
+        self.facing_right = True
         self.animation_manager = AnimationManager(animation_data)
         self.renderer = EnemyRenderer(self)
         

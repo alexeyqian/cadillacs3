@@ -53,6 +53,7 @@ class Player(Character):
 
     def update(self, game_state):
         super().update()
+        # self.update_intention()
         #self.update_movement(game_state.keys)
         # ...
         self.animation_manager.update(self.state.lower())
