@@ -2,7 +2,7 @@ from game.settings import *
 
 from game.entities.character import Character
 from game.entities.player_config import get_player_config
-from game.entities.player_renderer import PlayerRenderer
+from game.entities.character_renderer import CharacterRenderer
 from game.entities.attack_data import DEFAULT_PLAYER_ATTACK_DATA
 
 from game.components.interaction_component import InteractionComponent
@@ -24,7 +24,7 @@ class Player(Character):
 
         config = get_player_config(player_type)
         self._load_from_config(config)
-        self.renderer = PlayerRenderer(self)
+        self.renderer = CharacterRenderer(self)
 
     def _load_from_config(self, config):
         self.player_id = config.player_id
@@ -44,7 +44,4 @@ class Player(Character):
         self.intent.running = input.shift
         self.intent.wants_jump = input.jump_pressed
         self.intent.wants_attack = input.attack_pressed
-
-    def draw(self, screen, camera_x):
-        self.renderer.draw(screen, camera_x)
 

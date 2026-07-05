@@ -102,14 +102,16 @@ class Character(GameObject):
             return
 
         self._tick_attack_phase(dt)
-        if self.attack_phase != AttackPhase.FINISHED:
+        # Phase timing/hitbox keep ticking regardless, but don't let this
+        # stomp "hit"/"dead" - set_state() only guards "dead", not "hit".
+        if self.attack_phase != AttackPhase.FINISHED and self.can_act():
             self.set_state("attack")
 
     def update_animation(self, dt):
         self.animation_manager.update(self.state)
 
     def draw(self, screen, camera_x):
-        pass
+        self.renderer.draw(screen, camera_x)
 
     # --- Movement helpers ---------------------------------------------------
 

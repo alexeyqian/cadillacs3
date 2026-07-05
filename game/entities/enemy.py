@@ -1,6 +1,6 @@
 from game.entities.character import Character
 from game.entities.enemy_config import get_enemy_config
-from game.entities.enemy_renderer import EnemyRenderer
+from game.entities.character_renderer import CharacterRenderer
 
 from game.settings import *
 from game.controllers.loot_drop_controller import LootDropController
@@ -16,7 +16,7 @@ class Enemy(Character):
 
         config = get_enemy_config(enemy_type)
         self._load_from_config(config)
-        self.renderer = EnemyRenderer(self)
+        self.renderer = CharacterRenderer(self, show_health_bar=True)
 
     def _load_from_config(self, config):
         self.enemy_id = config.enemy_id
@@ -37,6 +37,3 @@ class Enemy(Character):
         self.intent.move_x = 0 if in_range else (1 if dx > 0 else -1)
         self.intent.move_z = 0 if in_range else (1 if dz > 0 else -1)
         self.intent.wants_attack = in_range
-
-    def draw(self, screen, camera_x):
-        self.renderer.draw(screen, camera_x)
