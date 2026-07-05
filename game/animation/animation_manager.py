@@ -95,14 +95,13 @@ class AnimationManager:
         return self.current_animation.get_current_frame()
 
     def update(self, name):
-        if name == self.current_name:
-            return
+        if name != self.current_name:
+            next_animation = self.animations.get(name)
+            if next_animation is None:
+                return
 
-        next_animation = self.animations.get(name)
-        if next_animation is None:
-            return
+            self.current_name = name
+            self.current_animation = next_animation
+            self.current_animation.reset()
 
-        self.current_name = name
-        self.current_animation = next_animation
-        self.current_animation.reset()
         self.current_animation.update()

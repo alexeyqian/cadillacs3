@@ -48,6 +48,9 @@ class Player(Character):
         self.intent.wants_jump = input.jump_pressed
         self.intent.wants_attack = input.attack_pressed
 
+    def update_animation(self, dt):
+        self.animation_manager.update(self.state)
+
     def draw(self, screen, camera_x):
         self.renderer.draw(screen, camera_x)
 

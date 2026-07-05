@@ -40,5 +40,8 @@ class Enemy(Character):
         self.intent.move_z = 0 if in_range else (1 if dz > 0 else -1)
         self.intent.wants_attack = in_range
 
+    def update_animation(self, dt):
+        self.animation_manager.update(self.state)
+
     def draw(self, screen, camera_x):
         self.renderer.draw(screen, camera_x)

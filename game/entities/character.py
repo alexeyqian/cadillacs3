@@ -104,7 +104,8 @@ class Character(GameObject):
             self.set_state("attack")
 
     def update_animation(self, dt):
-        self.animation_manager.update(self.state)
+        pass
+        #self.animation_manager.update(self.state)
 
     def draw(self, screen, camera_x):
         pass
