@@ -43,27 +43,27 @@ def main():
 
         # Update game state
         input = read_input_snapshot(pygame.key.get_pressed())
-        entities = stage.get_all_entities()
+        characters = stage.get_all_characters()
 
         # Phase 1: decide. Reads input/AI state only, nothing moves yet,
-        # so order across entities doesn't matter.
-        for entity in entities:
-            entity.update_intention(dt, input, player.x, player.z)
+        # so order across characters doesn't matter.
+        for character in characters:
+            character.update_intention(dt, input, player.x, player.z)
 
-        # Phase 2: act. Purely local physics per entity.
-        for entity in entities:
-            entity.update_movement(dt)
+        # Phase 2: act. Purely local physics per character.
+        for character in characters:
+            character.update_movement(dt)
 
-        # Phase 3: attack. Per-entity phase-timer ticking + intent-triggered start.
-        for entity in entities:
-            entity.update_attack(dt)
+        # Phase 3: attack. Per-character phase-timer ticking + intent-triggered start.
+        for character in characters:
+            character.update_attack(dt)
 
-        # Phase 4: reactions. Cross-entity: hitbox vs hurtbox resolution.
-        combat_manager.resolve(entities)
+        # Phase 4: reactions. Cross-character: hitbox vs hurtbox resolution.
+        combat_manager.resolve(characters)
 
         # Sync animation to whatever state the phases above landed on.
-        for entity in entities:
-            entity.update_animation(dt)
+        for character in characters:
+            character.update_animation(dt)
 
         # world progression (wave spawns, stage clears).
         #stage.update(dt)

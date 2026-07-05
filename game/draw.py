@@ -6,11 +6,11 @@ def draw(stage, screen):
 def _draw_world(stage, screen):
     camera = stage.camera
     stage.background.draw_far_and_mid(screen, camera.x)
-    entities = stage.get_all_entities()
+    characters = stage.get_all_characters()
     # depth sorting
-    entities.sort(key=lambda e: e.z)
-    for entity in entities:
-        entity.draw(screen, camera.x)
+    characters.sort(key=lambda c: c.z)
+    for character in characters:
+        character.draw(screen, camera.x)
 
 def _draw_ui(stage, screen):
     pass

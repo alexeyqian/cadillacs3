@@ -12,10 +12,13 @@ class Stage:
         self.enemies = []
         self._load_from_data(stage_data)
 
-    def get_all_entities(self):
+    def get_all_characters(self):
         return [self.player]
-        # todo: add others: weapons, projectiles, sparks, objects etc
-        #return [self.player] + self.enemies # plus others
+        # todo: include self.enemies once spawning is wired up.
+        # Non-character entities (weapons, projectiles, breakables) aren't
+        # Characters and don't belong in this list - they'd need their own
+        # update/draw pass.
+        #return [self.player] + self.enemies
 
     def _load_from_data(self, stage_data):
         self.stage_id = stage_data["id"]

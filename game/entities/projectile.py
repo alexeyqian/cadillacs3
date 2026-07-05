@@ -3,10 +3,11 @@ from game.settings import WORLD_WIDTH
 from game.colors import YELLOW_COLOR
 from game.components.health_component import HealthComponent
 from game.components.hitbox_component import HitboxComponent
+from game.entities.entity import Entity
 
 
-class Projectile(GameObject):
-    """Inherits directly from GameObject, not Character."""
+class Projectile(Entity):
+    """Inherits directly from Entity, not Character."""
     def __init__(self, x: float, z: float, vx: float, vz: float, damage: float):
         super().__init__(x, z)
         self.vx, self.vz = vx, vz

@@ -3,7 +3,7 @@ import pygame
 from game.settings import *
 from game.colors import *
 from engine.timer_manager import TimerManager
-from game.entities.game_object import GameObject
+from game.entities.entity import Entity
 from game.components.stats_component import StatsComponent
 from game.components.health_component import HealthComponent
 from game.components.hurtbox_component import HurtboxComponent
@@ -26,7 +26,7 @@ class Intent:
     wants_attack: bool = False
 
 
-class Character(GameObject):
+class Character(Entity):
     """Base for Player/Enemy. Each frame, the main loop drives these phases
     in order: update_intention -> update_movement -> update_attack -> update_animation.
     """

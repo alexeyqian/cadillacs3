@@ -3,13 +3,13 @@ import pygame
 
 #from game.managers.asset_manager import AssetManager
 from game.entities.loot import Loot
-from game.entities.game_object import GameObject
+from game.entities.entity import Entity
 from game.components.health_component import HealthComponent
 from game.components.hurtbox_component import HurtboxComponent
 from game.controllers.loot_drop_controller import LootDropController
 
-class BreakableObject(GameObject):
-    """Crates, barrels, etc. Inherits from GameObject."""
+class BreakableObject(Entity):
+    """Crates, barrels, etc. Inherits from Entity."""
     def __init__(self, x: float, z: float):
         super().__init__(x, z)
         self.width, self.height = 40, 40

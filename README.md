@@ -45,3 +45,9 @@ Other places that touch x/z (hitbox/hurtbox components, distance checks, depth-s
 Complete each phase for all entities before starting the next. Never interleave — if you did entity.update_intention(); entity.update_movement() per entity in one loop, an enemy's AI could read the player's already-moved position this frame instead of last frame's, making behavior depend on entity list order.
 
 update_movement must never read another entity's live state — it only touches the entity's own vx/vz/x/z. That's what makes it safe to run in any order.
+
+GameObject — the generic, engine-level concept: "a thing that exists in the world with a position, and can hold components." It carries no assumption about whether the thing is alive, active, or gameplay-relevant. A camera rig, a background layer, a spawn-point marker, a static wall, and a player character could all be GameObjects. This is the Unity sense of the word — deliberately minimal.
+
+Entity — the gameplay-relevant subset: something with identity and agency in the simulation — it updates every frame, has state that changes, and usually participates in combat/interaction (can deal or take damage, gets iterated by AI/physics/combat systems). In classic ECS architecture "Entity" is stripped down even further to just an ID with no behavior at all, but in most brawler codebases (not strict ECS) it informally means "an active participant," as opposed to passive scenery.
+
+The practical dividing line in a 2D beat-em-up specifically: does it need to be iterated by gameplay systems every frame (movement, AI, combat resolution), or is it just there to be drawn/collided with once? Player, enemies, projectiles, pickups, breakable props → entities. Background art, camera, static tile geometry → GameObjects (or not even that — often just rendering data with no update loop).

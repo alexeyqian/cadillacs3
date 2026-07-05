@@ -8,15 +8,15 @@ HIT_STUN_DURATION = 0.4  # seconds; matches HealthComponent's invulnerability wi
 class CombatManager:
     """Resolves collisions between active hitboxes and hurtboxes each frame."""
 
-    def resolve(self, entities):
-        for attacker in entities:
+    def resolve(self, characters):
+        for attacker in characters:
             if not attacker.alive:
                 continue
             hitbox = attacker.get_component(HitboxComponent)
             if not hitbox or not hitbox.active:
                 continue
 
-            for target in entities:
+            for target in characters:
                 if target is attacker or not target.alive:
                     continue
                 if target in hitbox.hits:
