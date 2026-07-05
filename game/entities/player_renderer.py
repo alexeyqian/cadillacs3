@@ -10,7 +10,7 @@ class PlayerRenderer:
         image = current_frame.image
         offset_x, offset_y = current_frame.offset
 
-        if not self.facing_right:
+        if not self.owner.facing_right:
             image = pygame.transform.flip(image, True, False)
 
         player_x = self.owner.x

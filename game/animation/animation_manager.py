@@ -8,10 +8,12 @@ class AnimationFrame: # single frame
     hitbox: tuple = None
 
 class Animation: # multiple frames
-    def __init__(self, name, frames):
+    def __init__(self, name, frames, frame_durations=None, loop=True):
         self.name = name
         self.frames = frames # multiple AnimationFrame
         self.default_frame_duration = 8
+        self.frame_durations = frame_durations
+        self.loop = loop
 
         self.current_frame = 0
         self.timer = 0
@@ -80,7 +82,12 @@ class AnimationManager:
                     offset=offset,
                     hitbox=config.get("hitbox"),
                 ))
-            animations[name] = Animation(name, frames)
+            animations[name] = Animation(
+                name,
+                frames,
+                frame_durations=config.get("frame_durations"),
+                loop=config.get("loop", True),
+            )
 
         return animations
 

@@ -36,6 +36,7 @@ class Player(Character):
         config = get_player_config(player_type)
         self._load_from_config(config)
         self.state = PlayerState.IDLE
+        self.facing_right = True
         self.animation_manager = AnimationManager(animation_data)
         self.renderer = PlayerRenderer(self)
         
@@ -54,7 +55,7 @@ class Player(Character):
         super().update()
         #self.update_movement(game_state.keys)
         # ...
-        #self.animation_manager.update(self.state)
+        self.animation_manager.update(self.state.lower())
 
     def draw(self, screen, camera_x):
         #super().draw(screen, camera_x)
