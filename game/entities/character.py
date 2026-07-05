@@ -11,32 +11,52 @@ from game.components.hitbox_component import HitboxComponent
 from game.components.status_effect_component import StatusEffectComponent
 from game.entities.attack_data import AttackData, AttackPhase
 
+
 @dataclass
 class Intent:
+    """What this entity wants to do this frame - written by update_intention(),
+    consumed by update_movement()/update_attack(). Keeping this a separate
+    snapshot (rather than mutating physics/attack state directly) is what lets
+    every entity's update_intention() run before anyone's update_movement()."""
     move_x: float = 0.0   # -1, 0, or 1
     move_z: float = 0.0   # -1, 0, or 1
     running: bool = False
     wants_jump: bool = False
     wants_attack: bool = False
 
+
 class Character(GameObject):
+    """Base for Player/Enemy. Each frame, the main loop drives these phases
+    in order: update_intention -> update_movement -> update_attack -> update_animation.
+    """
+
+    GRAVITY = 1500
+
+    # States in which the character still responds to intent-driven
+    # movement/attack. "hit" and "dead" are deliberately excluded, so a
+    # stun or death naturally overrides whatever the player/AI is asking for.
+    ACTIONABLE_STATES = {"idle", "walk", "run", "jump", "attack", "chase"}
+
     def __init__(self, x, z):
         super().__init__(x, z)
         self.width, self.height = PLAYER_W, PLAYER_H
         self.alive = True
-        self.state = "idle"
 
+        # State machine: gates which actions are currently allowed.
+        self.state = "idle"
+        self.hit_stun_timer = None
+
+        # Physics tuning, overridden per character type in _load_from_config.
         self.move_speed = PLAYER_SPEED
         self.jump_power = PLAYER_JUMP_POWER
-        
+
         self.intent = Intent()
 
+        # Attack phase state machine: WINDUP -> ACTIVE -> RECOVERY -> FINISHED.
         self.attack_data = None
         self.current_attack: AttackData = None
         self.attack_phase = AttackPhase.FINISHED
-        self.attack_phase_timer = 0.0
-
-        self.hit_stun_timer = None
+        self.attack_timer = 0.0
 
         self.add_component(StatsComponent())
         self.add_component(HealthComponent(100))
@@ -44,11 +64,14 @@ class Character(GameObject):
         self.add_component(HitboxComponent())
         self.add_component(StatusEffectComponent())
 
+    # --- State machine -----------------------------------------------------
+
     def can_act(self):
-        return self.state in ["idle", "walk", "run", "jump", "attack", "chase"]
+        return self.state in self.ACTIONABLE_STATES
 
     def set_state(self, new_state: str):
-        if self.state == "dead": return
+        if self.state == "dead":
+            return
         self.state = new_state
 
     def stun(self, duration):
@@ -57,74 +80,103 @@ class Character(GameObject):
         self.set_state("hit")
         self.hit_stun_timer = TimerManager.start_timer(duration, lambda: self.set_state("idle"))
 
+    # --- Per-frame phases, called by the main loop in this order -----------
+
     def update_intention(self, dt, keys, player_x, player_z):
         raise NotImplementedError
 
     def update_movement(self, dt):
-        attacking = self.attack_phase != AttackPhase.FINISHED
-        locked = attacking or not self.can_act()
+        if not self._is_action_locked():
+            self._apply_intent_to_velocity()
 
-        if not locked:
-            speed = self.move_speed * (2 if self.intent.running else 1)
-            self.vx = self.intent.move_x * speed
-            self.vz = self.intent.move_z * speed
-            if self.intent.move_x != 0:
-                self.facing = 1 if self.intent.move_x > 0 else -1
+        self._apply_gravity_and_move(dt)
+        self._refresh_movement_state()
 
-            if self.intent.wants_jump and self.y == 0:
-                self.vy = self.jump_power
+    def update_attack(self, dt):
+        if self.intent.wants_attack and self.attack_data:
+            self._try_start_attack(self.attack_data)
 
-        self.vy -= 1500 * dt
+        if self.attack_phase == AttackPhase.FINISHED:
+            return
+
+        self._tick_attack_phase(dt)
+        if self.attack_phase != AttackPhase.FINISHED:
+            self.set_state("attack")
+
+    def update_animation(self, dt):
+        self.animation_manager.update(self.state)
+
+    def draw(self, screen, camera_x):
+        pass
+
+    # --- Movement helpers ---------------------------------------------------
+
+    def _is_action_locked(self):
+        """True while mid-attack or otherwise unable to act (hit/dead) -
+        intent-driven velocity/state changes are suppressed in that case,
+        though any existing velocity (e.g. knockback) keeps integrating."""
+        is_attacking = self.attack_phase != AttackPhase.FINISHED
+        return is_attacking or not self.can_act()
+
+    def _apply_intent_to_velocity(self):
+        speed = self.move_speed * (2 if self.intent.running else 1)
+        self.vx = self.intent.move_x * speed
+        self.vz = self.intent.move_z * speed
+        if self.intent.move_x != 0:
+            self.facing = 1 if self.intent.move_x > 0 else -1
+
+        if self.intent.wants_jump and self.y == 0:
+            self.vy = self.jump_power
+
+    def _apply_gravity_and_move(self, dt):
+        self.vy -= self.GRAVITY * dt
         self.x += self.vx * dt
         self.z += self.vz * dt
         self.y = max(0.0, self.y + self.vy * dt)
         if self.y == 0:
             self.vy = 0
 
-        # Don't stomp "hit"/"dead" with a movement label - those states
-        # aren't in can_act()'s list, so this naturally skips them.
-        if self.can_act():
-            if self.y > 0:
-                self.set_state("jump")
-            elif self.intent.move_x != 0 or self.intent.move_z != 0:
-                self.set_state("walk")
-            else:
-                self.set_state("idle")
+    def _refresh_movement_state(self):
+        # Skipped while "hit"/"dead" (not in ACTIONABLE_STATES), so a
+        # movement label can't stomp those over the frames they last.
+        if not self.can_act():
+            return
+        if self.y > 0:
+            self.set_state("jump")
+        elif self.intent.move_x != 0 or self.intent.move_z != 0:
+            self.set_state("walk")
+        else:
+            self.set_state("idle")
 
-    def update_attack(self, dt):
-        if self.intent.wants_attack and self.attack_data:
-            if not self.can_act():
-                return
-            if self.attack_phase != AttackPhase.FINISHED:
-                return
+    # --- Attack helpers ------------------------------------------------------
 
-            self.current_attack = self.attack_data
-            self.attack_phase = AttackPhase.WINDUP
-            self.attack_phase_timer = 0.0
-            self.vx = 0  # stop moving during attack
-            self.vz = 0
-
-        if self.attack_phase == AttackPhase.FINISHED:
+    def _try_start_attack(self, attack: AttackData):
+        if not self.can_act() or self.attack_phase != AttackPhase.FINISHED:
             return
 
-        self.attack_phase_timer += dt
-        if self.attack_phase == AttackPhase.WINDUP and self.attack_phase_timer >= self.current_attack.windup:
-            self._enter_attack_phase(AttackPhase.ACTIVE)
-        elif self.attack_phase == AttackPhase.ACTIVE and self.attack_phase_timer >= self.current_attack.active:
-            self._enter_attack_phase(AttackPhase.RECOVERY)
-        elif self.attack_phase == AttackPhase.RECOVERY and self.attack_phase_timer >= self.current_attack.recovery:
-            self._enter_attack_phase(AttackPhase.FINISHED)
+        self.current_attack = attack
+        self.attack_phase = AttackPhase.WINDUP
+        self.attack_timer = 0.0
+        self.vx = 0  # stop moving during attack
+        self.vz = 0
 
-        if self.attack_phase != AttackPhase.FINISHED:
-            self.set_state("attack")
+    def _tick_attack_phase(self, dt):
+        self.attack_timer += dt
+        attack = self.current_attack
+        if self.attack_phase == AttackPhase.WINDUP and self.attack_timer >= attack.windup:
+            self._enter_attack_phase(AttackPhase.ACTIVE)
+        elif self.attack_phase == AttackPhase.ACTIVE and self.attack_timer >= attack.active:
+            self._enter_attack_phase(AttackPhase.RECOVERY)
+        elif self.attack_phase == AttackPhase.RECOVERY and self.attack_timer >= attack.recovery:
+            self._enter_attack_phase(AttackPhase.FINISHED)
 
     def _enter_attack_phase(self, new_phase):
         self.attack_phase = new_phase
-        self.attack_phase_timer = 0.0
+        self.attack_timer = 0.0
 
         hitbox = self.get_component(HitboxComponent)
         if new_phase == AttackPhase.ACTIVE and hitbox:
-            # knockback direction depends on the attacker's current facing,
+            # Knockback direction depends on the attacker's current facing,
             # so it's computed here rather than stored statically on AttackData.
             knockback = (self.current_attack.knockback_velocity * self.facing, 0)
             hitbox.activate(
@@ -139,29 +191,26 @@ class Character(GameObject):
         if new_phase == AttackPhase.FINISHED:
             self.current_attack = None
 
-    def update_animation(self, dt):
-        self.animation_manager.update(self.state)
-
-    def draw(self, screen, camera_x):
-        pass
+    # --- Debug box getters (subclasses override; used only when
+    # SHOW_COMBAT_BOXES is on) -------------------------------------------
 
     def get_frame_rect(self):
         pass
-    
+
     def get_collision_rect(self):
         pass
-    
+
     def get_hurt_rect(self):
         pass
-    
+
     def get_hit_rect(self):
         pass
-    
+
     def draw_debug_boxes(self, screen, camera_x, line_width=1):
         body_rect = self.get_frame_rect()
         collision_rect = self.get_collision_rect()
         hurt_rect = self.get_hurt_rect()
-        attack_rect = self.get_attack_rect()
+        attack_rect = self.get_hit_rect()
 
         pygame.draw.rect(screen, WHITE_COLOR, (
             body_rect.x - camera_x,
@@ -182,7 +231,7 @@ class Character(GameObject):
             (int(self.x - camera_x), int(self.y)),
             3,
         )
-        
+
         pygame.draw.rect(screen, GREEN_COLOR, (
             hurt_rect.x - camera_x,
             hurt_rect.y,
@@ -197,4 +246,3 @@ class Character(GameObject):
                 attack_rect.width,
                 attack_rect.height,
             ), line_width)
-
