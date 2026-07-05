@@ -11,4 +11,4 @@ class Camera:
             self.x = self.locked_x
         else:
             # follow player
-            self.x = player.x - SCREEN_WIDTH // 2
+            self.x = max(0, player.x - SCREEN_WIDTH // 2)

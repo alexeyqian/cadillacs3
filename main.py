@@ -1,5 +1,7 @@
 import pygame
 from engine.timer_manager import TimerManager
+from game.settings import *
+from game.colors import *
 from game.camera import Camera
 from game.entities.mustapha_player import MustaphaPlayer
 from game.world.stage import Stage
@@ -7,17 +9,12 @@ from game.world.stage_manager import StageManager
 from game.managers.combat_manager import CombatManager
 from game.draw import draw
 
-# Constants 16:9
-WIDTH, HEIGHT = 1728, 972
-FPS = 60
-BACKGROUND_COLOR = (30, 30, 30)
-
 def main():
     # Initialize Pygame
     pygame.init()
 
     # Create the window
-    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Basic Pygame Window")
 
     # Clock for controlling frame rate
@@ -62,7 +59,7 @@ def main():
         TimerManager.update(dt)
 
         # Draw everything
-        screen.fill(BACKGROUND_COLOR)
+        screen.fill(BLACK_COLOR)
         draw(stage, screen)
         # Update the display
         pygame.display.flip()

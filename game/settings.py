@@ -1,12 +1,8 @@
 ######## system and sizes ########
 
 FPS=60
-# external window width: for real monitor/display
-EXTERNAL_WIDTH=1920
-EXTERNAL_HEIGHT=1080
-# internal window width: for entire game area
-SCREEN_WIDTH=1920
-SCREEN_HEIGHT=1080
+SCREEN_WIDTH=1728 #1920
+SCREEN_HEIGHT=972 #1080
 # total stage width, should around 3 screens
 WORLD_WIDTH=SCREEN_WIDTH*4
 PLAYER_SCREEN_EDGE_MARGIN=20
