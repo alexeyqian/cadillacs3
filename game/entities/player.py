@@ -2,9 +2,7 @@ from game.settings import *
 
 from game.entities.character import Character
 from game.entities.player_config import get_player_config
-from game.entities.character_state import PlayerState
 from game.entities.player_renderer import PlayerRenderer
-from game.entities.attack_data import AttackData
 
 from game.components.interaction_component import InteractionComponent
 from game.components.inventory_component import InventoryComponent
@@ -35,11 +33,9 @@ class Player(Character):
 
         config = get_player_config(player_type)
         self._load_from_config(config)
-        self.state = PlayerState.IDLE
-        self.facing_right = True
         self.animation_manager = AnimationManager(animation_data)
         self.renderer = PlayerRenderer(self)
-        
+
     def _load_from_config(self, config):
         self.player_id = config.player_id
         self.display_name = config.display_name
@@ -51,62 +47,16 @@ class Player(Character):
 
         self.sprite_scale = config.sprite_scale
 
-    def update(self, game_state):
-        super().update()
-        # self.update_intention()
-        #self.update_movement(game_state.keys)
-        # ...
-        self.animation_manager.update(self.state.lower())
+    def update_intention(self, dt, keys, player_x, player_z):
+        self.intent.move_x = keys.right - keys.left
+        self.intent.move_z = keys.down - keys.up
+        self.intent.running = keys.shift
+        self.intent.wants_jump = keys.jump_pressed
+        self.intent.wants_attack = keys.attack_pressed
+        #self.get_component(InputController).handle_input(keys)
 
     def draw(self, screen, camera_x):
-        #super().draw(screen, camera_x)
         self.renderer.draw(screen, camera_x)
 
-    def update_movement(self, game_state):
-        player_input = game_state.player_input
-
-        self.state = PlayerState.WALK
-
-        if player_input.left:
-            self.move_left()
-        elif player_input.right:
-            self.move_right()
-        elif player_input.up:
-            self.move_up()
-        elif player_input.down:
-            self.move_down()
-        elif player_input.jump:
-            self.jump()
-            self.state = PlayerState.JUMP
-        elif player_input.attack:
-            self.attack()
-            self.state = PlayerState.ATTACK
-        else:
-            self.stop_moving()
-            self.state = PlayerState.IDLE
-
-    def move_left(self):
-        self.x -= self.speed
-        self.facing_right = False
-        
-    def move_right(self):
-        self.x += self.speed
-        self.facing_right = True
-    
-    def move_up(self):
-        self.y -= self.speed
-    
-    def move_down(self):
-        self.y += self.speed
-
-    def jump(self):
-        pass
-
-    def stop_moving(self):
-        pass
-    
-    def attack(self):
-        pass
-    
     def take_damage(self, amount):
         return super().take_damage(amount)

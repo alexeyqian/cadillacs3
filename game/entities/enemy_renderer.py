@@ -3,13 +3,15 @@ import game.settings as settings
 from game.colors import WHITE_COLOR, YELLOW_COLOR
 from game.camera import world_to_screen
 from game.components.health_component import HealthComponent
+from game.controllers.character_controller import CharacterController
 #from game.components.debug_renderer import CharacterDebugRenderer
 
 class EnemyRenderer:
     def draw(self, owner, screen, camera_x):
         current_frame = owner.animation_manager.get_current_frame()
         if not current_frame:
-            raise ValueError(f"Missing frame data for enemy state: {owner.state}")
+            state = owner.get_component(CharacterController).state
+            raise ValueError(f"Missing frame data for enemy state: {state}")
 
         image = current_frame.image
         offset_x, offset_y = current_frame.offset
@@ -21,10 +23,11 @@ class EnemyRenderer:
         image = pygame.transform.scale(image,
             (int(image.get_width() * scale),
             int(image.get_height() * scale)))
-        if not owner.facing_right:
+        facing_right = owner.facing >= 0
+        if not facing_right:
             image = pygame.transform.flip(image, True, False)
 
-        if owner.facing_right:
+        if facing_right:
             sprite_world_x = owner.x + offset_x
         else:
             sprite_world_x = owner.x - image.get_width() - offset_x

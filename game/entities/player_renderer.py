@@ -11,10 +11,11 @@ class PlayerRenderer:
         image = current_frame.image
         offset_x, offset_y = current_frame.offset
 
-        if not self.owner.facing_right:
+        facing_right = self.owner.facing >= 0
+        if not facing_right:
             image = pygame.transform.flip(image, True, False)
 
-        if self.owner.facing_right:
+        if facing_right:
             sprite_world_x = self.owner.x + offset_x
         else:
             sprite_world_x = self.owner.x - image.get_width() - offset_x

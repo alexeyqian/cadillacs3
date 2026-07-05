@@ -41,3 +41,7 @@ The screen, however, is flat — pygame only has one vertical axis, and pixel 0 
 That formula is a conversion between coordinate spaces (world → screen), so it deserves one canonical function rather than being reimplemented inline wherever a sprite gets drawn.
 
 Other places that touch x/z (hitbox/hurtbox components, distance checks, depth-sort in draw.py) stay as-is — those operate in world space for gameplay logic (collision, sorting), not screen pixels, so they don't need this conversion.
+
+Complete each phase for all entities before starting the next. Never interleave — if you did entity.update_intention(); entity.update_movement() per entity in one loop, an enemy's AI could read the player's already-moved position this frame instead of last frame's, making behavior depend on entity list order.
+
+update_movement must never read another entity's live state — it only touches the entity's own vx/vz/x/z. That's what makes it safe to run in any order.

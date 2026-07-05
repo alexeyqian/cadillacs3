@@ -41,12 +41,18 @@ def main():
                     running = False
 
         # Update game state
-        # per entity update
-        # player.get_component(InputController).handle_input(keys)?
+        keys = pygame.key.get_pressed()
         entities = stage.get_all_entities()
+
+        # Phase 1: decide. Reads input/AI state only, nothing moves yet,
+        # so order across entities doesn't matter.
         for entity in entities:
-            entity.update(dt)
-        
+            entity.update_intention(dt, keys, player.x, player.z)
+
+        # Phase 2: act. Purely local physics per entity.
+        for entity in entities:
+            entity.update_movement(dt)
+
         # cross-entity update: resolve attack/hurt collisions centrally.
         #combat_manager.update(dt, entities)
         

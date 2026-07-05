@@ -9,7 +9,8 @@ class InputController:
     """Reads raw hardware input and translates to game commands."""
     def __init__(self):
         self.input_buffer = [] # Stores recent inputs for buffering
-        
+    
+    # update intention
     def handle_input(self, keys):
         char_ctrl = self.owner.get_component(CharacterController)
         if not char_ctrl.can_act(): return
