@@ -3,7 +3,6 @@ import game.settings as settings
 from game.colors import WHITE_COLOR, YELLOW_COLOR
 from game.camera import world_to_screen
 from game.components.health_component import HealthComponent
-from game.controllers.character_state_machine import CharacterStateMachine
 #from game.components.debug_renderer import CharacterDebugRenderer
 
 class EnemyRenderer:
@@ -14,8 +13,7 @@ class EnemyRenderer:
         owner = self.owner
         current_frame = owner.animation_manager.get_current_frame()
         if not current_frame:
-            state = owner.get_component(CharacterStateMachine).state
-            raise ValueError(f"Missing frame data for enemy state: {state}")
+            raise ValueError(f"Missing frame data for enemy state: {owner.state}")
 
         image = current_frame.image
         offset_x, offset_y = current_frame.offset

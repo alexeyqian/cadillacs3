@@ -2,13 +2,13 @@ from dataclasses import dataclass
 import pygame
 from game.settings import *
 from game.colors import *
+from engine.timer_manager import TimerManager
 from game.entities.game_object import GameObject
 from game.components.stats_component import StatsComponent
 from game.components.health_component import HealthComponent
 from game.components.hurtbox_component import HurtboxComponent
 from game.components.hitbox_component import HitboxComponent
 from game.components.status_effect_component import StatusEffectComponent
-from game.controllers.character_state_machine import CharacterStateMachine
 from game.entities.attack_data import AttackData, AttackPhase
 
 @dataclass
@@ -32,20 +32,35 @@ class Character(GameObject):
         self.attack_phase_timer = 0.0
         self.intent = Intent()
 
+        # State machine: prevents illegal actions.
+        self.state = "idle"
+        self.hit_stun_timer = None
+
         self.add_component(StatsComponent())
         self.add_component(HealthComponent(100))
         self.add_component(HurtboxComponent())
         self.add_component(HitboxComponent())
         self.add_component(StatusEffectComponent())
-        self.add_component(CharacterStateMachine()) # The Master State Machine
+
+    def can_act(self):
+        return self.state in ["idle", "walk", "run", "jump", "attack", "chase"]
+
+    def set_state(self, new_state: str):
+        if self.state == "dead": return
+        self.state = new_state
+
+    def stun(self, duration):
+        if self.hit_stun_timer:
+            self.hit_stun_timer.cancel()
+        self.set_state("hit")
+        self.hit_stun_timer = TimerManager.start_timer(duration, lambda: self.set_state("idle"))
 
     def update_intention(self, dt, keys, player_x, player_z):
         raise NotImplementedError
 
     def update_movement(self, dt):
-        state_machine = self.get_component(CharacterStateMachine)
         attacking = self.attack_phase != AttackPhase.FINISHED
-        locked = attacking or not state_machine.can_act()
+        locked = attacking or not self.can_act()
 
         if not locked:
             speed = self.move_speed * (2 if self.intent.running else 1)
@@ -66,17 +81,16 @@ class Character(GameObject):
 
         # Don't stomp "hit"/"dead" with a movement label - those states
         # aren't in can_act()'s list, so this naturally skips them.
-        if state_machine.can_act():
+        if self.can_act():
             if self.y > 0:
-                state_machine.set_state("jump")
+                self.set_state("jump")
             elif self.intent.move_x != 0 or self.intent.move_z != 0:
-                state_machine.set_state("walk")
+                self.set_state("walk")
             else:
-                state_machine.set_state("idle")
+                self.set_state("idle")
 
-    def start_attack(self, attack: AttackData):
-        state_machine = self.get_component(CharacterStateMachine)
-        if not state_machine.can_act():
+    def _start_attack(self, attack: AttackData):
+        if not self.can_act():
             return
         if self.attack_phase != AttackPhase.FINISHED:
             return
@@ -89,7 +103,7 @@ class Character(GameObject):
 
     def update_attack(self, dt):
         if self.intent.wants_attack and self.attack_data:
-            self.start_attack(self.attack_data)
+            self._start_attack(self.attack_data)
 
         if self.attack_phase == AttackPhase.FINISHED:
             return
@@ -103,7 +117,7 @@ class Character(GameObject):
             self._enter_attack_phase(AttackPhase.FINISHED)
 
         if self.attack_phase != AttackPhase.FINISHED:
-            self.get_component(CharacterStateMachine).set_state("attack")
+            self.set_state("attack")
 
     def _enter_attack_phase(self, new_phase):
         self.attack_phase = new_phase
@@ -127,7 +141,7 @@ class Character(GameObject):
             self.current_attack = None
 
     def update_animation(self, dt):
-        self.animation_manager.update(self.get_component(CharacterStateMachine).state)
+        self.animation_manager.update(self.state)
 
     def draw(self, screen, camera_x):
         pass
