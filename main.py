@@ -5,7 +5,7 @@ from game.entities.mustapha_player import MustaphaPlayer
 from game.world.stage import Stage
 from game.world.stage_manager import StageManager
 from game.managers.combat_manager import CombatManager
-
+from game.draw import draw
 
 # Constants 16:9
 WIDTH, HEIGHT = 1728, 972
@@ -39,16 +39,19 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    running = False
 
         # Update game state
         # per entity update
         # player.get_component(InputController).handle_input(keys)?
-        entities = stage.get_all_entities()
+        entities = stage_manager.get_all_entities()
         for entity in entities:
             entity.update(dt)
         
         # cross-entity update: resolve attack/hurt collisions centrally.
-        combat_manager.update(dt, entities)
+        #combat_manager.update(dt, entities)
         
         # world progression (wave spawns, stage clears).
         #stage.update(dt)
@@ -60,9 +63,7 @@ def main():
 
         # Draw everything
         screen.fill(BACKGROUND_COLOR)
-
-        # (Your drawing code goes here)
-
+        draw(stage, screen)
         # Update the display
         pygame.display.flip()
 

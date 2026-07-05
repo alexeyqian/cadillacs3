@@ -21,7 +21,8 @@ class PendingSpawn:
 
 
 class Wave:
-    def __init__(self, trigger_x, spawn_instructions, max_active=4):
+    def __init__(self, stage, trigger_x, spawn_instructions, max_active=4):
+        self.stage = stage
         self.trigger_x = trigger_x
         self.started = False
         self.completed = False
@@ -75,6 +76,7 @@ class Wave:
             capability_overrides=pending.capability_overrides,
         )
         self.spawn_timer = self.pending_spawns[0].delay if self.pending_spawns else 0
+        self.stage.enemies.append(enemy)
         return [enemy]
 
     def is_spawning_done(self):
