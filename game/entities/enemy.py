@@ -9,8 +9,8 @@ from game.animation.animation_manager import AnimationManager
 class Enemy(Character):
     def __init__(self, x, z, enemy_type, animation_data, target): # target is Player
         super().__init__(x, z)
-        self.width = 40
-        self.height = 80
+        self.width = ENEMY_W
+        self.height = ENEMY_H
         self.tags.add("enemy")
 
         self.add_component(LootDropController())

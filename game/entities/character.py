@@ -24,16 +24,18 @@ class Character(GameObject):
         super().__init__(x, z)
         self.width, self.height = PLAYER_W, PLAYER_H
         self.alive = True
+        self.state = "idle"
+
         self.move_speed = PLAYER_SPEED
         self.jump_power = PLAYER_JUMP_POWER
+        
+        self.intent = Intent()
+
         self.attack_data = None
         self.current_attack: AttackData = None
         self.attack_phase = AttackPhase.FINISHED
         self.attack_phase_timer = 0.0
-        self.intent = Intent()
 
-        # State machine: prevents illegal actions.
-        self.state = "idle"
         self.hit_stun_timer = None
 
         self.add_component(StatsComponent())
@@ -89,21 +91,18 @@ class Character(GameObject):
             else:
                 self.set_state("idle")
 
-    def _start_attack(self, attack: AttackData):
-        if not self.can_act():
-            return
-        if self.attack_phase != AttackPhase.FINISHED:
-            return
-
-        self.current_attack = attack
-        self.attack_phase = AttackPhase.WINDUP
-        self.attack_phase_timer = 0.0
-        self.vx = 0  # stop moving during attack
-        self.vz = 0
-
     def update_attack(self, dt):
         if self.intent.wants_attack and self.attack_data:
-            self._start_attack(self.attack_data)
+            if not self.can_act():
+                return
+            if self.attack_phase != AttackPhase.FINISHED:
+                return
+
+            self.current_attack = self.attack_data
+            self.attack_phase = AttackPhase.WINDUP
+            self.attack_phase_timer = 0.0
+            self.vx = 0  # stop moving during attack
+            self.vz = 0
 
         if self.attack_phase == AttackPhase.FINISHED:
             return
