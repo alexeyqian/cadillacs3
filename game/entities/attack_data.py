@@ -21,6 +21,9 @@ class AttackData:
     combo_window: float = 0
     damage: float = 10
     knockback: tuple = ()
+    # some attack is special, such as mustapha's run attack is flying attack, which is airborne
+    # other player's run attack might be not airborne,
+    launch_power: float = 0 # initial upward velocity applied to the attacker on start
 
     hitbox_offset_x: int = 0 # deprecated
     hitbox_offset_y: int = 0 # deprecated
@@ -59,6 +62,7 @@ DEFAULT_PLAYER_ATTACK_DATA = AttackData(
 DEFAULT_PLAYER_RUN_ATTACK_DATA = AttackData(
     delay=0,
     damage=RUN_ATTACK_DAMAGE,
+    launch_power=RUN_ATTACK_LAUNCH_POWER,
     windup=RUN_ATTACK_WINDUP_DURATION / FPS,
     active=RUN_ATTACK_ACTIVE_DURATION / FPS,
     recovery=RUN_ATTACK_RECOVERY_DURATION / FPS,

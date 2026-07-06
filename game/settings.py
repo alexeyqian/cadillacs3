@@ -151,6 +151,7 @@ RUN_ATTACK_RECOVERY_DURATION=6
 RUN_ATTACK_COOLDOWN=30
 RUN_ATTACK_HIT_STUN_DURATION=25
 RUN_ATTACK_KNOCKBACK_VELOCITY=400 # pixels per second (dt-scaled physics)
+RUN_ATTACK_LAUNCH_POWER=400 # initial upward velocity; keeps the player airborne through the swing
 
 # TODO: below design is too complicated, might remove?
 RUN_ATTACK_FULL_POWER_DISTANCE=240
