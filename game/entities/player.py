@@ -36,7 +36,6 @@ class Player(Character):
         self.run_speed = config.run_speed
         self.jump_power = config.jump_power
         self.jump_air_move_speed = config.jump_air_move_speed
-        self.run_air_move_speed = config.run_air_move_speed
         self.attack_data = DEFAULT_PLAYER_ATTACK_DATA
         self.run_attack_data = DEFAULT_PLAYER_RUN_ATTACK_DATA
 

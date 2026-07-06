@@ -58,7 +58,6 @@ class Character(Entity):
         self.run_speed = 0
         self.jump_power = 0
         self.jump_air_move_speed = 0
-        self.run_air_move_speed = 0
 
         self.intent = Intent()
 
@@ -137,14 +136,17 @@ class Character(Entity):
     def _is_action_locked(self):
         """True while mid-attack or otherwise unable to act (hit/dead) -
         intent-driven velocity/state changes are suppressed in that case,
-        though any existing velocity (e.g. knockback) keeps integrating."""
+        though any existing velocity (e.g. knockback) keeps integrating.
+        Attacks with keep_moving (e.g. a run attack) are the exception -
+        intent still drives movement while they're in progress."""
         is_attacking = self.attack_phase != AttackPhase.FINISHED
-        return is_attacking or not self.can_act()
+        moves_during_attack = is_attacking and self.current_attack and self.current_attack.keep_moving
+        return (is_attacking and not moves_during_attack) or not self.can_act()
 
     def _apply_intent_to_velocity(self):
         airborne = self.y > 0
         if airborne:
-            speed = self.run_air_move_speed if self.intent.running else self.jump_air_move_speed
+            speed = self.jump_air_move_speed
         else:
             speed = self.run_speed if self.intent.running else self.move_speed
 
@@ -186,8 +188,9 @@ class Character(Entity):
         self.current_attack = attack
         self.attack_phase = AttackPhase.WINDUP
         self.attack_timer = 0.0
-        self.vx = 0  # stop moving during attack
-        self.vz = 0
+        if not attack.keep_moving:
+            self.vx = 0  # stop moving during attack
+            self.vz = 0
 
     def _tick_attack_phase(self, dt):
         self.attack_timer += dt
