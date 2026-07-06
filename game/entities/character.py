@@ -54,8 +54,9 @@ class Character(Entity):
         self.hit_stun_timer = None
 
         # Physics tuning, overridden per character type in _load_from_config.
-        self.move_speed = PLAYER_SPEED
-        self.jump_power = PLAYER_JUMP_POWER
+        self.move_speed = 0
+        self.run_speed = 0
+        self.jump_power = 0
 
         self.intent = Intent()
 
@@ -130,7 +131,10 @@ class Character(Entity):
         return is_attacking or not self.can_act()
 
     def _apply_intent_to_velocity(self):
-        speed = self.move_speed * (2 if self.intent.running else 1)
+        speed = self.move_speed
+        if self.intent.running:
+            speed = self.run_speed
+
         self.vx = self.intent.move_x * speed
         self.vz = self.intent.move_z * speed
         if self.intent.move_x != 0:

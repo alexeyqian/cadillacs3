@@ -85,7 +85,7 @@ ENEMY_SCORE_POINTS = 100
 ######## speed ########
 # Pixels per second (movement is dt-scaled, not per-frame).
 PLAYER_SPEED = 250
-PLAYER_RUN_SPEED= PLAYER_SPEED * 3
+PLAYER_RUN_SPEED = PLAYER_SPEED * 4
 PLAYER_AIR_MOVE_SPEED=PLAYER_SPEED*1.5
 PLAYER_JUMP_POWER = 600
 ENEMY_SPEED=int(PLAYER_SPEED*0.5)
@@ -93,7 +93,6 @@ ENEMY_RUN_SPEED=int(PLAYER_SPEED*0.9)
 ENEMY_Y_SPEED=int(ENEMY_SPEED*0.5)
 ENEMY_RUN_CHASE_THRESHOLD=400  # pixels; enemy switches to run when farther than this
 PROJECTILE_SPEED=PLAYER_SPEED*3
-
 ######## player attack ########
 FIST_DAMAGE=10
 # Attack lifecycle
