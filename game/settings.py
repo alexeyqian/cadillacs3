@@ -4,21 +4,6 @@ FPS=60
 SCREEN_WIDTH=1728 #1920
 SCREEN_HEIGHT=972 #1080
 # total stage width, should around 3 screens
-WORLD_WIDTH=SCREEN_WIDTH*4
-PLAYER_SCREEN_EDGE_MARGIN=20
-
-# Classical Proportions (Artistic & Anatomical)
-# Width-to-height ratio: 1:4 ratio
-# Biacromial width: 46.25 cm
-# Head height units: 2 full heads wide
-# height: 185 cm, shoulder: 46.25cm
-# height: 182 cm, shoulder: 45.5cm
-# height: 180 cm, shoulder: 45cm
-# PLAYER_NAKED_HEIGHT=185
-# PLAYER_NAKED_WIDTH=47
-# Since arcade is left/right facing,
-# the width is wider than shoulder
-
 # Important: feet alignment matters most.anchor by feet, not by image center.
 # Across idle, walk, attack, hit, etc., 
 # the player’s feet should land on the same baseline. 

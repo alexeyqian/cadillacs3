@@ -1,6 +1,4 @@
 from engine.timer_manager import TimerManager
-from game.settings import WORLD_WIDTH
-from game.colors import YELLOW_COLOR
 from game.components.health_component import HealthComponent
 from game.components.hitbox_component import HitboxComponent
 from game.entities.entity import Entity

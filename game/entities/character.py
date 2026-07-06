@@ -67,6 +67,7 @@ class Character(Entity):
         self.current_attack: AttackData = None
         self.attack_phase = AttackPhase.FINISHED
         self.attack_timer = 0.0
+        self.attack_cooldown_timer = 0.0
 
         self.add_component(StatsComponent())
         self.add_component(HealthComponent(100))
@@ -105,6 +106,8 @@ class Character(Entity):
         self._refresh_movement_state()
 
     def update_attack(self, dt):
+        self.attack_cooldown_timer = max(0.0, self.attack_cooldown_timer - dt)
+
         if self.intent.wants_attack:
             attack = self._select_attack()
             if attack:
@@ -184,6 +187,8 @@ class Character(Entity):
     def _try_start_attack(self, attack: AttackData):
         if not self.can_act() or self.attack_phase != AttackPhase.FINISHED:
             return
+        if self.attack_cooldown_timer > 0:
+            return
 
         self.current_attack = attack
         self.attack_phase = AttackPhase.WINDUP
@@ -230,6 +235,7 @@ class Character(Entity):
             hitbox.deactivate()
 
         if new_phase == AttackPhase.FINISHED:
+            self.attack_cooldown_timer = self.current_attack.cooldown
             self.current_attack = None
 
     def get_collision_rect(self):
