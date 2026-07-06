@@ -20,16 +20,23 @@ class InputReader:
     double-tap-to-run, which a single stateless snapshot can't see."""
 
     def __init__(self):
-        self._was_pressed = {"left": False, "right": False}
+        self._was_pressed = {"left": False, "right": False, "attack": False}
         self._tap_window = {"left": 0.0, "right": 0.0}
         self._dash_direction = None
 
     def read(self, raw_keys, dt):
         left = bool(raw_keys[pygame.K_a])
         right = bool(raw_keys[pygame.K_d])
+        attack_held = bool(raw_keys[pygame.K_j])
 
         self._update_dash("left", left, dt)
         self._update_dash("right", right, dt)
+
+        # Edge-triggered: True only the frame attack is newly pressed, not
+        # while held. Combo advancement/mashing needs distinct presses -
+        # otherwise holding the key would auto-play the whole combo.
+        attack_pressed = attack_held and not self._was_pressed["attack"]
+        self._was_pressed["attack"] = attack_held
 
         return InputSnapshot(
             left=left,
@@ -38,7 +45,7 @@ class InputReader:
             down=bool(raw_keys[pygame.K_s]),
             running=self._dash_direction is not None,
             jump_pressed=bool(raw_keys[pygame.K_k]),
-            attack_pressed=bool(raw_keys[pygame.K_j]),
+            attack_pressed=attack_pressed,
         )
 
     def _update_dash(self, direction, is_pressed, dt):

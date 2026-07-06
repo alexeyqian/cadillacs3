@@ -33,6 +33,7 @@ class CombatManager:
 
     def _react_to_hit(self, target):
         if not target.alive:
+            target.cancel_attack()
             target.set_state("dead")
         else:
             target.stun(HIT_STUN_DURATION)

@@ -51,3 +51,9 @@ GameObject — the generic, engine-level concept: "a thing that exists in the wo
 Entity — the gameplay-relevant subset: something with identity and agency in the simulation — it updates every frame, has state that changes, and usually participates in combat/interaction (can deal or take damage, gets iterated by AI/physics/combat systems). In classic ECS architecture "Entity" is stripped down even further to just an ID with no behavior at all, but in most brawler codebases (not strict ECS) it informally means "an active participant," as opposed to passive scenery.
 
 The practical dividing line in a 2D beat-em-up specifically: does it need to be iterated by gameplay systems every frame (movement, AI, combat resolution), or is it just there to be drawn/collided with once? Player, enemies, projectiles, pickups, breakable props → entities. Background art, camera, static tile geometry → GameObjects (or not even that — often just rendering data with no update loop).
+
+
+Combo attack:
+InputReader.attack_pressed is now edge-triggered (true only the frame J is newly pressed, not while held) — holding the button no longer auto-chains through the combo; each hit needs its own distinct press.
+Character.combo_window_timer starts counting down the moment a hit finishes (= current_attack.combo_window); a press within that window continues to the next hit, a press after it expires resets to hit 1.
+Doesn't loop past 3: combo_index is clamped (min(combo_index + 1, len - 1)), and hit 3 has combo_window=0, so there's nothing to advance into.

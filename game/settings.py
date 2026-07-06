@@ -92,7 +92,15 @@ ATTACK_1_RECOVERY_DURATION=5
 ATTACK_1_COOLDOWN=2
 ATTACK_1_HIT_STUN_DURATION=15
 ATTACK_1_KNOCKBACK_VELOCITY=400 # pixels per second (dt-scaled physics)
-ATTACK_1_COMBO_WINDOW=20
+# Combo windows: how long after a hit finishes you can press attack again to
+# continue the chain instead of it resetting to hit 1. Classic beat-em-ups
+# (Streets of Rage, Final Fight) sit around 300-500ms - tight enough to need
+# real input, generous enough not to feel like a fighting-game link. Widening
+# slightly through the chain (hit1 -> hit2 -> hit3) is the common pattern,
+# since later hits follow more committed animations and can afford more
+# leniency. The finisher (hit 3) intentionally has no window - see
+# DEFAULT_PLAYER_ATTACK_3_DATA - so it can't chain into anything.
+ATTACK_1_COMBO_WINDOW=24 # 0.4s @ 60fps
 
 ATTACK_2_DAMAGE=int(FIST_DAMAGE*1.5)
 ATTACK_2_HIT_STUN=10
@@ -102,7 +110,7 @@ ATTACK_2_RECOVERY_DURATION=6
 ATTACK_2_COOLDOWN=4
 ATTACK_2_HIT_STUN_DURATION=20
 ATTACK_2_KNOCKBACK_VELOCITY=400 # pixels per second (dt-scaled physics)
-ATTACK_2_COMBO_WINDOW=25
+ATTACK_2_COMBO_WINDOW=30 # 0.5s @ 60fps
 
 ATTACK_3_DAMAGE=int(FIST_DAMAGE*2)
 ATTACK_3_HIT_STUN=10

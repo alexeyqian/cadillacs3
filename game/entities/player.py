@@ -4,7 +4,11 @@ from game.settings import *
 from game.entities.character import Character
 from game.entities.player_config import get_player_config
 from game.entities.character_renderer import CharacterRenderer
-from game.entities.attack_data import DEFAULT_PLAYER_ATTACK_DATA, DEFAULT_PLAYER_RUN_ATTACK_DATA
+from game.entities.attack_data import (
+    DEFAULT_PLAYER_ATTACK_DATA,
+    DEFAULT_PLAYER_COMBO_ATTACKS,
+    DEFAULT_PLAYER_RUN_ATTACK_DATA,
+)
 
 from game.components.interaction_component import InteractionComponent
 from game.components.inventory_component import InventoryComponent
@@ -37,6 +41,7 @@ class Player(Character):
         self.jump_power = config.jump_power
         self.jump_air_move_speed = config.jump_air_move_speed
         self.attack_data = DEFAULT_PLAYER_ATTACK_DATA
+        self.combo_attacks = DEFAULT_PLAYER_COMBO_ATTACKS
         self.run_attack_data = DEFAULT_PLAYER_RUN_ATTACK_DATA
 
         self.sprite_scale = config.sprite_scale

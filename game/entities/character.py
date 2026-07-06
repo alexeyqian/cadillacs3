@@ -35,7 +35,7 @@ class Character(Entity):
     # States in which the character still responds to intent-driven
     # movement/attack. "hit" and "dead" are deliberately excluded, so a
     # stun or death naturally overrides whatever the player/AI is asking for.
-    ACTIONABLE_STATES = {"idle", "walk", "run", "jump", "attack", "run_attack", "chase"}
+    ACTIONABLE_STATES = {"idle", "walk", "run", "jump", "attack", "attack2", "attack3", "run_attack", "chase"}
 
     def __init__(self, x, z, animation_data):
         super().__init__(x, z)
@@ -60,8 +60,11 @@ class Character(Entity):
         self.intent = Intent()
 
         # Attack phase state machine: WINDUP -> ACTIVE -> RECOVERY -> FINISHED.
-        self.attack_data = None # todo: rename to available_attacks: List[AttackData]
+        self.attack_data = None # single basic attack, used when combo_attacks is empty
         self.run_attack_data = None # used instead of attack_data while intent.running
+        self.combo_attacks = [] # e.g. [attack1, attack2, attack3]; empty means no combo chain
+        self.combo_index = 0 # index into combo_attacks that the next press will start
+        self.combo_window_timer = 0.0 # time left to continue the combo before it resets to hit 1
         self.current_attack: AttackData = None
         self.attack_phase = AttackPhase.FINISHED
         self.attack_timer = 0.0
@@ -88,8 +91,21 @@ class Character(Entity):
     def stun(self, duration):
         if self.hit_stun_timer:
             self.hit_stun_timer.cancel()
+        self.cancel_attack()
         self.set_state("hit")
         self.hit_stun_timer = TimerManager.start_timer(duration, lambda: self.set_state("idle"))
+
+    def cancel_attack(self):
+        """Interrupts any in-progress attack. Without this, a hit landing
+        mid-windup would leave attack_phase ticking toward ACTIVE while the
+        animation has already switched to "hit" - which has no hitbox data
+        to read, crashing _enter_attack_phase."""
+        hitbox = self.get_component(HitboxComponent)
+        if hitbox:
+            hitbox.deactivate()
+        self.attack_phase = AttackPhase.FINISHED
+        self.current_attack = None
+        self.combo_index = 0
 
     # --- Per-frame phases, called by the main loop in this order -----------
 
@@ -105,11 +121,10 @@ class Character(Entity):
 
     def update_attack(self, dt):
         self.attack_cooldown_timer = max(0.0, self.attack_cooldown_timer - dt)
+        self.combo_window_timer = max(0.0, self.combo_window_timer - dt)
 
         if self.intent.wants_attack:
-            attack = self._select_attack()
-            if attack:
-                self._try_start_attack(attack)
+            self._try_start_next_attack()
 
         if self.attack_phase == AttackPhase.FINISHED:
             return
@@ -118,13 +133,25 @@ class Character(Entity):
         # Phase timing/hitbox keep ticking regardless, but don't let this
         # stomp "hit"/"dead" - set_state() only guards "dead", not "hit".
         if self.attack_phase != AttackPhase.FINISHED and self.can_act():
-            is_run_attack = self.current_attack is self.run_attack_data
-            self.set_state("run_attack" if is_run_attack else "attack")
+            self.set_state(self.current_attack.name)
 
-    def _select_attack(self):
+    def _try_start_next_attack(self):
         if self.intent.running and self.run_attack_data:
-            return self.run_attack_data
-        return self.attack_data
+            self._try_start_attack(self.run_attack_data)
+            return
+
+        if not self.combo_attacks:
+            if self.attack_data:
+                self._try_start_attack(self.attack_data)
+            return
+
+        # Window expired (or this is the first press, or the last hit just
+        # finished with no window at all) - next press starts a fresh chain.
+        if self.combo_window_timer <= 0:
+            self.combo_index = 0
+
+        if self._try_start_attack(self.combo_attacks[self.combo_index]):
+            self.combo_index = min(self.combo_index + 1, len(self.combo_attacks) - 1)
 
     def update_animation(self, dt):
         self.animation_manager.update(self.state)
@@ -182,11 +209,11 @@ class Character(Entity):
 
     # --- Attack helpers ------------------------------------------------------
 
-    def _try_start_attack(self, attack: AttackData):
+    def _try_start_attack(self, attack: AttackData) -> bool:
         if not self.can_act() or self.attack_phase != AttackPhase.FINISHED:
-            return
+            return False
         if self.attack_cooldown_timer > 0:
-            return
+            return False
 
         self.current_attack = attack
         self.attack_phase = AttackPhase.WINDUP
@@ -194,6 +221,7 @@ class Character(Entity):
         if not attack.keep_moving:
             self.vx = 0  # stop moving during attack
             self.vz = 0
+        return True
 
     def _tick_attack_phase(self, dt):
         self.attack_timer += dt
@@ -234,6 +262,7 @@ class Character(Entity):
 
         if new_phase == AttackPhase.FINISHED:
             self.attack_cooldown_timer = self.current_attack.cooldown
+            self.combo_window_timer = self.current_attack.combo_window
             self.current_attack = None
 
     def get_collision_rect(self):
