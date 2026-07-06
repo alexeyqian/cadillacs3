@@ -56,6 +56,21 @@ DEFAULT_PLAYER_ATTACK_DATA = AttackData(
 )
 
 
+DEFAULT_PLAYER_RUN_ATTACK_DATA = AttackData(
+    delay=0,
+    damage=RUN_ATTACK_DAMAGE,
+    windup=RUN_ATTACK_WINDUP_DURATION / FPS,
+    active=RUN_ATTACK_ACTIVE_DURATION / FPS,
+    recovery=RUN_ATTACK_RECOVERY_DURATION / FPS,
+    cooldown=0,
+    hit_stun_duration=RUN_ATTACK_HIT_STUN_DURATION,
+    knockback_velocity=RUN_ATTACK_KNOCKBACK_VELOCITY,
+    lane_reach=1,
+    max_targets=1,
+    combo_window=0,
+)
+
+
 DEFAULT_ENEMY_ATTACK_DATA = AttackData(
     hitbox_offset_x=ENEMY_HITBOX_OFFSET_X,
     hitbox_offset_y=ENEMY_HITBOX_OFFSET_Y,

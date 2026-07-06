@@ -37,7 +37,7 @@ class Character(Entity):
     # States in which the character still responds to intent-driven
     # movement/attack. "hit" and "dead" are deliberately excluded, so a
     # stun or death naturally overrides whatever the player/AI is asking for.
-    ACTIONABLE_STATES = {"idle", "walk", "run", "jump", "attack", "chase"}
+    ACTIONABLE_STATES = {"idle", "walk", "run", "jump", "attack", "run_attack", "chase"}
 
     def __init__(self, x, z, animation_data):
         super().__init__(x, z)
@@ -64,6 +64,7 @@ class Character(Entity):
 
         # Attack phase state machine: WINDUP -> ACTIVE -> RECOVERY -> FINISHED.
         self.attack_data = None # todo: rename to available_attacks: List[AttackData]
+        self.run_attack_data = None # used instead of attack_data while intent.running
         self.current_attack: AttackData = None
         self.attack_phase = AttackPhase.FINISHED
         self.attack_timer = 0.0
@@ -105,8 +106,10 @@ class Character(Entity):
         self._refresh_movement_state()
 
     def update_attack(self, dt):
-        if self.intent.wants_attack and self.attack_data:
-            self._try_start_attack(self.attack_data)
+        if self.intent.wants_attack:
+            attack = self._select_attack()
+            if attack:
+                self._try_start_attack(attack)
 
         if self.attack_phase == AttackPhase.FINISHED:
             return
@@ -115,7 +118,13 @@ class Character(Entity):
         # Phase timing/hitbox keep ticking regardless, but don't let this
         # stomp "hit"/"dead" - set_state() only guards "dead", not "hit".
         if self.attack_phase != AttackPhase.FINISHED and self.can_act():
-            self.set_state("attack")
+            is_run_attack = self.current_attack is self.run_attack_data
+            self.set_state("run_attack" if is_run_attack else "attack")
+
+    def _select_attack(self):
+        if self.intent.running and self.run_attack_data:
+            return self.run_attack_data
+        return self.attack_data
 
     def update_animation(self, dt):
         self.animation_manager.update(self.state)
