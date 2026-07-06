@@ -10,7 +10,8 @@ class PlayerConfig:
     speed: float = PLAYER_SPEED
     run_speed: float = PLAYER_RUN_SPEED
     jump_power: float = PLAYER_JUMP_POWER
-    air_move_speed: float = PLAYER_AIR_MOVE_SPEED
+    jump_air_move_speed: float = PLAYER_JUMP_AIR_MOVE_SPEED
+    run_air_move_speed: float = PLAYER_RUN_AIR_MOVE_SPEED
 
     animation_data: dict = None
     sprite_scale: int = 1

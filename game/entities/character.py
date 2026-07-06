@@ -57,6 +57,8 @@ class Character(Entity):
         self.move_speed = 0
         self.run_speed = 0
         self.jump_power = 0
+        self.jump_air_move_speed = 0
+        self.run_air_move_speed = 0
 
         self.intent = Intent()
 
@@ -131,9 +133,11 @@ class Character(Entity):
         return is_attacking or not self.can_act()
 
     def _apply_intent_to_velocity(self):
-        speed = self.move_speed
-        if self.intent.running:
-            speed = self.run_speed
+        airborne = self.y > 0
+        if airborne:
+            speed = self.run_air_move_speed if self.intent.running else self.jump_air_move_speed
+        else:
+            speed = self.run_speed if self.intent.running else self.move_speed
 
         self.vx = self.intent.move_x * speed
         self.vz = self.intent.move_z * speed

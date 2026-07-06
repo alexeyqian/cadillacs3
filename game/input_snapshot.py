@@ -37,7 +37,7 @@ class InputReader:
             up=bool(raw_keys[pygame.K_w]),
             down=bool(raw_keys[pygame.K_s]),
             running=self._dash_direction is not None,
-            jump_pressed=bool(raw_keys[pygame.K_SPACE]),
+            jump_pressed=bool(raw_keys[pygame.K_k]),
             attack_pressed=bool(raw_keys[pygame.K_j]),
         )
 

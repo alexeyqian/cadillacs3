@@ -86,8 +86,9 @@ ENEMY_SCORE_POINTS = 100
 # Pixels per second (movement is dt-scaled, not per-frame).
 PLAYER_SPEED = 250
 PLAYER_RUN_SPEED = PLAYER_SPEED * 4
-PLAYER_AIR_MOVE_SPEED=PLAYER_SPEED*1.5
 PLAYER_JUMP_POWER = 600
+PLAYER_JUMP_AIR_MOVE_SPEED=PLAYER_SPEED*1.5 # horizontal air control after a normal jump
+PLAYER_RUN_AIR_MOVE_SPEED=PLAYER_RUN_SPEED # horizontal air control after jumping out of a run
 ENEMY_SPEED=int(PLAYER_SPEED*0.5)
 ENEMY_RUN_SPEED=int(PLAYER_SPEED*0.9)
 ENEMY_Y_SPEED=int(ENEMY_SPEED*0.5)
