@@ -6,7 +6,7 @@ from game.settings import *
 from game.controllers.loot_drop_controller import LootDropController
 
 class Enemy(Character):
-    def __init__(self, x, z, enemy_type, animation_data, target): # target is Player
+    def __init__(self, x, z, enemy_type, animation_data):
         super().__init__(x, z, animation_data)
         self.width, self.height = ENEMY_W, ENEMY_H # todo: load from config
         self.collision_box_w, self.collision_box_h = ENEMY_COLLISION_W, ENEMY_COLLISION_H

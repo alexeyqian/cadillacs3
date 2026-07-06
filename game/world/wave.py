@@ -8,6 +8,8 @@ from game.factories.enemy_factory import EnemyFactory
 class SpawnInstruction:
     enemy_type: str
     side: str = "right"
+    y: Optional[int] = None
+    delay: Optional[int] = None
     capability_overrides: Optional[dict] = None
 
 

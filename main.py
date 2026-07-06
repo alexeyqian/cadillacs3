@@ -11,16 +11,11 @@ from game.draw import draw
 from game.input_snapshot import InputReader
 
 def main():
-    # Initialize Pygame
     pygame.init()
-
-    # Create the window
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Basic Pygame Window")
 
-    # Clock for controlling frame rate
     clock = pygame.time.Clock()
-
     camera = Camera()
     player = MustaphaPlayer(500, 500)
     stage_manager = StageManager(camera, player)
@@ -44,6 +39,13 @@ def main():
 
         # Update game state
         input = input_reader.read(pygame.key.get_pressed(), dt)
+
+        # World progression (wave spawns, stage clears) runs before the
+        # per-character phases, so anything spawned this frame still gets a
+        # full update cycle - including update_animation - before draw()
+        # renders it (a fresh enemy's animation_manager has no current
+        # animation at all until its first update_animation call).
+        stage.update(dt)
         characters = stage.get_all_characters()
 
         # Phase 1: decide. Reads input/AI state only, nothing moves yet,
@@ -65,9 +67,6 @@ def main():
         # Sync animation to whatever state the phases above landed on.
         for character in characters:
             character.update_animation(dt)
-
-        # world progression (wave spawns, stage clears).
-        #stage.update(dt)
 
         camera.update(player)
         TimerManager.update(dt)

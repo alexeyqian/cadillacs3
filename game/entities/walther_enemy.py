@@ -4,5 +4,4 @@ from game.entities.enemy import Enemy
 class WaltherEnemy(Enemy):
     def __init__(self, x, y):
         super().__init__(x, y, enemy_type="walther",
-                animation_data=WALTHER_ANIMATIONS,
-                sprite_scale=1)
+                animation_data=WALTHER_ANIMATIONS)

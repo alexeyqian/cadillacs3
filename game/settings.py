@@ -51,6 +51,7 @@ UI_FONT_SIZE=36
 ######## debug ########
 SHOW_COMBAT_BOXES=True
 SHOW_EXIT_RECT=True
+SHOW_DEBUG_TEXT=True
 # Dev only.
 # None means start from the first stage normally.
 # Can be a stage id, for example: "episode_1_stage_4_ruined_arena"

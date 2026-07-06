@@ -13,12 +13,30 @@ class Stage:
         self._load_from_data(stage_data)
 
     def get_all_characters(self):
-        return [self.player]
-        # todo: include self.enemies once spawning is wired up.
+        return [self.player] + self.enemies
+
+    def get_all_entities(self):
         # Non-character entities (weapons, projectiles, breakables) aren't
-        # Characters and don't belong in this list - they'd need their own
-        # update/draw pass.
-        #return [self.player] + self.enemies
+        # Characters and don't belong in get_all_characters().
+        return self.get_all_characters() + []
+
+    def update(self, dt):
+        self._update_waves()
+                
+    def _update_waves(self):
+        for wave in self.waves:
+            if wave.completed:
+                continue
+
+            if not wave.started:
+                if self.player.x < wave.trigger_x:
+                    continue
+                wave.start(self.camera.x)
+
+            wave.tick(len(self.enemies)) # appends any newly spawned enemy to self.enemies
+
+            if wave.is_spawning_done():
+                wave.completed = True
 
     def _load_from_data(self, stage_data):
         self.stage_id = stage_data["id"]
@@ -52,6 +70,8 @@ class Stage:
                     spawn_instructions.append(SpawnInstruction(
                         enemy_type=spawn_config["enemy_type"],
                         side=spawn_config.get("side", "right"),
+                        y=spawn_config.get("y"),
+                        delay=spawn_config.get("delay"),
                         capability_overrides=spawn_config.get("capability_overrides"),
                     ))
 
