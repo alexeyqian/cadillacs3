@@ -66,7 +66,7 @@ UI_FIRST_Y=32
 UI_FONT_SIZE=36
 
 ######## debug ########
-SHOW_COMBAT_BOXES=False
+SHOW_COMBAT_BOXES=True
 SHOW_EXIT_RECT=True
 # Dev only.
 # None means start from the first stage normally.

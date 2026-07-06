@@ -1,4 +1,6 @@
 import pygame
+from game.settings import SHOW_COMBAT_BOXES
+from game.colors import *
 from game.camera import world_to_screen
 from game.components.health_component import HealthComponent
 
@@ -38,6 +40,9 @@ class CharacterRenderer:
 
         if self.show_health_bar:
             self._draw_health_bar(screen, camera_x, frame_rect)
+        
+        if SHOW_COMBAT_BOXES:
+            self._draw_debug_boxes(screen, camera_x)
 
     def _draw_health_bar(self, screen, camera_x, frame_rect):
         owner = self.owner
@@ -49,3 +54,46 @@ class CharacterRenderer:
 
         pygame.draw.rect(screen, (120, 120, 120), (bar_x, frame_rect.y - hp_height, bar_width, 6))
         pygame.draw.rect(screen, (255, 0, 0), (bar_x, frame_rect.y - hp_height, hp_width, 6))
+
+    def _draw_debug_boxes(self, screen, camera_x, line_width=1):
+        collision_rect = self.owner.get_collision_rect()
+        hurt_rect = self.owner.get_hurt_rect()
+        hit_rect = self.owner.get_hit_rect()
+        body_rect = self.owner.get_frame_rect()
+
+        # collision rect
+        pygame.draw.rect(screen, BLUE_COLOR, (
+            collision_rect.x - camera_x,
+            collision_rect.y,
+            collision_rect.width,
+            collision_rect.height,
+        ), line_width)
+        pygame.draw.circle(
+            screen,
+            WHITE_COLOR,
+            (int(self.owner.x - camera_x), int(self.owner.y)),
+            3,
+        )
+        # hurt rect
+        pygame.draw.rect(screen, GREEN_COLOR, (
+            hurt_rect.x - camera_x,
+            hurt_rect.y,
+            hurt_rect.width,
+            hurt_rect.height,
+        ), line_width)
+        # hit rect
+        if hit_rect:
+            pygame.draw.rect(screen, RED_COLOR, (
+                hit_rect.x - camera_x,
+                hit_rect.y,
+                hit_rect.width,
+                hit_rect.height,
+            ), line_width)
+        # frame rect
+        pygame.draw.rect(screen, WHITE_COLOR, (
+            body_rect.x - camera_x,
+            body_rect.y,
+            body_rect.width,
+            body_rect.height,
+        ), line_width)
+

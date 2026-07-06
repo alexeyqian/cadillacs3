@@ -1,3 +1,4 @@
+import pygame
 from game.settings import *
 
 from game.entities.character import Character
@@ -14,12 +15,13 @@ class Player(Character):
     def __init__(self, x, z, player_type, animation_data):
         super().__init__(x, z, animation_data)
 
-        self.width = PLAYER_W
-        self.height = PLAYER_H
+        self.width, self.height = PLAYER_W, PLAYER_H
+        self.collision_box_w, self.collision_box_h = PLAYER_COLLISION_W, PLAYER_COLLISION_H
+        self.hurtbox_w, self.hurtbox_h = PLAYER_HURTBOX_W, PLAYER_HURTBOX_H
+
         self.tags.add("player")
         self.add_component(InteractionComponent())
         self.add_component(InventoryComponent())
-
         self.add_component(GrabController())
 
         config = get_player_config(player_type)
@@ -44,4 +46,7 @@ class Player(Character):
         self.intent.running = input.shift
         self.intent.wants_jump = input.jump_pressed
         self.intent.wants_attack = input.attack_pressed
+
+
+
 

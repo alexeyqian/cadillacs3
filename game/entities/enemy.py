@@ -8,10 +8,11 @@ from game.controllers.loot_drop_controller import LootDropController
 class Enemy(Character):
     def __init__(self, x, z, enemy_type, animation_data, target): # target is Player
         super().__init__(x, z, animation_data)
-        self.width = ENEMY_W
-        self.height = ENEMY_H
-        self.tags.add("enemy")
+        self.width, self.height = ENEMY_W, ENEMY_H # todo: load from config
+        self.collision_box_w, self.collision_box_h = ENEMY_COLLISION_W, ENEMY_COLLISION_H
+        self.hurtbox_w, self.hurtbox_h = ENEMY_HURTBOX_W, ENEMY_HURTBOX_H # todo: load hurtbox from config
 
+        self.tags.add("enemy")
         self.add_component(LootDropController())
 
         config = get_enemy_config(enemy_type)

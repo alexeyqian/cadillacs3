@@ -6,6 +6,7 @@ from engine.timer_manager import TimerManager
 from game.entities.entity import Entity
 from game.components.stats_component import StatsComponent
 from game.components.health_component import HealthComponent
+from game.components.collision_box_component import CollisionBoxComponent
 from game.components.hurtbox_component import HurtboxComponent
 from game.components.hitbox_component import HitboxComponent
 from game.components.status_effect_component import StatusEffectComponent
@@ -40,9 +41,13 @@ class Character(Entity):
 
     def __init__(self, x, z, animation_data):
         super().__init__(x, z)
+        # default values, real values load from player or enemy's config
         self.width, self.height = PLAYER_W, PLAYER_H
+        self.collision_box_w, self.collision_box_h = PLAYER_COLLISION_W, PLAYER_COLLISION_H
+        self.hurtbox_w, self.hurtbox_h = PLAYER_HURTBOX_W, PLAYER_HURTBOX_H
+
+        self.sprite_scale = 1.0
         self.alive = True
-        self.animation_manager = AnimationManager(animation_data)
 
         # State machine: gates which actions are currently allowed.
         self.state = "idle"
@@ -55,16 +60,18 @@ class Character(Entity):
         self.intent = Intent()
 
         # Attack phase state machine: WINDUP -> ACTIVE -> RECOVERY -> FINISHED.
-        self.attack_data = None
+        self.attack_data = None # todo: rename to available_attacks: List[AttackData]
         self.current_attack: AttackData = None
         self.attack_phase = AttackPhase.FINISHED
         self.attack_timer = 0.0
 
         self.add_component(StatsComponent())
         self.add_component(HealthComponent(100))
-        self.add_component(HurtboxComponent())
+        self.add_component(CollisionBoxComponent(self.collision_box_w, self.collision_box_h))
+        self.add_component(HurtboxComponent(self.hurtbox_w, self.hurtbox_h))
         self.add_component(HitboxComponent())
         self.add_component(StatusEffectComponent())
+        self.animation_manager = AnimationManager(animation_data)
 
     # --- State machine -----------------------------------------------------
 
@@ -91,7 +98,7 @@ class Character(Entity):
         if not self._is_action_locked():
             self._apply_intent_to_velocity()
 
-        self._apply_gravity_and_move(dt)
+        self._apply_move_and_gravity(dt)
         self._refresh_movement_state()
 
     def update_attack(self, dt):
@@ -132,10 +139,11 @@ class Character(Entity):
         if self.intent.wants_jump and self.y == 0:
             self.vy = self.jump_power
 
-    def _apply_gravity_and_move(self, dt):
-        self.vy -= self.GRAVITY * dt
+    def _apply_move_and_gravity(self, dt):
         self.x += self.vx * dt
         self.z += self.vz * dt
+
+        self.vy -= self.GRAVITY * dt
         self.y = max(0.0, self.y + self.vy * dt)
         if self.y == 0:
             self.vy = 0
@@ -183,11 +191,20 @@ class Character(Entity):
             # Knockback direction depends on the attacker's current facing,
             # so it's computed here rather than stored statically on AttackData.
             knockback = (self.current_attack.knockback_velocity * self.facing, 0)
+
+            # todo: use hitbox in attack data instead of animation config
+            frame = self.animation_manager.get_current_frame()
+            animation_hitbox = getattr(frame, "hitbox", None)
+
             hitbox.activate(
                 self.current_attack.damage,
                 knockback,
-                self.current_attack.hitbox_w,
-                self.current_attack.hitbox_h
+                animation_hitbox[0], # offset_x
+                animation_hitbox[1], # offset_z
+                animation_hitbox[2], # hitbox_w
+                animation_hitbox[3]  # hitbox_h
+                #self.current_attack.hitbox_w,
+                #self.current_attack.hitbox_h
             )
         elif new_phase != AttackPhase.ACTIVE and hitbox:
             hitbox.deactivate()
@@ -195,58 +212,57 @@ class Character(Entity):
         if new_phase == AttackPhase.FINISHED:
             self.current_attack = None
 
-    # --- Debug box getters (subclasses override; used only when
-    # SHOW_COMBAT_BOXES is on) -------------------------------------------
-
-    def get_frame_rect(self):
-        pass
-
     def get_collision_rect(self):
-        pass
+        return self.get_component(CollisionBoxComponent).get_rect()
 
     def get_hurt_rect(self):
-        pass
-
+        return self.get_component(HurtboxComponent).get_rect()
+    
     def get_hit_rect(self):
-        pass
+        hitbox = self.get_component(HitboxComponent)
+        if hitbox and hitbox.active:
+            return hitbox.get_rect()
+        return None
 
-    def draw_debug_boxes(self, screen, camera_x, line_width=1):
-        body_rect = self.get_frame_rect()
-        collision_rect = self.get_collision_rect()
-        hurt_rect = self.get_hurt_rect()
-        attack_rect = self.get_hit_rect()
+    def get_frame_rect(self):
+        frame = self.animation_manager.get_current_frame()
+        scale = self.sprite_scale
+        offset_x, offset_y = frame.offset
 
-        pygame.draw.rect(screen, WHITE_COLOR, (
-            body_rect.x - camera_x,
-            body_rect.y,
-            body_rect.width,
-            body_rect.height,
-        ), line_width)
+        frame_w = frame.image.get_width() * scale
+        frame_h = frame.image.get_height() * scale
+        offset_x *= scale
+        offset_y *= scale
 
-        pygame.draw.rect(screen, BLUE_COLOR, (
-            collision_rect.x - camera_x,
-            collision_rect.y,
-            collision_rect.width,
-            collision_rect.height,
-        ), line_width)
-        pygame.draw.circle(
-            screen,
-            WHITE_COLOR,
-            (int(self.x - camera_x), int(self.y)),
-            3,
+        if self.facing:
+            world_x = self.x + offset_x
+        else:
+            world_x = self.x - frame_w - offset_x
+
+        # todo: handle jumping later
+        world_y = self.z + offset_y
+
+        return pygame.Rect(
+            int(world_x),
+            int(world_y),
+            int(frame_w),
+            int(frame_h),
         )
 
-        pygame.draw.rect(screen, GREEN_COLOR, (
-            hurt_rect.x - camera_x,
-            hurt_rect.y,
-            hurt_rect.width,
-            hurt_rect.height,
-        ), line_width)
+    # todo: deprecated
+    def _convert_box_to_world_rect(self, box):
+        anchor_x = self.x
+        anchor_z = self.z # todo: update anchor_z if jumping
+        facing_right = self.facing
 
-        if attack_rect:
-            pygame.draw.rect(screen, RED_COLOR, (
-                attack_rect.x - camera_x,
-                attack_rect.y,
-                attack_rect.width,
-                attack_rect.height,
-            ), line_width)
+        if facing_right:
+            world_x = anchor_x + box.x
+        else:
+            world_x = anchor_x - box.x - box.width
+
+        return pygame.Rect(
+            int(world_x),
+            int(anchor_z + box.y),
+            int(box.width),
+            int(box.height)
+        )
