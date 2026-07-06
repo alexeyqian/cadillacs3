@@ -26,7 +26,7 @@ PLAYER_W=128 # static left/right facing width
 PLAYER_H=256
 # collision box is centered on bottom
 # COLLISION UNIT == UNIT_LENGTH == PIXEL_PER_GRID == player shoulder width
-PLAYER_COLLISION_W = 128
+PLAYER_COLLISION_W = 100
 PLAYER_COLLISION_H = 50
 # Lift player collision and hurt boxes while jumping so ground collisions do not
 # keep using the feet anchor while the character is airborne.
@@ -34,7 +34,7 @@ PLAYER_JUMP_BOX_Y_OFFSET = 256 # can use 128 should be good enough to avoid enem
 # default for most of times
 # some special movement might need special hurtbox
 PLAYER_HURTBOX_W = PLAYER_COLLISION_W
-PLAYER_HURTBOX_H = PLAYER_H - PLAYER_COLLISION_H
+PLAYER_HURTBOX_H = PLAYER_H
 PLAYER_HURTBOX_OFFSET_X=int(-1 * PLAYER_HURTBOX_W//2)
 PLAYER_HURTBOX_OFFSET_Y=-1*PLAYER_H
 
