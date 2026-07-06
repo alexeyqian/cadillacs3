@@ -109,11 +109,6 @@ DEFAULT_PLAYER_COMBO_ATTACKS = [
     DEFAULT_PLAYER_ATTACK_3_DATA,
 ]
 
-# Kept as the single "basic attack" for anything that doesn't use the combo
-# chain (e.g. a character with only one punch).
-DEFAULT_PLAYER_ATTACK_DATA = DEFAULT_PLAYER_ATTACK_1_DATA
-
-
 DEFAULT_PLAYER_RUN_ATTACK_DATA = AttackData(
     name="run_attack",
     delay=0,

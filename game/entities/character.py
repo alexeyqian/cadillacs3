@@ -60,6 +60,7 @@ class Character(Entity):
         self.intent = Intent()
 
         # Attack phase state machine: WINDUP -> ACTIVE -> RECOVERY -> FINISHED.
+        # the one attack for characters without a combo
         self.attack_data = None # single basic attack, used when combo_attacks is empty
         self.run_attack_data = None # used instead of attack_data while intent.running
         self.combo_attacks = [] # e.g. [attack1, attack2, attack3]; empty means no combo chain
