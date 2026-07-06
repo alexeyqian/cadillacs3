@@ -8,6 +8,7 @@ class HurtboxComponent:
         
     def get_rect(self):
         return pygame.Rect(
-            self.owner.x - self.width//2, 
-            self.owner.z - self.height, 
+            self.owner.x - self.width//2,
+            # -y for jumping when needed
+            self.owner.z - self.owner.y - self.height,
             self.width, self.height)

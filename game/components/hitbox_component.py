@@ -30,7 +30,8 @@ class HitboxComponent:
     
     def get_rect(self):
         x = self.owner.x + (self.offset_x if self.owner.facing == 1 else -self.offset_x - self.width)
-        y = self.owner.z + self.offset_z
+        # # -y for jumping when needed
+        y = self.owner.z - self.owner.y + self.offset_z
         return pygame.Rect(x, y, self.width, self.height)
 
     def update(self, dt):

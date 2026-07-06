@@ -13,9 +13,7 @@ PLAYER_H=256
 # COLLISION UNIT == UNIT_LENGTH == PIXEL_PER_GRID == player shoulder width
 PLAYER_COLLISION_W = 100
 PLAYER_COLLISION_H = 50
-# Lift player collision and hurt boxes while jumping so ground collisions do not
-# keep using the feet anchor while the character is airborne.
-PLAYER_JUMP_BOX_Y_OFFSET = 256 # can use 128 should be good enough to avoid enemies' collision box
+
 # default for most of times
 # some special movement might need special hurtbox
 PLAYER_HURTBOX_W = PLAYER_COLLISION_W
@@ -71,7 +69,7 @@ ENEMY_SCORE_POINTS = 100
 # Pixels per second (movement is dt-scaled, not per-frame).
 PLAYER_SPEED = 250
 PLAYER_RUN_SPEED = PLAYER_SPEED * 4
-PLAYER_JUMP_POWER = 600
+PLAYER_JUMP_POWER = 700
 PLAYER_JUMP_AIR_MOVE_SPEED=PLAYER_SPEED*1.5 # horizontal air control after a normal jump
 ENEMY_SPEED=int(PLAYER_SPEED*0.5)
 ENEMY_RUN_SPEED=int(PLAYER_SPEED*0.9)

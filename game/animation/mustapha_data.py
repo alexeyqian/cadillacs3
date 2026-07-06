@@ -30,6 +30,7 @@ MUSTAPHA_ANIMATIONS = {
         "frames_count": 4,
         "frame_width": 384,
         "frame_height": 384,
+        "frame_durations": (10, 10, 10, 10)
     },
     "attack": {
         "file": "assets/player/mustapha_attack_3x.png",
