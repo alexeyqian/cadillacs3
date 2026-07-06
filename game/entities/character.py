@@ -32,8 +32,6 @@ class Character(Entity):
     in order: update_intention -> update_movement -> update_attack -> update_animation.
     """
 
-    GRAVITY = 1500
-
     # States in which the character still responds to intent-driven
     # movement/attack. "hit" and "dead" are deliberately excluded, so a
     # stun or death naturally overrides whatever the player/AI is asking for.
@@ -165,7 +163,7 @@ class Character(Entity):
         self.x += self.vx * dt
         self.z += self.vz * dt
 
-        self.vy -= self.GRAVITY * dt
+        self.vy -= GRAVITY * dt
         self.y = max(0.0, self.y + self.vy * dt)
         if self.y == 0:
             self.vy = 0
@@ -265,8 +263,8 @@ class Character(Entity):
         else:
             world_x = self.x - frame_w - offset_x
 
-        # todo: handle jumping later
-        world_y = self.z + offset_y
+        # -y for jumping when needed
+        world_y = self.z - self.y + offset_y
 
         return pygame.Rect(
             int(world_x),
