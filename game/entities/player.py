@@ -43,7 +43,7 @@ class Player(Character):
     def update_intention(self, dt, input, player_x, player_z):
         self.intent.move_x = input.right - input.left
         self.intent.move_z = input.down - input.up
-        self.intent.running = input.shift
+        self.intent.running = input.running
         self.intent.wants_jump = input.jump_pressed
         self.intent.wants_attack = input.attack_pressed
 

@@ -8,7 +8,7 @@ from game.world.stage import Stage
 from game.world.stage_manager import StageManager
 from game.managers.combat_manager import CombatManager
 from game.draw import draw
-from game.input_snapshot import read_input_snapshot
+from game.input_snapshot import InputReader
 
 def main():
     # Initialize Pygame
@@ -27,6 +27,7 @@ def main():
     stage = stage_manager.load_current_stage()
 
     combat_manager = CombatManager()
+    input_reader = InputReader()
 
     running = True
     while running:
@@ -42,7 +43,7 @@ def main():
                     running = False
 
         # Update game state
-        input = read_input_snapshot(pygame.key.get_pressed())
+        input = input_reader.read(pygame.key.get_pressed(), dt)
         characters = stage.get_all_characters()
 
         # Phase 1: decide. Reads input/AI state only, nothing moves yet,

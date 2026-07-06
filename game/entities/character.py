@@ -156,7 +156,7 @@ class Character(Entity):
         if self.y > 0:
             self.set_state("jump")
         elif self.intent.move_x != 0 or self.intent.move_z != 0:
-            self.set_state("walk")
+            self.set_state("run" if self.intent.running else "walk")
         else:
             self.set_state("idle")
 
