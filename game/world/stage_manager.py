@@ -18,7 +18,7 @@ class StageManager:
 
     def advance_to_next_stage(self):
         has_next_stage = self.current_stage_index + 1 < len(self.stages)
-        if not has_next_stage():
+        if not has_next_stage:
             return None
 
         self.current_stage_index += 1

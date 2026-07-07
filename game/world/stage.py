@@ -1,3 +1,4 @@
+import pygame
 from game.settings import SCREEN_WIDTH
 from game.world.lane import Lane
 from game.world.wave import SpawnInstruction, Wave
@@ -33,6 +34,12 @@ class Stage:
         self._update_waves()
         self.floating_text_manager.update(dt)
         self.warning_manager.update(dt)
+
+    def is_complete(self):
+        if self.completion == "clear_waves_then_exit" and self.current_wave is not None:
+            return False
+        exit_rect = pygame.Rect(*self.exit_rect)
+        return self.player.get_collision_rect().colliderect(exit_rect)
 
     def clamp_characters_to_bounds(self):
         if self.locked_arena_bounds:

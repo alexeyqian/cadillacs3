@@ -84,6 +84,16 @@ def main():
             character.update_animation(dt)
 
         stage.update_clean()
+
+        # All waves cleared and the player has reached the exit - advance to
+        # the next stage. If there isn't one, just stay put (nothing else to
+        # load).
+        if stage.is_complete():
+            next_stage = stage_manager.advance_to_next_stage()
+            if next_stage is not None:
+                stage = next_stage
+                combat_manager.stage = stage
+
         camera.update(player, stage.world_width)
         TimerManager.update(dt)
         draw(stage, screen)

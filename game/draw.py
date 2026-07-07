@@ -1,5 +1,5 @@
 import pygame
-from game.settings import SHOW_DEBUG_INFO
+from game.settings import SHOW_DEBUG_INFO, SHOW_EXIT_RECT
 from game.colors import *
 from game.components.health_component import HealthComponent
 
@@ -15,12 +15,19 @@ def draw(stage, screen):
 def _draw_world(stage, screen):
     camera = stage.camera
     stage.background.draw_far_and_mid(screen, camera.x)
+    if SHOW_EXIT_RECT:
+        _draw_exit_rect(stage, screen, camera.x)
     characters = stage.get_all_characters()
     # depth sorting
     characters.sort(key=lambda c: c.z)
     for character in characters:
         character.draw(screen, camera.x)
     stage.floating_text_manager.draw(screen, camera.x)
+
+def _draw_exit_rect(stage, screen, camera_x):
+    x, y, w, h = stage.exit_rect
+    rect = (x - camera_x, y, w, h)
+    pygame.draw.rect(screen, GREEN_COLOR, rect, 3)
 
 def _draw_ui(stage, screen):
     _draw_player_hud(stage.player, screen)
