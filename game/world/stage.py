@@ -6,6 +6,7 @@ from game.entities.breakable_object import BreakableObject
 # from game.entities.explosive_barrel import ExplosiveBarrel
 from game.entities.weapon import Weapon
 from game.managers.floating_text_manager import FloatingTextManager
+from game.managers.warning_manager import WarningManager
 
 class Stage:
     def __init__(self, camera, player, stage_data):
@@ -13,6 +14,7 @@ class Stage:
         self.player = player
         self.enemies = []
         self.floating_text_manager = FloatingTextManager()
+        self.warning_manager = WarningManager()
         # (min_x, max_x) while a wave's arena is locked - camera frozen,
         # player/enemies walled to the current screen. None means no lock;
         # movement falls back to the full stage bounds.
@@ -30,6 +32,7 @@ class Stage:
     def update(self, dt):
         self._update_waves()
         self.floating_text_manager.update(dt)
+        self.warning_manager.update(dt)
 
     def clamp_characters_to_bounds(self):
         if self.locked_arena_bounds:
@@ -51,6 +54,8 @@ class Stage:
                 return
             wave.start(self.camera.x)
             self._lock_arena(self.camera.x)
+            message = "BOSS AHEAD!" if wave.has_boss else "WAVE OF ENEMIES"
+            self.warning_manager.show(message)
 
         wave.tick(len(self.enemies)) # appends any newly spawned enemy to self.enemies
 
@@ -130,6 +135,7 @@ class Stage:
                 trigger_x=wave_config["trigger_x"],
                 spawn_instructions=spawn_instructions,
                 max_active=wave_config.get("max_active", 4),
+                has_boss=wave_config.get("has_boss", False),
             ))
         return waves
     

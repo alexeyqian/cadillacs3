@@ -23,12 +23,13 @@ class PendingSpawn:
 
 
 class Wave:
-    def __init__(self, stage, trigger_x, spawn_instructions, max_active=4):
+    def __init__(self, stage, trigger_x, spawn_instructions, max_active=4, has_boss=False):
         self.stage = stage
         self.trigger_x = trigger_x
         self.started = False
         self.completed = False
         self.max_active = max_active
+        self.has_boss = has_boss
         self.spawn_instructions = spawn_instructions
         self.pending_spawns = []
         self.spawn_timer = 0

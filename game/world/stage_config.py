@@ -176,6 +176,7 @@ STAGES = [
             },
             {
                 "trigger_x": 2800,
+                "has_boss": True,
                 "spawns": [
                     {
                         "enemy_type": "walther",

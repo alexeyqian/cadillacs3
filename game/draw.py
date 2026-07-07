@@ -1,9 +1,11 @@
 import pygame
 from game.settings import SHOW_DEBUG_TEXT
+from game.colors import *
 from game.components.health_component import HealthComponent
 
 _debug_font = None
 _hud_font = None
+_warning_font = None
 
 
 def draw(stage, screen):
@@ -24,6 +26,8 @@ def _draw_ui(stage, screen):
     _draw_player_hud(stage.player, screen)
     if SHOW_DEBUG_TEXT:
         _draw_debug_attack_text(stage.player, screen)
+    if stage.warning_manager.active:
+        _draw_warning(stage.warning_manager, screen)
 
 def _draw_player_hud(player, screen):
     global _hud_font
@@ -41,6 +45,16 @@ def _draw_player_hud(player, screen):
 
     score_surface = _hud_font.render(f"Score: {player.score}", True, (255, 255, 255))
     screen.blit(score_surface, (x, y + bar_height + 6))
+
+def _draw_warning(warning_manager, screen):
+    global _warning_font
+    if _warning_font is None:
+        _warning_font = pygame.font.SysFont(None, 48, bold=True)
+
+    surface = _warning_font.render(warning_manager.message, True, YELLOW_COLOR)
+    x = screen.get_width() // 2 - surface.get_width() // 2
+    y = screen.get_height() // 2 - surface.get_height() // 2
+    screen.blit(surface, (x, y))
 
 def _draw_debug_attack_text(player, screen):
     global _debug_font
