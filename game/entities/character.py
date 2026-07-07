@@ -3,6 +3,7 @@ import pygame
 from game.settings import *
 from game.colors import *
 from engine.timer_manager import TimerManager
+from engine.event_bus import EventBus
 from game.entities.entity import Entity
 from game.components.stats_component import StatsComponent
 from game.components.health_component import HealthComponent
@@ -226,6 +227,7 @@ class Character(Entity):
         if not attack.keep_moving:
             self.vx = 0  # stop moving during attack
             self.vz = 0
+        EventBus.publish("attack_started", self, attack.name)
         return True
 
     def _tick_attack_phase(self, dt):

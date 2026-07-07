@@ -9,6 +9,7 @@ from game.world.stage_manager import StageManager
 from game.managers.combat_manager import CombatManager
 from game.managers.collision_manager import CollisionManager
 from game.managers.enemy_ai_manager import EnemyAIManager
+from game.managers.audio_manager import AudioManager
 from game.draw import draw
 from game.input_snapshot import InputReader
 
@@ -26,6 +27,7 @@ def main():
     combat_manager = CombatManager(stage)
     collision_manager = CollisionManager()
     enemy_ai_manager = EnemyAIManager()
+    audio_manager = AudioManager()
     input_reader = InputReader()
 
     running = True
