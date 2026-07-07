@@ -41,6 +41,17 @@ class Stage:
             if wave.is_spawning_done():
                 wave.completed = True
 
+    def update_clean(self):
+        pass
+        #self.enemies[:] = [e for e in self.enemies if not e.is_ready_to_remove()]
+        #self.projectiles[:] = [p for p in self.projectiles if p.active]
+        #self.enemy_projectiles[:] = [p for p in self.enemy_projectiles if p.active]
+        #self.objects[:] = [o for o in self.objects if o.hp > 0]
+        #self.loot_items[:] = [l for l in self.loot_items if l.active]
+        #self.hit_sparks[:] = [s for s in self.hit_sparks if s.active]
+        #self.floating_texts[:] = [t for t in self.floating_texts if t.active]
+        #self.explosions[:] = [e for e in self.explosions if e.active]
+
     def _load_from_data(self, stage_data):
         self.stage_id = stage_data["id"]
         self.stage_name = stage_data["name"]

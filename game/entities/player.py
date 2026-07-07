@@ -11,6 +11,7 @@ from game.entities.attack_data import (
 
 from game.components.interaction_component import InteractionComponent
 from game.components.inventory_component import InventoryComponent
+from game.components.hurtbox_component import HurtboxComponent
 from game.controllers.grab_controller import GrabController
 
 
@@ -44,6 +45,9 @@ class Player(Character):
         self.run_attack_data = DEFAULT_PLAYER_RUN_ATTACK_DATA
 
         self.sprite_scale = config.sprite_scale
+
+        self.get_component(HurtboxComponent).configure(
+            PLAYER_HURTBOX_W, PLAYER_HURTBOX_H, PLAYER_HURTBOX_AIRBORNE_H)
 
     def update_intention(self, dt, input, player_x, player_z):
         self.intent.move_x = input.right - input.left

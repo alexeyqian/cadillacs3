@@ -3,6 +3,7 @@ from game.entities.enemy_config import get_enemy_config
 from game.entities.character_renderer import CharacterRenderer
 
 from game.settings import *
+from game.components.hurtbox_component import HurtboxComponent
 from game.controllers.loot_drop_controller import LootDropController
 
 class Enemy(Character):
@@ -10,7 +11,7 @@ class Enemy(Character):
         super().__init__(x, z, animation_data)
         self.width, self.height = ENEMY_W, ENEMY_H # todo: load from config
         self.collision_box_w, self.collision_box_h = ENEMY_COLLISION_W, ENEMY_COLLISION_H
-        self.hurtbox_w, self.hurtbox_h = ENEMY_HURTBOX_W, ENEMY_HURTBOX_H # todo: load hurtbox from config
+        self.hurtbox_w, self.hurtbox_h = ENEMY_HURTBOX_W, ENEMY_HURTBOX_H
 
         self.tags.add("enemy")
         self.add_component(LootDropController())
@@ -30,6 +31,8 @@ class Enemy(Character):
         self.score_points = config.score_points
 
         self.sprite_scale = config.sprite_scale
+
+        self.get_component(HurtboxComponent).configure(config.hurt_box_w, config.hurt_box_h)
 
     def update_intention(self, dt, keys, player_x, player_z):
         dx = player_x - self.x

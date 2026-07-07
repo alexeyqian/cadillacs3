@@ -18,6 +18,10 @@ PLAYER_COLLISION_H = 50
 # some special movement might need special hurtbox
 PLAYER_HURTBOX_W = PLAYER_COLLISION_W
 PLAYER_HURTBOX_H = PLAYER_H
+# Shorter while airborne (legs tucked up out of reach of low/sweep attacks).
+# Anchored from the same top edge as PLAYER_HURTBOX_H, so only the leg
+# region is excluded - see HurtboxComponent.get_rect().
+PLAYER_HURTBOX_AIRBORNE_H = int(PLAYER_HURTBOX_H * 0.6)
 PLAYER_HURTBOX_OFFSET_X=int(-1 * PLAYER_HURTBOX_W//2)
 PLAYER_HURTBOX_OFFSET_Y=-1*PLAYER_H
 
@@ -132,7 +136,7 @@ RUN_ATTACK_DAMAGE=28
 RUN_ATTACK_WINDUP_DURATION=4
 RUN_ATTACK_ACTIVE_DURATION=15
 RUN_ATTACK_RECOVERY_DURATION=6
-RUN_ATTACK_COOLDOWN=20
+RUN_ATTACK_COOLDOWN=10
 RUN_ATTACK_HIT_STUN_DURATION=25
 RUN_ATTACK_KNOCKBACK_VELOCITY=200 # pixels per second (dt-scaled physics)
 
