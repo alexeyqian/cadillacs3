@@ -21,9 +21,6 @@ class AttackData:
     combo_window: float = 0 # how long after finishing this attack a repeat press continues the combo
     damage: float = 10
     knockback: tuple = ()
-    # some attack is special, such as mustapha's run attack is flying attack, which is airborne
-    # other player's run attack might be not airborne,
-    launch_power: float = 0 # initial upward velocity applied to the attacker on start
     keep_moving: bool = False # if True, intent-driven movement keeps applying during this attack
 
     hitbox_offset_x: int = 0 # deprecated
@@ -113,7 +110,6 @@ DEFAULT_PLAYER_RUN_ATTACK_DATA = AttackData(
     name="run_attack",
     delay=0,
     damage=RUN_ATTACK_DAMAGE,
-    launch_power=RUN_ATTACK_LAUNCH_POWER,
     keep_moving=True,
     windup=RUN_ATTACK_WINDUP_DURATION / FPS,
     active=RUN_ATTACK_ACTIVE_DURATION / FPS,

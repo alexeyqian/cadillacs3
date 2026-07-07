@@ -8,6 +8,9 @@ HIT_STUN_DURATION = 0.4  # seconds; matches HealthComponent's invulnerability wi
 class CombatManager:
     """Resolves collisions between active hitboxes and hurtboxes each frame."""
 
+    def __init__(self, stage=None):
+        self.stage = stage
+
     def resolve(self, characters):
         for attacker in characters:
             if not attacker.alive:
@@ -41,5 +44,10 @@ class CombatManager:
 
     def _award_score(self, attacker, target):
         points = getattr(target, "score_points", 0)
-        if points and hasattr(attacker, "score"):
-            attacker.score += points
+        if not points or not hasattr(attacker, "score"):
+            return
+
+        attacker.score += points
+        if self.stage.floating_text_manager:
+            spawn_z = target.renderer.get_health_bar_top_z()
+            self.stage.floating_text_manager.spawn(f"+{points}", target.x, spawn_z)

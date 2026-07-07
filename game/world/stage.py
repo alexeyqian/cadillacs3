@@ -4,12 +4,14 @@ from game.world.background import Background
 from game.entities.breakable_object import BreakableObject
 # from game.entities.explosive_barrel import ExplosiveBarrel
 from game.entities.weapon import Weapon
+from game.managers.floating_text_manager import FloatingTextManager
 
 class Stage:
     def __init__(self, camera, player, stage_data):
         self.camera = camera
         self.player = player
         self.enemies = []
+        self.floating_text_manager = FloatingTextManager()
         self._load_from_data(stage_data)
 
     def get_all_characters(self):
@@ -22,6 +24,7 @@ class Stage:
 
     def update(self, dt):
         self._update_waves()
+        self.floating_text_manager.update(dt)
                 
     def _update_waves(self):
         for wave in self.waves:

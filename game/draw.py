@@ -1,5 +1,5 @@
 import pygame
-from game.settings import SHOW_DEBUG_TEXT, UI_FIRST_X, UI_FIRST_Y, UI_FONT_SIZE
+from game.settings import SHOW_DEBUG_TEXT
 from game.components.health_component import HealthComponent
 
 _debug_font = None
@@ -18,6 +18,7 @@ def _draw_world(stage, screen):
     characters.sort(key=lambda c: c.z)
     for character in characters:
         character.draw(screen, camera.x)
+    stage.floating_text_manager.draw(screen, camera.x)
 
 def _draw_ui(stage, screen):
     _draw_player_hud(stage.player, screen)
@@ -27,9 +28,9 @@ def _draw_ui(stage, screen):
 def _draw_player_hud(player, screen):
     global _hud_font
     if _hud_font is None:
-        _hud_font = pygame.font.SysFont(None, UI_FONT_SIZE)
+        _hud_font = pygame.font.SysFont(None, 36)
 
-    x, y = UI_FIRST_X, UI_FIRST_Y
+    x, y = 32, 32
     bar_width, bar_height = 200, 24
 
     health = player.get_component(HealthComponent)

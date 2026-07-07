@@ -55,7 +55,6 @@ class StageManager:
         #self.objects.clear()
         #self.loot_items.clear()
         #self.hit_sparks.clear()
-        #self.floating_texts.clear()
         #self.explosions.clear()
         #self.objects.clear()
 

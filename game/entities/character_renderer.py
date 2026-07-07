@@ -6,9 +6,22 @@ from game.components.health_component import HealthComponent
 
 
 class CharacterRenderer:
+    HP_BAR_HEIGHT = 12  # gap between the sprite's top edge and the health bar
+
     def __init__(self, owner, show_health_bar=False):
         self.owner = owner
         self.show_health_bar = show_health_bar
+
+    def get_health_bar_top_z(self):
+        """World z whose screen row (at y=0) lines up with the top of this
+        character's health bar - see _draw_health_bar, which computes the
+        same offset from the sprite's frame. Lets other systems (e.g. a
+        floating score popup) anchor to the bar without duplicating the
+        sprite-offset math and drifting out of sync with it."""
+        owner = self.owner
+        frame = owner.animation_manager.get_current_frame()
+        offset_y = frame.offset[1] if frame else 0
+        return owner.z - owner.y + offset_y - self.HP_BAR_HEIGHT
 
     def draw(self, screen, camera_x):
         owner = self.owner
@@ -50,10 +63,10 @@ class CharacterRenderer:
         bar_x = int(owner.x - camera_x - bar_width / 2)
         health = owner.get_component(HealthComponent)
         hp_width = int(bar_width * (health.health / health.max_health))
-        hp_height = 12
 
-        pygame.draw.rect(screen, (120, 120, 120), (bar_x, frame_rect.y - hp_height, bar_width, 6))
-        pygame.draw.rect(screen, (255, 0, 0), (bar_x, frame_rect.y - hp_height, hp_width, 6))
+        bar_top = frame_rect.y - self.HP_BAR_HEIGHT
+        pygame.draw.rect(screen, (120, 120, 120), (bar_x, bar_top, bar_width, 6))
+        pygame.draw.rect(screen, (255, 0, 0), (bar_x, bar_top, hp_width, 6))
 
     def _draw_debug_boxes(self, screen, camera_x, line_width=1):
         collision_rect = self.owner.get_collision_rect()

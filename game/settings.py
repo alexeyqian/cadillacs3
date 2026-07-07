@@ -40,14 +40,6 @@ ENEMY_HITBOX_H = int(ENEMY_H*0.2)
 ENEMY_HITBOX_OFFSET_X = int(ENEMY_W/2)
 ENEMY_HITBOX_OFFSET_Y = int(-1*(ENEMY_HURTBOX_H + 70))
 
-# fallback walkable area height
-LANE_TOP=600-PLAYER_H
-LANE_BOTTOM = SCREEN_HEIGHT-PLAYER_H-100
-
-UI_FIRST_X=32
-UI_FIRST_Y=32
-UI_FONT_SIZE=36
-
 ######## debug ########
 SHOW_COMBAT_BOXES=True
 SHOW_EXIT_RECT=True
@@ -55,8 +47,8 @@ SHOW_DEBUG_TEXT=True
 # Dev only.
 # None means start from the first stage normally.
 # Can be a stage id, for example: "episode_1_stage_4_ruined_arena"
-START_STAGE=None
 #"episode_1_stage_4_ruined_arena"
+START_STAGE=None
 
 ######## health and score ########
 PLAYER_LIVES=1 #3
@@ -68,7 +60,7 @@ ENEMY_SCORE_POINTS = 100
 
 ######## speed ########
 # Pixels per second (movement is dt-scaled, not per-frame).
-PLAYER_SPEED = 250
+PLAYER_SPEED = 400
 PLAYER_RUN_SPEED = PLAYER_SPEED * 4
 PLAYER_JUMP_POWER = 700
 PLAYER_JUMP_AIR_MOVE_SPEED=PLAYER_SPEED*1.5 # horizontal air control after a normal jump
@@ -140,10 +132,9 @@ RUN_ATTACK_DAMAGE=28
 RUN_ATTACK_WINDUP_DURATION=4
 RUN_ATTACK_ACTIVE_DURATION=15
 RUN_ATTACK_RECOVERY_DURATION=6
-RUN_ATTACK_COOLDOWN=30
+RUN_ATTACK_COOLDOWN=20
 RUN_ATTACK_HIT_STUN_DURATION=25
-RUN_ATTACK_KNOCKBACK_VELOCITY=400 # pixels per second (dt-scaled physics)
-RUN_ATTACK_LAUNCH_POWER=400 # initial upward velocity; keeps the player airborne through the swing
+RUN_ATTACK_KNOCKBACK_VELOCITY=200 # pixels per second (dt-scaled physics)
 
 # TODO: below design is too complicated, might remove?
 RUN_ATTACK_FULL_POWER_DISTANCE=240

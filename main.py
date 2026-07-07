@@ -21,7 +21,7 @@ def main():
     stage_manager = StageManager(camera, player)
     stage = stage_manager.load_current_stage()
 
-    combat_manager = CombatManager()
+    combat_manager = CombatManager(stage)
     input_reader = InputReader()
 
     running = True
