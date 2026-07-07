@@ -42,21 +42,30 @@ class Stage:
             character.z = max(self.lane_top, min(character.z, self.lane_bottom))
 
     def _update_waves(self):
-        for wave in self.waves:
-            if wave.completed:
-                continue
+        wave = self.current_wave
+        if wave is None:
+            return  # no wave active - either none configured, or all cleared
 
-            if not wave.started:
-                if self.player.x < wave.trigger_x:
-                    continue
-                wave.start(self.camera.x)
-                self._lock_arena(self.camera.x)
+        if not wave.started:
+            if self.player.x < wave.trigger_x:
+                return
+            wave.start(self.camera.x)
+            self._lock_arena(self.camera.x)
 
-            wave.tick(len(self.enemies)) # appends any newly spawned enemy to self.enemies
+        wave.tick(len(self.enemies)) # appends any newly spawned enemy to self.enemies
 
-            if wave.is_cleared():
-                wave.completed = True
-                self._unlock_arena()
+        if wave.is_cleared():
+            wave.completed = True
+            self._unlock_arena()
+            self._advance_to_next_wave()
+
+    def _advance_to_next_wave(self):
+        self.current_wave_index += 1
+        self.current_wave = (
+            self.waves[self.current_wave_index]
+            if self.current_wave_index < len(self.waves)
+            else None
+        )
 
     def _lock_arena(self, camera_x):
         self.camera.locked = True
@@ -90,6 +99,8 @@ class Stage:
         self.lane_system = Lane(self.lane_top, self.lane_bottom)
 
         self.waves = self._build_waves(stage_data["waves"])
+        self.current_wave_index = 0
+        self.current_wave = self.waves[0] if self.waves else None
 
         far = stage_data.get("background_far", stage_data["background"])
         mid = stage_data.get("background_mid", stage_data["background"])
