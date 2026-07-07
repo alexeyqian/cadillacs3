@@ -1,3 +1,4 @@
+from game.settings import SCREEN_WIDTH
 from game.world.lane import Lane
 from game.world.wave import SpawnInstruction, Wave
 from game.world.background import Background
@@ -12,6 +13,10 @@ class Stage:
         self.player = player
         self.enemies = []
         self.floating_text_manager = FloatingTextManager()
+        # (min_x, max_x) while a wave's arena is locked - camera frozen,
+        # player/enemies walled to the current screen. None means no lock;
+        # movement falls back to the full stage bounds.
+        self.locked_arena_bounds = None
         self._load_from_data(stage_data)
 
     def get_all_characters(self):
@@ -26,9 +31,15 @@ class Stage:
         self._update_waves()
         self.floating_text_manager.update(dt)
 
-    def clamp_player_to_bounds(self):
-        self.player.x = max(0, min(self.player.x, self.world_width))
-        self.player.z = max(self.lane_top, min(self.player.z, self.lane_bottom))
+    def clamp_characters_to_bounds(self):
+        if self.locked_arena_bounds:
+            min_x, max_x = self.locked_arena_bounds
+        else:
+            min_x, max_x = 0, self.world_width
+
+        for character in self.get_all_characters():
+            character.x = max(min_x, min(character.x, max_x))
+            character.z = max(self.lane_top, min(character.z, self.lane_bottom))
 
     def _update_waves(self):
         for wave in self.waves:
@@ -39,11 +50,22 @@ class Stage:
                 if self.player.x < wave.trigger_x:
                     continue
                 wave.start(self.camera.x)
+                self._lock_arena(self.camera.x)
 
             wave.tick(len(self.enemies)) # appends any newly spawned enemy to self.enemies
 
-            if wave.is_spawning_done():
+            if wave.is_cleared():
                 wave.completed = True
+                self._unlock_arena()
+
+    def _lock_arena(self, camera_x):
+        self.camera.locked = True
+        self.camera.locked_x = camera_x
+        self.locked_arena_bounds = (camera_x, camera_x + SCREEN_WIDTH)
+
+    def _unlock_arena(self):
+        self.camera.locked = False
+        self.locked_arena_bounds = None
 
     def update_clean(self):
         self.enemies[:] = [e for e in self.enemies if not e.is_ready_to_remove()]

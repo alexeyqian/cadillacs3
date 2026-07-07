@@ -32,6 +32,7 @@ class Wave:
         self.spawn_instructions = spawn_instructions
         self.pending_spawns = []
         self.spawn_timer = 0
+        self.spawned_enemies = []
 
     def start(self, camera_x=0):
         self.started = True
@@ -79,7 +80,14 @@ class Wave:
         )
         self.spawn_timer = self.pending_spawns[0].delay if self.pending_spawns else 0
         self.stage.enemies.append(enemy)
+        self.spawned_enemies.append(enemy)
         return [enemy]
 
     def is_spawning_done(self):
         return not self.pending_spawns
+
+    def is_cleared(self):
+        """All of this wave's spawns are out and every enemy it spawned is
+        dead - not just "finished spawning". Drives when the arena lock
+        (camera + movement bounds) releases."""
+        return self.is_spawning_done() and all(not e.alive for e in self.spawned_enemies)
