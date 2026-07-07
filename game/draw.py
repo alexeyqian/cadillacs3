@@ -1,5 +1,5 @@
 import pygame
-from game.settings import SHOW_DEBUG_TEXT
+from game.settings import SHOW_DEBUG_INFO
 from game.colors import *
 from game.components.health_component import HealthComponent
 
@@ -24,7 +24,7 @@ def _draw_world(stage, screen):
 
 def _draw_ui(stage, screen):
     _draw_player_hud(stage.player, screen)
-    if SHOW_DEBUG_TEXT:
+    if SHOW_DEBUG_INFO:
         _draw_debug_attack_text(stage.player, screen)
     if stage.warning_manager.active:
         _draw_warning(stage.warning_manager, screen)

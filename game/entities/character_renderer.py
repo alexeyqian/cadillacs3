@@ -1,5 +1,5 @@
 import pygame
-from game.settings import SHOW_COMBAT_BOXES, DEAD_FLASH_INTERVAL_FRAMES
+from game.settings import SHOW_DEBUG_INFO, DEAD_FLASH_INTERVAL_FRAMES
 from game.colors import *
 from game.camera import world_to_screen
 from game.components.health_component import HealthComponent
@@ -56,7 +56,7 @@ class CharacterRenderer:
         if self.show_health_bar:
             self._draw_health_bar(screen, camera_x, frame_rect)
         
-        if SHOW_COMBAT_BOXES:
+        if SHOW_DEBUG_INFO:
             self._draw_debug_boxes(screen, camera_x)
 
     def _is_sprite_visible(self):
