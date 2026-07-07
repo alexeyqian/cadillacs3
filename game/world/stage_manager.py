@@ -29,6 +29,10 @@ class StageManager:
     def get_current_stage(self):
         return self.current_stage
 
+    def load_stage_by_id(self, stage_id):
+        self.current_stage_index = self._find_stage_index(stage_id)
+        return self.load_current_stage()
+
     def _find_stage_index(self, stage_id):
         if stage_id is None:
             return 0

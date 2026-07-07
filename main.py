@@ -10,6 +10,8 @@ from game.managers.combat_manager import CombatManager
 from game.managers.collision_manager import CollisionManager
 from game.managers.enemy_ai_manager import EnemyAIManager
 from game.managers.audio_manager import AudioManager
+from game.managers.pause_menu import PauseMenu
+from game.managers.save_manager import SaveManager
 from game.draw import draw
 from game.input_snapshot import InputReader
 
@@ -29,6 +31,7 @@ def main():
     enemy_ai_manager = EnemyAIManager()
     audio_manager = AudioManager()
     input_reader = InputReader()
+    pause_menu = PauseMenu()
 
     running = True
     while running:
@@ -39,9 +42,32 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            if event.type == pygame.KEYDOWN:
+            elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    running = False
+                    pause_menu.toggle()
+                elif pause_menu.is_open:
+                    action = pause_menu.handle_key(event.key)
+                    if action == "save":
+                        SaveManager.save(player, stage)
+                        pause_menu.close()
+                    elif action == "load":
+                        loaded_stage = SaveManager.load(player, stage_manager)
+                        if loaded_stage is not None:
+                            stage = loaded_stage
+                            combat_manager.stage = stage
+                        pause_menu.close()
+                    elif action == "continue":
+                        pause_menu.close()
+                    elif action == "quit":
+                        running = False
+
+        if pause_menu.is_open:
+            # Frozen behind the menu: redraw the last frame + overlay, skip
+            # every gameplay update phase below.
+            draw(stage, screen)
+            pause_menu.draw(screen)
+            pygame.display.flip()
+            continue
 
         # Update game state
         input = input_reader.read(pygame.key.get_pressed(), dt)
