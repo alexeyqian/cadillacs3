@@ -23,6 +23,7 @@ class Player(Character):
         self.hurtbox_w, self.hurtbox_h = PLAYER_HURTBOX_W, PLAYER_HURTBOX_H
 
         self.tags.add("player")
+        self.score = 0
         self.add_component(InteractionComponent())
         self.add_component(InventoryComponent())
         self.add_component(GrabController())

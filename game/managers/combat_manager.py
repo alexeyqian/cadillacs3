@@ -29,11 +29,17 @@ class CombatManager:
                 if hitbox.get_rect().colliderect(hurtbox.get_rect()):
                     health.take_damage(hitbox.damage, hitbox.knockback)
                     hitbox.hits.add(target)
-                    self._react_to_hit(target)
+                    self._react_to_hit(attacker, target)
 
-    def _react_to_hit(self, target):
+    def _react_to_hit(self, attacker, target):
         if not target.alive:
             target.cancel_attack()
             target.set_state("dead")
+            self._award_score(attacker, target)
         else:
             target.stun(HIT_STUN_DURATION)
+
+    def _award_score(self, attacker, target):
+        points = getattr(target, "score_points", 0)
+        if points and hasattr(attacker, "score"):
+            attacker.score += points

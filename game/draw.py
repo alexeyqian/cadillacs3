@@ -1,7 +1,9 @@
 import pygame
-from game.settings import SHOW_DEBUG_TEXT
+from game.settings import SHOW_DEBUG_TEXT, UI_FIRST_X, UI_FIRST_Y, UI_FONT_SIZE
+from game.components.health_component import HealthComponent
 
 _debug_font = None
+_hud_font = None
 
 
 def draw(stage, screen):
@@ -18,8 +20,26 @@ def _draw_world(stage, screen):
         character.draw(screen, camera.x)
 
 def _draw_ui(stage, screen):
+    _draw_player_hud(stage.player, screen)
     if SHOW_DEBUG_TEXT:
         _draw_debug_attack_text(stage.player, screen)
+
+def _draw_player_hud(player, screen):
+    global _hud_font
+    if _hud_font is None:
+        _hud_font = pygame.font.SysFont(None, UI_FONT_SIZE)
+
+    x, y = UI_FIRST_X, UI_FIRST_Y
+    bar_width, bar_height = 200, 24
+
+    health = player.get_component(HealthComponent)
+    hp_ratio = max(0.0, health.health / health.max_health) if health.max_health else 0.0
+    pygame.draw.rect(screen, (80, 80, 80), (x, y, bar_width, bar_height))
+    pygame.draw.rect(screen, (200, 30, 30), (x, y, int(bar_width * hp_ratio), bar_height))
+    pygame.draw.rect(screen, (255, 255, 255), (x, y, bar_width, bar_height), 2)
+
+    score_surface = _hud_font.render(f"Score: {player.score}", True, (255, 255, 255))
+    screen.blit(score_surface, (x, y + bar_height + 6))
 
 def _draw_debug_attack_text(player, screen):
     global _debug_font

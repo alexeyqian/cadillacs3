@@ -27,6 +27,7 @@ class Enemy(Character):
         self.run_speed = config.run_speed
         self.attack_range = config.attack_range
         self.attack_data = config.attack
+        self.score_points = config.score_points
 
         self.sprite_scale = config.sprite_scale
 

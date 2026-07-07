@@ -48,8 +48,7 @@ class StageManager:
         return Stage(camera, player, stage_data)
 
     def _reset_entities(self):
-        pass
-        #self.enemies.clear()
+        self.enemies.clear()
         #self.weapons.clear()
         #self.projectiles.clear()
         #self.enemy_projectiles.clear()
@@ -58,8 +57,6 @@ class StageManager:
         #self.hit_sparks.clear()
         #self.floating_texts.clear()
         #self.explosions.clear()
-
-        #self.weapons.clear()
         #self.objects.clear()
 
         # todo: should call stage manager function
