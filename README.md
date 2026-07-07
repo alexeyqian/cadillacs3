@@ -57,3 +57,8 @@ Combo attack:
 InputReader.attack_pressed is now edge-triggered (true only the frame J is newly pressed, not while held) — holding the button no longer auto-chains through the combo; each hit needs its own distinct press.
 Character.combo_window_timer starts counting down the moment a hit finishes (= current_attack.combo_window); a press within that window continues to the next hit, a press after it expires resets to hit 1.
 Doesn't loop past 3: combo_index is clamped (min(combo_index + 1, len - 1)), and hit 3 has combo_window=0, so there's nothing to advance into.
+
+Most classic beat-em-ups (Streets of Rage, Final Fight, Double Dragon) don't model hitbox-vs-hitbox collision at all — hitboxes only test against hurtboxes, so if both attacks are active on the same frame, both land and both take damage (a straightforward "trade")
+
+flanking and attacker-slot limiting
+Genre convention is less about real pathfinding (arenas are simple x/z lanes, no navmesh needed) and more about two specific tricks: (1) capping simultaneous attackers — only a few enemies (e.g. 2–4) are ever allowed to actively close in and attack at once, the rest hang back circling/faking so the player isn't overwhelmed instantly, and (2) flanking instead of direct-chase — each enemy targets an offset position around the player (spread across x and lane/z) rather than the player's exact coordinates, so they surround rather than stack into a single-file conga line.

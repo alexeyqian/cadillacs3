@@ -16,6 +16,11 @@ class Enemy(Character):
         self.tags.add("enemy")
         self.add_component(LootDropController())
 
+        # Set each frame by EnemyAIManager, before update_intention runs -
+        # keeps a crowd from instantly mobbing the player (see that class).
+        self.has_attack_slot = False
+        self.flank_target = (x, z)
+
         config = get_enemy_config(enemy_type)
         self._load_from_config(config)
         self.renderer = CharacterRenderer(self, show_health_bar=True)
@@ -39,9 +44,27 @@ class Enemy(Character):
         dz = player_z - self.z
         in_range = (dx * dx + dz * dz) ** 0.5 <= self.attack_range
 
-        self.intent.move_x = 0 if in_range else (1 if dx > 0 else -1)
-        self.intent.move_z = 0 if in_range else (1 if dz > 0 else -1)
-        self.intent.wants_attack = in_range
+        if self.has_attack_slot:
+            # Cleared to close in and attack directly.
+            if in_range:
+                self.intent.move_x = 0
+                self.intent.move_z = 0
+                self.intent.wants_attack = True
+                return
+            self.intent.move_x = 1 if dx > 0 else -1
+            self.intent.move_z = 1 if dz > 0 else -1
+            self.intent.wants_attack = False
+            return
+
+        # No attack slot right now - hold a flanking position around the
+        # player instead of piling in for a hit.
+        target_x, target_z = self.flank_target
+        tdx = target_x - self.x
+        tdz = target_z - self.z
+
+        self.intent.move_x = 0 if abs(tdx) < 4 else (1 if tdx > 0 else -1)
+        self.intent.move_z = 0 if abs(tdz) < ENEMY_FLANK_Z_TOLERANCE else (1 if tdz > 0 else -1)
+        self.intent.wants_attack = False
 
     def is_ready_to_remove(self):
         return not self.alive and self.animation_manager.is_finished()

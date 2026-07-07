@@ -8,6 +8,7 @@ from game.world.stage import Stage
 from game.world.stage_manager import StageManager
 from game.managers.combat_manager import CombatManager
 from game.managers.collision_manager import CollisionManager
+from game.managers.enemy_ai_manager import EnemyAIManager
 from game.draw import draw
 from game.input_snapshot import InputReader
 
@@ -24,6 +25,7 @@ def main():
 
     combat_manager = CombatManager(stage)
     collision_manager = CollisionManager()
+    enemy_ai_manager = EnemyAIManager()
     input_reader = InputReader()
 
     running = True
@@ -49,6 +51,11 @@ def main():
         # animation at all until its first update_animation call).
         stage.update(dt)
         characters = stage.get_all_characters()
+
+        # Assigns flank targets + attack slots for this frame, before any
+        # enemy reads them in update_intention - keeps the crowd from
+        # instantly mobbing the player (see EnemyAIManager).
+        enemy_ai_manager.resolve(dt, player, stage.enemies)
 
         # Phase 1: decide. Reads input/AI state only, nothing moves yet,
         # so order across characters doesn't matter.
