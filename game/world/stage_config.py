@@ -15,7 +15,7 @@ STAGES = [
                 "spawns": [
                     {
                         "enemy_type": "ferris",
-                        "count": 1
+                        "count": 2
                     },
                 ],
             },

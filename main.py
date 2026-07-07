@@ -7,6 +7,7 @@ from game.entities.mustapha_player import MustaphaPlayer
 from game.world.stage import Stage
 from game.world.stage_manager import StageManager
 from game.managers.combat_manager import CombatManager
+from game.managers.collision_manager import CollisionManager
 from game.draw import draw
 from game.input_snapshot import InputReader
 
@@ -22,6 +23,7 @@ def main():
     stage = stage_manager.load_current_stage()
 
     combat_manager = CombatManager(stage)
+    collision_manager = CollisionManager()
     input_reader = InputReader()
 
     running = True
@@ -56,6 +58,11 @@ def main():
         # Phase 2: act. Purely local physics per character.
         for character in characters:
             character.update_movement(dt)
+
+        # Phase 2.5: bodies can't overlap - push apart before attacks/combat
+        # read positions, so a fast mover (e.g. a run attack) can't slide
+        # clean through another character instead of bumping into them.
+        collision_manager.resolve(characters)
 
         # Phase 3: attack. Per-character phase-timer ticking + intent-triggered start.
         for character in characters:

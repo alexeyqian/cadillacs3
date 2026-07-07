@@ -77,12 +77,7 @@ ENEMY_Y_SPEED=int(ENEMY_SPEED*0.5)
 ENEMY_RUN_CHASE_THRESHOLD=400  # pixels; enemy switches to run when farther than this
 PROJECTILE_SPEED=PLAYER_SPEED*3
 ######## player attack ########
-FIST_DAMAGE=10
-# Attack lifecycle
-# -> windup (prepare)
-# -> active attack (hit player once, not every frame) 
-# -> recovery (enemy cannot move)
-# ->cooldown(frame cooldown before next attack)
+FIST_DAMAGE=20
 
 ATTACK_1_DAMAGE=FIST_DAMAGE
 ATTACK_1_WINDUP_DURATION=3
@@ -90,7 +85,7 @@ ATTACK_1_ACTIVE_DURATION=10
 ATTACK_1_RECOVERY_DURATION=5
 ATTACK_1_COOLDOWN=2
 ATTACK_1_HIT_STUN_DURATION=15
-ATTACK_1_KNOCKBACK_VELOCITY=400 # pixels per second (dt-scaled physics)
+ATTACK_1_KNOCKBACK_VELOCITY=300 # pixels per second (dt-scaled physics)
 # Combo windows: how long after a hit finishes you can press attack again to
 # continue the chain instead of it resetting to hit 1. Classic beat-em-ups
 # (Streets of Rage, Final Fight) sit around 300-500ms - tight enough to need
@@ -120,15 +115,6 @@ ATTACK_3_COOLDOWN=6
 ATTACK_3_HIT_STUN_DURATION=25
 ATTACK_3_KNOCKBACK_VELOCITY=400 # pixels per second (dt-scaled physics)
 
-# todo: simplify it?
-ATTACK_3_FORWARD_NUDGE_FRAMES=3
-ATTACK_3_FORWARD_NUDGE_SPEED_SCALE=0.35
-
-PLAYER_THIRD_HIT_RECOVERY = 24
-PLAYER_CLASH_RECOVERY = 8
-# Debug helper: allow ATTACK -> ATTACK2 -> ATTACK3 even when punches hit nothing.
-ALLOW_COMBO_NOT_HIT=True
-
 # RUN ATTACK
 # it's 0.25 seconds, should we use game frames as timer counter here?
 RUN_TAP_WINDOW=0.25
@@ -140,18 +126,7 @@ RUN_ATTACK_ACTIVE_DURATION=15
 RUN_ATTACK_RECOVERY_DURATION=6
 RUN_ATTACK_COOLDOWN=10
 RUN_ATTACK_HIT_STUN_DURATION=25
-RUN_ATTACK_KNOCKBACK_VELOCITY=200 # pixels per second (dt-scaled physics)
-
-# TODO: below design is too complicated, might remove?
-RUN_ATTACK_FULL_POWER_DISTANCE=240
-RUN_ATTACK_MOMENTUM_FRAMES=18
-RUN_ATTACK_MOMENTUM_SPEED_SCALE=0.85
-RUN_ATTACK_LANDING_RECOVERY=4
-
-RUN_ATTACK_BASE_KNOCKBACK=18
-RUN_ATTACK_FULL_POWER_KNOCKBACK_BONUS=6
-RUN_ATTACK_BASE_ENEMY_HIT_STUN=40
-RUN_ATTACK_FULL_POWER_ENEMY_HIT_STUN_BONUS=6
+RUN_ATTACK_KNOCKBACK_VELOCITY=500 # pixels per second (dt-scaled physics)
 
 # todo: settings for jump attack
 JUMP_ATTACK_DAMAGE=FIST_DAMAGE
@@ -161,11 +136,6 @@ PLAYER_GRAB_RANGE=int(PLAYER_W * 0.4)
 PLAYER_GRAB_KNEE_WINDUP_DURATION = 6
 PLAYER_GRAB_KNEE_ACTIVE_DURATION = 4
 PLAYER_GRAB_KNEE_RECOVERY_DURATION = 4
-PLAYER_GRAB_KNEE_DURATION = (
-    PLAYER_GRAB_KNEE_WINDUP_DURATION
-    + PLAYER_GRAB_KNEE_ACTIVE_DURATION
-    + PLAYER_GRAB_KNEE_RECOVERY_DURATION
-)
 PLAYER_GRAB_KNEE_HIT_FRAME = PLAYER_GRAB_KNEE_WINDUP_DURATION
 THROWN_DAMAGE=int(FIST_DAMAGE*1.5)
 # weapons
@@ -194,13 +164,7 @@ ENEMY_ATTACK_KNOCKBACK_VELOCITY=300 # pixels per second (dt-scaled physics)
 MAX_MELEE_ATTACKERS = 4
 ENEMY_FLANK_OFFSET_X = 120
 # avoid multiple enemies stack on the same lane. 
-# give flankers a small Y offset based on crowding.
-ENEMY_FLANK_OFFSET_Y = 36
+# give flankers a small Z offset based on crowding.
+ENEMY_FLANK_OFFSET_Z = 36
 ENEMY_FLANK_DECISION_DURATION = 20
-ENEMY_FLANK_Y_TOLERANCE = 18
-
-# per enemy settings
-RANGED_ENEMY_ATTACK_DAMAGE=ENEMY_ATTACK_DAMAGE*0.5
-
-BOSS_ENEMY_SPEED=ENEMY_SPEED*0.5
-BOSS_SPECIAL_ATTACK_WARNING_DURATION=45
+ENEMY_FLANK_Z_TOLERANCE = 18
