@@ -114,6 +114,10 @@ class Character(Entity):
         raise NotImplementedError
 
     def update_movement(self, dt):
+        if self.state == "dead":
+            self.vx = self.vz = self.vy = 0
+            return
+
         if not self._is_action_locked():
             self._apply_intent_to_velocity()
 

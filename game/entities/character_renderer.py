@@ -1,5 +1,5 @@
 import pygame
-from game.settings import SHOW_COMBAT_BOXES
+from game.settings import SHOW_COMBAT_BOXES, DEAD_FLASH_INTERVAL_FRAMES
 from game.colors import *
 from game.camera import world_to_screen
 from game.components.health_component import HealthComponent
@@ -11,6 +11,7 @@ class CharacterRenderer:
     def __init__(self, owner, show_health_bar=False):
         self.owner = owner
         self.show_health_bar = show_health_bar
+        self._dead_flash_timer = 0
 
     def get_health_bar_top_z(self):
         """World z whose screen row (at y=0) lines up with the top of this
@@ -49,13 +50,22 @@ class CharacterRenderer:
 
         screen_x, screen_y = world_to_screen(sprite_world_x, owner.y, owner.z, camera_x)
         frame_rect = pygame.Rect(screen_x, screen_y + offset_y, image.get_width(), image.get_height())
-        screen.blit(image, frame_rect.topleft)
+        if self._is_sprite_visible():
+            screen.blit(image, frame_rect.topleft)
 
         if self.show_health_bar:
             self._draw_health_bar(screen, camera_x, frame_rect)
         
         if SHOW_COMBAT_BOXES:
             self._draw_debug_boxes(screen, camera_x)
+
+    def _is_sprite_visible(self):
+        """Blinks the sprite on/off while playing the death animation."""
+        if self.owner.state != "dead":
+            self._dead_flash_timer = 0
+            return True
+        self._dead_flash_timer += 1
+        return (self._dead_flash_timer // DEAD_FLASH_INTERVAL_FRAMES) % 2 == 0
 
     def _draw_health_bar(self, screen, camera_x, frame_rect):
         owner = self.owner

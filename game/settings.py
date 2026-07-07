@@ -61,6 +61,8 @@ PLAYER_EXTRA_LIFE_SCORE_BASE=30000
 PLAYER_EXTRA_LIFE_SCORE_STEP=30000
 ENEMY_MAX_HP=int(PLAYER_MAX_HP*1)
 ENEMY_SCORE_POINTS = 100
+# Sprite blink cadence while the "dead" animation plays (frames per on/off half-cycle).
+DEAD_FLASH_INTERVAL_FRAMES = 6
 
 ######## speed ########
 # Pixels per second (movement is dt-scaled, not per-frame).
