@@ -63,6 +63,7 @@ def main():
         # read positions, so a fast mover (e.g. a run attack) can't slide
         # clean through another character instead of bumping into them.
         collision_manager.resolve(characters)
+        stage.clamp_player_to_bounds()
 
         # Phase 3: attack. Per-character phase-timer ticking + intent-triggered start.
         for character in characters:
@@ -76,7 +77,7 @@ def main():
             character.update_animation(dt)
 
         stage.update_clean()
-        camera.update(player)
+        camera.update(player, stage.world_width)
         TimerManager.update(dt)
         draw(stage, screen)
         pygame.display.flip()

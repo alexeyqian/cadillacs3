@@ -17,9 +17,16 @@ class Camera:
         self.locked = False
         self.locked_x = 0
 
-    def update(self, player):
+    def update(self, player, world_width=None):
         if self.locked:
             self.x = self.locked_x
-        else:
-            # follow player
-            self.x = max(0, player.x - SCREEN_WIDTH // 2)
+            return
+
+        # follow player
+        self.x = max(0, player.x - SCREEN_WIDTH // 2)
+        if world_width is not None:
+            # Don't scroll past the right edge of the stage. (Only x is
+            # clamped - the camera has no vertical/z scroll to bound; the
+            # lane_top/lane_bottom depth range is fixed within the screen
+            # height and is enforced on the player directly, not the camera.)
+            self.x = min(self.x, max(0, world_width - SCREEN_WIDTH))

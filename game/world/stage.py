@@ -26,6 +26,10 @@ class Stage:
         self._update_waves()
         self.floating_text_manager.update(dt)
 
+    def clamp_player_to_bounds(self):
+        self.player.x = max(0, min(self.player.x, self.world_width))
+        self.player.z = max(self.lane_top, min(self.player.z, self.lane_bottom))
+
     def _update_waves(self):
         for wave in self.waves:
             if wave.completed:
