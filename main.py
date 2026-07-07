@@ -68,6 +68,7 @@ def main():
         for character in characters:
             character.update_animation(dt)
 
+        stage.update_clean()
         camera.update(player)
         TimerManager.update(dt)
         draw(stage, screen)

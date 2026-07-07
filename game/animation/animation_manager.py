@@ -17,6 +17,7 @@ class Animation: # multiple frames
 
         self.current_frame = 0
         self.timer = 0
+        self.finished = False
 
     def update(self):
         self.timer += 1
@@ -33,7 +34,8 @@ class Animation: # multiple frames
             self.current_frame = 0
         else:
             self.current_frame = len(self.frames) - 1
-    
+            self.finished = True
+
     def get_current_frame(self)-> AnimationFrame:
         return self.frames[self.current_frame]
 
@@ -52,6 +54,7 @@ class Animation: # multiple frames
     def reset(self):
         self.current_frame = 0
         self.timer = 0
+        self.finished = False
 
 class AnimationManager:
     def __init__(self, animation_data: dict):
@@ -93,6 +96,9 @@ class AnimationManager:
 
     def get_current_frame(self):
         return self.current_animation.get_current_frame()
+
+    def is_finished(self):
+        return self.current_animation is not None and self.current_animation.finished
 
     def update(self, name):
         if name != self.current_name:

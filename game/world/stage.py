@@ -25,7 +25,7 @@ class Stage:
     def update(self, dt):
         self._update_waves()
         self.floating_text_manager.update(dt)
-                
+
     def _update_waves(self):
         for wave in self.waves:
             if wave.completed:
@@ -42,8 +42,7 @@ class Stage:
                 wave.completed = True
 
     def update_clean(self):
-        pass
-        #self.enemies[:] = [e for e in self.enemies if not e.is_ready_to_remove()]
+        self.enemies[:] = [e for e in self.enemies if not e.is_ready_to_remove()]
         #self.projectiles[:] = [p for p in self.projectiles if p.active]
         #self.enemy_projectiles[:] = [p for p in self.enemy_projectiles if p.active]
         #self.objects[:] = [o for o in self.objects if o.hp > 0]

@@ -8,6 +8,11 @@ class HurtboxComponent:
         # Defaults to height (no shrink) unless configure() sets a shorter one.
         self.airborne_height = airborne_height if airborne_height is not None else height
 
+    def configure(self, width, height, airborne_height=None):
+        self.width = width
+        self.height = height
+        self.airborne_height = airborne_height if airborne_height is not None else height
+
     def get_rect(self):
         owner = self.owner
         # Top is always anchored using the full standing height, so the

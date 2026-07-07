@@ -45,5 +45,6 @@ BLADE_ANIMATIONS = {
         "frames_count": 1,
         "frame_width": 384,
         "frame_height": 384,
+        "loop": False,
     },
 }

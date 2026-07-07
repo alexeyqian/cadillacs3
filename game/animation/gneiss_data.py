@@ -30,5 +30,7 @@ GNEISS_ANIMATIONS = {
         "frames_count": 1,
         "frame_width": 384,
         "frame_height": 384,
+        "frame_durations": (60,),
+        "loop": False,
     },
 }

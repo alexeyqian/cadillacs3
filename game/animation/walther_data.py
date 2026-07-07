@@ -29,6 +29,7 @@ WALTHER_ANIMATIONS = {
         "file": "assets/enemies/walther_dead_3x.png",
         "frames_count": 1,
         "frame_width": 384,
-        "frame_height": 384
+        "frame_height": 384,
+        "loop": False,
     },
 }

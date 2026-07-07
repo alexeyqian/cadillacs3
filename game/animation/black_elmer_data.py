@@ -30,6 +30,7 @@ BLACK_ELMER_ANIMATIONS = {
         "file": "assets/enemies/black_elmer_dead_3x.png",
         "frames_count": 1,
         "frame_width": 256,
-        "frame_height": 256
+        "frame_height": 256,
+        "loop": False,
     },
 }

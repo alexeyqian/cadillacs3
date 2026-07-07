@@ -42,3 +42,6 @@ class Enemy(Character):
         self.intent.move_x = 0 if in_range else (1 if dx > 0 else -1)
         self.intent.move_z = 0 if in_range else (1 if dz > 0 else -1)
         self.intent.wants_attack = in_range
+
+    def is_ready_to_remove(self):
+        return not self.alive and self.animation_manager.is_finished()
