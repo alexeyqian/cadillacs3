@@ -113,10 +113,10 @@ class CharacterRenderer:
                 hit_rect.height,
             ), line_width)
         # frame rect
-        pygame.draw.rect(screen, WHITE_COLOR, (
-            body_rect.x - camera_x,
-            body_rect.y,
-            body_rect.width,
-            body_rect.height,
-        ), line_width)
+        #pygame.draw.rect(screen, WHITE_COLOR, (
+        #    body_rect.x - camera_x,
+        #    body_rect.y,
+        #    body_rect.width,
+        #    body_rect.height,
+        #), line_width)
 

@@ -85,7 +85,7 @@ ATTACK_1_ACTIVE_DURATION=10
 ATTACK_1_RECOVERY_DURATION=5
 ATTACK_1_COOLDOWN=2
 ATTACK_1_HIT_STUN_DURATION=15
-ATTACK_1_KNOCKBACK_VELOCITY=300 # pixels per second (dt-scaled physics)
+ATTACK_1_KNOCKBACK_VELOCITY=100 # pixels per second (dt-scaled physics)
 # Combo windows: how long after a hit finishes you can press attack again to
 # continue the chain instead of it resetting to hit 1. Classic beat-em-ups
 # (Streets of Rage, Final Fight) sit around 300-500ms - tight enough to need
@@ -103,7 +103,7 @@ ATTACK_2_ACTIVE_DURATION=10
 ATTACK_2_RECOVERY_DURATION=6
 ATTACK_2_COOLDOWN=4
 ATTACK_2_HIT_STUN_DURATION=20
-ATTACK_2_KNOCKBACK_VELOCITY=400 # pixels per second (dt-scaled physics)
+ATTACK_2_KNOCKBACK_VELOCITY=150 # pixels per second (dt-scaled physics)
 ATTACK_2_COMBO_WINDOW=30 # 0.5s @ 60fps
 
 ATTACK_3_DAMAGE=int(FIST_DAMAGE*2)
@@ -113,7 +113,7 @@ ATTACK_3_ACTIVE_DURATION=10
 ATTACK_3_RECOVERY_DURATION=8
 ATTACK_3_COOLDOWN=6
 ATTACK_3_HIT_STUN_DURATION=25
-ATTACK_3_KNOCKBACK_VELOCITY=400 # pixels per second (dt-scaled physics)
+ATTACK_3_KNOCKBACK_VELOCITY=200 # pixels per second (dt-scaled physics)
 
 # RUN ATTACK
 # it's 0.25 seconds, should we use game frames as timer counter here?
@@ -125,8 +125,8 @@ RUN_ATTACK_WINDUP_DURATION=4
 RUN_ATTACK_ACTIVE_DURATION=15
 RUN_ATTACK_RECOVERY_DURATION=6
 RUN_ATTACK_COOLDOWN=10
-RUN_ATTACK_HIT_STUN_DURATION=40
-RUN_ATTACK_KNOCKBACK_VELOCITY=500 # pixels per second (dt-scaled physics)
+RUN_ATTACK_HIT_STUN_DURATION=30
+RUN_ATTACK_KNOCKBACK_VELOCITY=200 # pixels per second (dt-scaled physics)
 
 # todo: settings for jump attack
 JUMP_ATTACK_DAMAGE=FIST_DAMAGE

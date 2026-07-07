@@ -2,8 +2,6 @@ from game.components.health_component import HealthComponent
 from game.components.hitbox_component import HitboxComponent
 from game.components.hurtbox_component import HurtboxComponent
 
-HIT_STUN_DURATION = 0.4  # seconds; matches HealthComponent's invulnerability window
-
 
 class CombatManager:
     """Resolves collisions between active hitboxes and hurtboxes each frame."""
@@ -40,7 +38,7 @@ class CombatManager:
             target.set_state("dead")
             self._award_score(attacker, target)
         else:
-            target.stun(HIT_STUN_DURATION)
+            target.stun(attacker.current_attack.hit_stun_duration)
 
     def _award_score(self, attacker, target):
         points = getattr(target, "score_points", 0)
