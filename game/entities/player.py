@@ -25,6 +25,7 @@ class Player(Character):
 
         self.tags.add("player")
         self.score = 0
+        self.lives = PLAYER_LIVES
         self.add_component(InteractionComponent())
         self.add_component(InventoryComponent())
         self.add_component(GrabController())

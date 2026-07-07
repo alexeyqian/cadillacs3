@@ -1,5 +1,10 @@
 import pygame
-from game.settings import SHOW_DEBUG_INFO, SHOW_EXIT_RECT
+from game.settings import (
+    SHOW_DEBUG_INFO,
+    SHOW_EXIT_RECT,
+    PLAYER_EXTRA_LIFE_SCORE_BASE,
+    PLAYER_EXTRA_LIFE_SCORE_STEP,
+)
 from game.colors import *
 from game.components.health_component import HealthComponent
 
@@ -50,8 +55,17 @@ def _draw_player_hud(player, screen):
     pygame.draw.rect(screen, (200, 30, 30), (x, y, int(bar_width * hp_ratio), bar_height))
     pygame.draw.rect(screen, (255, 255, 255), (x, y, bar_width, bar_height), 2)
 
-    score_surface = _hud_font.render(f"Score: {player.score}", True, (255, 255, 255))
+    next_extra_life_score = _get_next_extra_life_score(player.score)
+    score_surface = _hud_font.render(
+        f"Score: {player.score}   Lives: {player.lives}   Next Life: {next_extra_life_score}",
+        True, (255, 255, 255))
     screen.blit(score_surface, (x, y + bar_height + 6))
+
+def _get_next_extra_life_score(score):
+    if score < PLAYER_EXTRA_LIFE_SCORE_BASE:
+        return PLAYER_EXTRA_LIFE_SCORE_BASE
+    milestones_passed = (score - PLAYER_EXTRA_LIFE_SCORE_BASE) // PLAYER_EXTRA_LIFE_SCORE_STEP
+    return PLAYER_EXTRA_LIFE_SCORE_BASE + (milestones_passed + 1) * PLAYER_EXTRA_LIFE_SCORE_STEP
 
 def _draw_warning(warning_manager, screen):
     global _warning_font
