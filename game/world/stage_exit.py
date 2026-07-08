@@ -1,5 +1,4 @@
 import pygame
-from game.settings import STAGE_EXIT_OPEN_DURATION
 from game.entities.entity import Entity
 from game.components.health_component import HealthComponent
 from game.components.hurtbox_component import HurtboxComponent
@@ -18,6 +17,11 @@ CLOSED_COLOR = (120, 60, 30)
 OPENING_COLOR = (200, 140, 40)
 OPEN_COLOR = (60, 160, 60)
 
+######## stage exit ########
+# How long the exit's closed -> open transition takes once the player
+# lands the attack that opens it (seconds). Applies whether the stage's
+# exit is dressed up as a door, a window, or anything else.
+STAGE_EXIT_OPEN_DURATION = 0.5
 
 class StageExit(Entity):
     """The way out of a stage - a door, window, hatch, whatever the stage

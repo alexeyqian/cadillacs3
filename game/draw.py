@@ -1,7 +1,6 @@
 import pygame
 from game.settings import (
     SHOW_DEBUG_INFO,
-    SHOW_EXIT_RECT,
     PLAYER_EXTRA_LIFE_SCORE_BASE,
     PLAYER_EXTRA_LIFE_SCORE_STEP,
 )
@@ -21,8 +20,7 @@ def _draw_world(stage, screen):
     camera = stage.camera
     stage.background.draw_far_and_mid(screen, camera.x)
     stage.exit.draw(screen, camera.x)
-    if SHOW_EXIT_RECT:
-        _draw_exit_arrow(stage, screen, camera.x)
+    _draw_exit_arrow(stage, screen, camera.x)
     characters = stage.get_all_characters()
     # depth sorting
     characters.sort(key=lambda c: c.z)
@@ -30,6 +28,7 @@ def _draw_world(stage, screen):
         character.draw(screen, camera.x)
     stage.floating_text_manager.draw(screen, camera.x)
 
+# todo: in future, just show an png file as arrow
 def _draw_exit_arrow(stage, screen, camera_x):
     """Points down at the stage exit so it's easy to spot regardless of
     what its current sprite looks like."""

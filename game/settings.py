@@ -46,7 +46,6 @@ ENEMY_HITBOX_OFFSET_Y = int(-1*(ENEMY_HURTBOX_H + 70))
 
 ######## debug ########
 SHOW_DEBUG_INFO=False
-SHOW_EXIT_RECT=True
 # Dev only.
 # None means start from the first stage normally.
 # Can be a stage id, for example: "episode_1_stage_4_ruined_arena"
@@ -165,9 +164,3 @@ ENEMY_FLANK_OFFSET_X = 120
 ENEMY_FLANK_OFFSET_Z = 36
 ENEMY_FLANK_DECISION_DURATION = 20
 ENEMY_FLANK_Z_TOLERANCE = 18
-
-######## stage exit ########
-# How long the exit's closed -> open transition takes once the player
-# lands the attack that opens it (seconds). Applies whether the stage's
-# exit is dressed up as a door, a window, or anything else.
-STAGE_EXIT_OPEN_DURATION = 0.5
