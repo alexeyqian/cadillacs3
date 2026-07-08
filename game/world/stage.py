@@ -1,7 +1,7 @@
-import pygame
 from game.settings import SCREEN_WIDTH
 from game.world.lane import Lane
 from game.world.wave import SpawnInstruction, Wave
+from game.world.stage_exit import StageExit
 from game.world.background import Background
 from game.entities.breakable_object import BreakableObject
 # from game.entities.explosive_barrel import ExplosiveBarrel
@@ -21,6 +21,7 @@ class Stage:
         # movement falls back to the full stage bounds.
         self.locked_arena_bounds = None
         self._load_from_data(stage_data)
+        self.exit = StageExit(self.exit_rect)
 
     def get_all_characters(self):
         return [self.player] + self.enemies
@@ -34,12 +35,14 @@ class Stage:
         self._update_waves()
         self.floating_text_manager.update(dt)
         self.warning_manager.update(dt)
+        self.exit.update(dt)
 
     def is_complete(self):
         if self.completion == "clear_waves_then_exit" and self.current_wave is not None:
             return False
-        exit_rect = pygame.Rect(*self.exit_rect)
-        return self.player.get_collision_rect().colliderect(exit_rect)
+        if not self.exit.is_open:
+            return False
+        return self.player.get_collision_rect().colliderect(self.exit.rect)
 
     def clamp_characters_to_bounds(self):
         if self.locked_arena_bounds:

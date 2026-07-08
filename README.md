@@ -62,3 +62,6 @@ Most classic beat-em-ups (Streets of Rage, Final Fight, Double Dragon) don't mod
 
 flanking and attacker-slot limiting
 Genre convention is less about real pathfinding (arenas are simple x/z lanes, no navmesh needed) and more about two specific tricks: (1) capping simultaneous attackers — only a few enemies (e.g. 2–4) are ever allowed to actively close in and attack at once, the rest hang back circling/faking so the player isn't overwhelmed instantly, and (2) flanking instead of direct-chase — each enemy targets an offset position around the player (spread across x and lane/z) rather than the player's exact coordinates, so they surround rather than stack into a single-file conga line.
+
+Exit stage flow:
+clear waves → attack the door → it opens → walk into it → stage advances.

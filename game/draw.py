@@ -20,8 +20,9 @@ def draw(stage, screen):
 def _draw_world(stage, screen):
     camera = stage.camera
     stage.background.draw_far_and_mid(screen, camera.x)
+    stage.exit.draw(screen, camera.x)
     if SHOW_EXIT_RECT:
-        _draw_exit_rect(stage, screen, camera.x)
+        _draw_exit_arrow(stage, screen, camera.x)
     characters = stage.get_all_characters()
     # depth sorting
     characters.sort(key=lambda c: c.z)
@@ -29,10 +30,19 @@ def _draw_world(stage, screen):
         character.draw(screen, camera.x)
     stage.floating_text_manager.draw(screen, camera.x)
 
-def _draw_exit_rect(stage, screen, camera_x):
-    x, y, w, h = stage.exit_rect
-    rect = (x - camera_x, y, w, h)
-    pygame.draw.rect(screen, GREEN_COLOR, rect, 3)
+def _draw_exit_arrow(stage, screen, camera_x):
+    """Points down at the stage exit so it's easy to spot regardless of
+    what its current sprite looks like."""
+    rect = stage.exit.rect
+    center_x = rect.x + rect.width // 2 - camera_x
+    tip_y = rect.y - 10
+    arrow_width, arrow_height = 24, 20
+    points = [
+        (center_x, tip_y),
+        (center_x - arrow_width // 2, tip_y - arrow_height),
+        (center_x + arrow_width // 2, tip_y - arrow_height),
+    ]
+    pygame.draw.polygon(screen, YELLOW_COLOR, points)
 
 def _draw_ui(stage, screen):
     _draw_player_hud(stage.player, screen)

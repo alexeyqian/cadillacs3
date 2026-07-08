@@ -160,8 +160,14 @@ ENEMY_ATTACK_KNOCKBACK_VELOCITY=int(ATTACK_1_KNOCKBACK_VELOCITY*0.5)
 # should enter ATTACK at the same time.
 MAX_MELEE_ATTACKERS = 4
 ENEMY_FLANK_OFFSET_X = 120
-# avoid multiple enemies stack on the same lane. 
+# avoid multiple enemies stack on the same lane.
 # give flankers a small Z offset based on crowding.
 ENEMY_FLANK_OFFSET_Z = 36
 ENEMY_FLANK_DECISION_DURATION = 20
 ENEMY_FLANK_Z_TOLERANCE = 18
+
+######## stage exit ########
+# How long the exit's closed -> open transition takes once the player
+# lands the attack that opens it (seconds). Applies whether the stage's
+# exit is dressed up as a door, a window, or anything else.
+STAGE_EXIT_OPEN_DURATION = 0.5

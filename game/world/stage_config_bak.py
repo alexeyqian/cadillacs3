@@ -19,6 +19,36 @@ STAGES = [
                     },
                 ],
             },
+            {
+                "trigger_x": 2000,
+                "max_active": 4,
+                "spawns": [
+                    {
+                        "enemy_type": "ferris",
+                        "count": 2
+                    },
+                    {
+                        "enemy_type": "gneiss",
+                        "side": "left",
+                        "count": 2
+                    }
+                ],
+            },
+            {
+                "trigger_x": 3000,
+                "max_active": 4,
+                "spawns": [
+                    {
+                        "enemy_type": "gneiss",
+                        "count": 2
+                    },
+                    {
+                        "enemy_type": "black_elmer",
+                        "side": "left",
+                        "count": 1
+                    },
+                ],
+            },
         ],
         "weapons": [
             #{"type": "knife", "x": 850, "y": 500},
