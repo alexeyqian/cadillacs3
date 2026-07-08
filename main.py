@@ -69,6 +69,16 @@ def main():
             pygame.display.flip()
             continue
 
+        if stage.intro.is_playing:
+            # Scripted, non-interactive moment (e.g. the player jumping in
+            # through a window) - no input/AI/combat, just the intro's own
+            # timer/animation and a redraw, until it finishes.
+            stage.intro.update(dt)
+            TimerManager.update(dt)
+            draw(stage, screen)
+            pygame.display.flip()
+            continue
+
         # Update game state
         input = input_reader.read(pygame.key.get_pressed(), dt)
 

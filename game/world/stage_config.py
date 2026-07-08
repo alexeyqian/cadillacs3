@@ -8,6 +8,13 @@ STAGES = [
         "player_start": (160, 620),
         "lane_top": 520,
         "lane_bottom": 830,
+        # No animation_state yet (no sprite art for it) - just holds on the
+        # player's default idle pose, camera locked, for a beat before
+        # gameplay starts. Add "animation_state": "..." once there's a
+        # matching one-shot (loop=False) clip in the player's animation data.
+        "intro": {
+            "duration": 1.5,
+        },
         "waves": [
             {
                 "trigger_x": 1000,

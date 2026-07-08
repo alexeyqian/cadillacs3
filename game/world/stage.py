@@ -2,6 +2,7 @@ from game.settings import SCREEN_WIDTH
 from game.world.lane import Lane
 from game.world.wave import SpawnInstruction, Wave
 from game.world.stage_exit import StageExit
+from game.world.stage_intro import StageIntro
 from game.world.background import Background
 from game.entities.breakable_object import BreakableObject
 # from game.entities.explosive_barrel import ExplosiveBarrel
@@ -22,6 +23,7 @@ class Stage:
         self.locked_arena_bounds = None
         self._load_from_data(stage_data)
         self.exit = StageExit(self.exit_rect)
+        self.intro = StageIntro(player, camera, stage_data.get("intro"))
 
     def get_all_characters(self):
         return [self.player] + self.enemies
