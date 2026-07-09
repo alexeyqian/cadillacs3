@@ -65,3 +65,9 @@ Genre convention is less about real pathfinding (arenas are simple x/z lanes, no
 
 Exit stage flow:
 clear waves → attack the door → it opens → walk into it → stage advances.
+
+Backgrounds:
+
+4-5 layers is the practical sweet spot for this genre, and the breakdown you listed maps almost exactly onto genre convention (Streets of Rage 4, Final Fight): sky/far (near-static or barely moving), far-mid (softened/blurred secondary buildings), near background (sharp detail right behind the playable lane), playable ground (moves 1:1 with characters), and foreground decoration (scrolls faster than the player — railings/plants passing in front, occluding characters briefly for a strong depth cue). Going beyond 5 has diminishing returns — more art to produce and maintain, more draw calls, and it gets hard to keep a consistent art direction across that many independent layers.
+
+Split into 3 (or more) source images: a begin tile (the entry, with the door on the left), a middle tile (one repeatable arch/column/window unit — needs to be cropped so its right edge tiles seamlessly against its own left edge), and an end tile (the staircase section on the right). Each stays small in memory regardless of how long the stage is.

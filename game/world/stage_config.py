@@ -26,6 +26,36 @@ STAGES = [
                     },
                 ],
             },
+            {
+                "trigger_x": 2000,
+                "max_active": 4,
+                "spawns": [
+                    {
+                        "enemy_type": "ferris",
+                        "count": 2
+                    },
+                    {
+                        "enemy_type": "gneiss",
+                        "side": "left",
+                        "count": 2
+                    }
+                ],
+            },
+            {
+                "trigger_x": 3000,
+                "max_active": 4,
+                "spawns": [
+                    {
+                        "enemy_type": "gneiss",
+                        "count": 2
+                    },
+                    {
+                        "enemy_type": "black_elmer",
+                        "side": "left",
+                        "count": 1
+                    },
+                ],
+            },
         ],
         "weapons": [
             #{"type": "knife", "x": 850, "y": 500},
@@ -46,7 +76,15 @@ STAGES = [
     {
         "id": "episode_1_stage_2_hallway",
         "name": "Mansion Hallway",
-        "background": "assets/backgrounds/episode_1/episode_1_stage_2_hallway.png",
+        # begin (entry door) + repeated middle (one column/window bay) +
+        # end (staircase) instead of one 3132px-wide image - see
+        # TiledBackground. middle's repeat count is derived from
+        # world_width, not hand-counted here.
+        "background_tiles": {
+            "begin": "assets/backgrounds/episode_1/episode_1_stage_2_hallway_begin.png",
+            "middle": "assets/backgrounds/episode_1/episode_1_stage_2_hallway_middle.png",
+            "end": "assets/backgrounds/episode_1/episode_1_stage_2_hallway_end.png",
+        },
         "world_width": 3132,
         "world_height": 1080,
         "player_start": (160, 720),
