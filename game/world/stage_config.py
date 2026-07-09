@@ -2,7 +2,34 @@ STAGES = [
     {
         "id": "episode_1_stage_1_rooftop",
         "name": "Rooftop Approach",
-        "background": "assets/backgrounds/episode_1/episode_1_stage_1_rooftop.png",
+        # 5-layer parallax, all cropped from the single original rooftop
+        # painting and split by vertical band (y_offset). far/far_mid/
+        # ground/front are small repeatable tiles (no unique landmarks in
+        # those bands); "near" keeps the water tower + door/ladder
+        # building it contains, so it stays one full-width, non-tiled
+        # image rather than being duplicated across the stage.
+        "background": {
+            "far": {
+                "tiles": {"middle": "assets/backgrounds/episode_1/episode_1_stage_1_rooftop_far.png"},
+                "y_offset": 0,
+            },
+            "far_mid": {
+                "tiles": {"middle": "assets/backgrounds/episode_1/episode_1_stage_1_rooftop_far_mid.png"},
+                "y_offset": 140,
+            },
+            "near": {
+                "image": "assets/backgrounds/episode_1/episode_1_stage_1_rooftop_near.png",
+                "y_offset": 330,
+            },
+            "ground": {
+                "tiles": {"middle": "assets/backgrounds/episode_1/episode_1_stage_1_rooftop_ground.png"},
+                "y_offset": 520,
+            },
+            "front": {
+                "tiles": {"middle": "assets/backgrounds/episode_1/episode_1_stage_1_rooftop_front.png"},
+                "y_offset": 830,
+            },
+        },
         "world_width": 3338,
         "world_height": 1080,
         "player_start": (160, 620),
@@ -76,14 +103,18 @@ STAGES = [
     {
         "id": "episode_1_stage_2_hallway",
         "name": "Mansion Hallway",
-        # begin (entry door) + repeated middle (one column/window bay) +
-        # end (staircase) instead of one 3132px-wide image - see
-        # TiledBackground. middle's repeat count is derived from
-        # world_width, not hand-counted here.
-        "background_tiles": {
-            "begin": "assets/backgrounds/episode_1/episode_1_stage_2_hallway_begin.png",
-            "middle": "assets/backgrounds/episode_1/episode_1_stage_2_hallway_middle.png",
-            "end": "assets/backgrounds/episode_1/episode_1_stage_2_hallway_end.png",
+        "background": {
+            # begin (entry door) + repeated middle (one column/window bay)
+            # + end (staircase) instead of one 3132px-wide image - see
+            # BackgroundLayer. middle's repeat count is derived from
+            # world_width, not hand-counted here.
+            "ground": {
+                "tiles": {
+                    "begin": "assets/backgrounds/episode_1/episode_1_stage_2_hallway_begin.png",
+                    "middle": "assets/backgrounds/episode_1/episode_1_stage_2_hallway_middle.png",
+                    "end": "assets/backgrounds/episode_1/episode_1_stage_2_hallway_end.png",
+                },
+            },
         },
         "world_width": 3132,
         "world_height": 1080,
@@ -162,7 +193,9 @@ STAGES = [
     {
         "id": "episode_1_stage_4_ruined_arena",
         "name": "Ruined Arena",
-        "background": "assets/backgrounds/episode_1/episode_1_stage_4_ruined_arena.png",
+        "background": {
+            "ground": {"image": "assets/backgrounds/episode_1/episode_1_stage_4_ruined_arena.png"},
+        },
         "world_width": 3086,
         "world_height": 1080,
         "player_start": (160, 720),
@@ -212,9 +245,15 @@ STAGES = [
     {
         "id": "episode_2_stage_1_woods",
         "name": "Rooftop Approach",
-        "background_far": "assets/backgrounds/episode_2/2_1_far_background.png",
-        "background": "assets/backgrounds/episode_2/2_1.png",
-        "background_front": "assets/backgrounds/episode_2/2_1_front_decoration.png",
+        # Real 3-layer parallax: far scrolls slower than gameplay, front
+        # scrolls faster (passes in front of characters) - see
+        # Background/BackgroundLayer. Uses the default scroll_factor for
+        # each named layer; pass "scroll_factor": ... per layer to override.
+        "background": {
+            "far": {"image": "assets/backgrounds/episode_2/2_1_far_background.png"},
+            "ground": {"image": "assets/backgrounds/episode_2/2_1.png"},
+            "front": {"image": "assets/backgrounds/episode_2/2_1_front_decoration.png"},
+        },
         "water_zone_start_x": 6480,
         "water_zone_end_x": 9384,
         "water_splash": "assets/backgrounds/episode_2/water_splash.png",

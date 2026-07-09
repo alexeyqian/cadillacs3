@@ -4,7 +4,6 @@ from game.world.wave import SpawnInstruction, Wave
 from game.world.stage_exit import StageExit
 from game.world.stage_intro import StageIntro
 from game.world.background import Background
-from game.world.tiled_background import TiledBackground
 from game.entities.breakable_object import BreakableObject
 # from game.entities.explosive_barrel import ExplosiveBarrel
 from game.entities.weapon import Weapon
@@ -120,24 +119,7 @@ class Stage:
         self.current_wave_index = 0
         self.current_wave = self.waves[0] if self.waves else None
 
-        self.background = self._build_background(stage_data)
-
-    def _build_background(self, stage_data):
-        tiles = stage_data.get("background_tiles")
-        if tiles:
-            return TiledBackground(
-                tiles["begin"], tiles["middle"], tiles["end"],
-                total_width=self.world_width,
-                front_file=stage_data.get("background_front"),
-            )
-
-        far = stage_data.get("background_far", stage_data["background"])
-        mid = stage_data.get("background_mid", stage_data["background"])
-        return Background(
-            far,
-            mid_file=mid,
-            front_file=stage_data.get("background_front"),
-        )
+        self.background = Background(stage_data["background"], self.world_width)
 
     def _build_waves(self, wave_configs):
         waves = []

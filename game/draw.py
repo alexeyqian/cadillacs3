@@ -18,7 +18,7 @@ def draw(stage, screen):
 
 def _draw_world(stage, screen):
     camera = stage.camera
-    stage.background.draw_far_and_mid(screen, camera.x)
+    stage.background.draw_background(screen, camera.x)
     stage.exit.draw(screen, camera.x)
     _draw_exit_arrow(stage, screen, camera.x)
     characters = stage.get_all_characters()
@@ -27,6 +27,8 @@ def _draw_world(stage, screen):
     for character in characters:
         character.draw(screen, camera.x)
     stage.floating_text_manager.draw(screen, camera.x)
+    # Foreground decoration, drawn last so it can pass in front of characters.
+    stage.background.draw_front(screen, camera.x)
 
 # todo: in future, just show an png file as arrow
 def _draw_exit_arrow(stage, screen, camera_x):
