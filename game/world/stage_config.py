@@ -15,19 +15,11 @@ STAGES = [
             },
             "far_mid": {
                 "tiles": {"middle": "assets/backgrounds/episode_1/episode_1_stage_1_rooftop_far_mid.png"},
-                "y_offset": 140,
-            },
-            "near": {
-                "image": "assets/backgrounds/episode_1/episode_1_stage_1_rooftop_near.png",
-                "y_offset": 330,
+                "y_offset": 0,
             },
             "ground": {
                 "tiles": {"middle": "assets/backgrounds/episode_1/episode_1_stage_1_rooftop_ground.png"},
-                "y_offset": 520,
-            },
-            "front": {
-                "tiles": {"middle": "assets/backgrounds/episode_1/episode_1_stage_1_rooftop_front.png"},
-                "y_offset": 830,
+                "y_offset": 0,
             },
         },
         "world_width": 3338,
@@ -40,7 +32,7 @@ STAGES = [
         # gameplay starts. Add "animation_state": "..." once there's a
         # matching one-shot (loop=False) clip in the player's animation data.
         "intro": {
-            "duration": 1.5,
+            "duration": 0.1,
         },
         "waves": [
             {
