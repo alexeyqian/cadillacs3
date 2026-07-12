@@ -1,8 +1,8 @@
 ######## system and sizes ########
 
 FPS=60
-SCREEN_WIDTH=1728 #1920
-SCREEN_HEIGHT=972 #1080
+SCREEN_WIDTH= 1920
+SCREEN_HEIGHT= 1080
 # total stage width, should around 3 screens
 # Important: feet alignment matters most.anchor by feet, not by image center.
 # Across idle, walk, attack, hit, etc., 

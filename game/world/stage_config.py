@@ -1,4 +1,103 @@
 STAGES = [
+     {
+        "id": "episode_2_stage_1_woods",
+        "name": "Rooftop Approach",
+        # Real 3-layer parallax: far scrolls slower than gameplay, front
+        # scrolls faster (passes in front of characters) - see
+        # Background/BackgroundLayer. Uses the default scroll_factor for
+        # each named layer; pass "scroll_factor": ... per layer to override.
+        "background": {
+            "far": {
+                "tiles": {"middle": "assets/backgrounds/episode_2/far_tile.png"},
+                "y_offset": 0,
+            },
+            "far_mid": {
+                "tiles": {"middle": "assets/backgrounds/episode_2/far_mid_tile.png"},
+                "y_offset": 0,
+            },
+            "ground": {
+                "tiles": {"middle": "assets/backgrounds/episode_2/ground_tile.png"},
+                "y_offset": 522,
+            },
+            "front": {
+                "tiles": {"middle": "assets/backgrounds/episode_2/front_tile.png"},
+                "y_offset": 910,
+            },
+        },
+        "water_zone_start_x": 6480,
+        "water_zone_end_x": 9384,
+        "water_splash": "assets/backgrounds/episode_2/water_splash.png",
+        "world_width": 11664,
+        "world_height": 1080,
+        "player_start": (160, 620),
+        "lane_top": 520,
+        "lane_bottom": 798,
+        "waves": [
+            {
+                "trigger_x": 2600,
+                "max_active": 3,
+                "spawns": [
+                    {
+                        "enemy_type": "ferris",
+                        "count": 2
+                    },
+                ],
+            },
+            {
+                "trigger_x": 5000,
+                "max_active": 4,
+                "spawns": [
+                    {
+                        "enemy_type": "ferris",
+                        "count": 2
+                    },
+                    {
+                        "enemy_type": "gneiss",
+                        "side": "left",
+                        "count": 2
+                    }
+                ],
+            },
+            {
+                "trigger_x": 7400,
+                "max_active": 4,
+                "spawns": [
+                    {
+                        "enemy_type": "gneiss",
+                        "count": 2
+                    },
+                    {
+                        "enemy_type": "black_elmer",
+                        "side": "left",
+                        "count": 1
+                    },
+                ],
+            },
+            {
+                "trigger_x": 10680,
+                "max_active": 4,
+                "spawns": [
+                    {
+                        "enemy_type": "gneiss",
+                        "count": 2
+                    },
+                    {
+                        "enemy_type": "black_elmer",
+                        "side": "left",
+                        "count": 1
+                    },
+                ],
+            },
+        ],
+        "weapons": [
+        ],
+        "objects": [
+           
+        ],
+        "completion": "clear_waves_then_exit",
+        "exit_rect": (11500, 340, 100, 260),
+    },
+
     {
         "id": "episode_1_stage_1_rooftop",
         "name": "Rooftop Approach",
@@ -234,96 +333,5 @@ STAGES = [
         "exit_rect": (2500, 620, 140, 460),
     },
     
-    {
-        "id": "episode_2_stage_1_woods",
-        "name": "Rooftop Approach",
-        # Real 3-layer parallax: far scrolls slower than gameplay, front
-        # scrolls faster (passes in front of characters) - see
-        # Background/BackgroundLayer. Uses the default scroll_factor for
-        # each named layer; pass "scroll_factor": ... per layer to override.
-        "background": {
-            "far": {"image": "assets/backgrounds/episode_2/2_1_far_background.png"},
-            "ground": {"image": "assets/backgrounds/episode_2/2_1.png"},
-            "front": {"image": "assets/backgrounds/episode_2/2_1_front_decoration.png"},
-        },
-        "water_zone_start_x": 6480,
-        "water_zone_end_x": 9384,
-        "water_splash": "assets/backgrounds/episode_2/water_splash.png",
-        "world_width": 11664,
-        "world_height": 1080,
-        "player_start": (160, 620),
-        "lane_top": 520,
-        "lane_bottom": 900,
-        "waves": [
-            {
-                "trigger_x": 2600,
-                "max_active": 3,
-                "spawns": [
-                    {
-                        "enemy_type": "ferris",
-                        "count": 2
-                    },
-                ],
-            },
-            {
-                "trigger_x": 5000,
-                "max_active": 4,
-                "spawns": [
-                    {
-                        "enemy_type": "ferris",
-                        "count": 2
-                    },
-                    {
-                        "enemy_type": "gneiss",
-                        "side": "left",
-                        "count": 2
-                    }
-                ],
-            },
-            {
-                "trigger_x": 7400,
-                "max_active": 4,
-                "spawns": [
-                    {
-                        "enemy_type": "gneiss",
-                        "count": 2
-                    },
-                    {
-                        "enemy_type": "black_elmer",
-                        "side": "left",
-                        "count": 1
-                    },
-                ],
-            },
-            {
-                "trigger_x": 10680,
-                "max_active": 4,
-                "spawns": [
-                    {
-                        "enemy_type": "gneiss",
-                        "count": 2
-                    },
-                    {
-                        "enemy_type": "black_elmer",
-                        "side": "left",
-                        "count": 1
-                    },
-                ],
-            },
-        ],
-        "weapons": [
-            #{"type": "knife", "x": 850, "y": 500},
-            #{"type": "bat", "x": 1750, "y": 500},
-            #{"type": "pistol", "x": 2260, "y": 500},
-        ],
-        "objects": [
-            # for wave 2
-            {"kind": "breakable", "x": 2000, "y": 500, "loot_type":"health"},
-            # for wave 3
-            {"kind": "breakable", "x": 3000, "y": 500, "loot_type":"health"},
-            #{"kind": "barrel", "x": 1740, "y": 760},
-        ],
-        "completion": "clear_waves_then_exit",
-        "exit_rect": (11500, 340, 100, 260),
-    },
+   
 ]
