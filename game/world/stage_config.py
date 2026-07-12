@@ -1,79 +1,5 @@
 STAGES = [
-     {
-        "id": "episode_2_stage_1_woods",
-        "name": "Rooftop Approach",
-        # Real 3-layer parallax: far scrolls slower than gameplay, front
-        # scrolls faster (passes in front of characters) - see
-        # Background/BackgroundLayer. Uses the default scroll_factor for
-        # each named layer; pass "scroll_factor": ... per layer to override.
-        "background": {
-            "far": {
-                "tiles": {"middle": "assets/backgrounds/episode_2/far_tile.png"},
-                "y_offset": 0,
-            },
-            
-            "ground": {
-                "tiles": {"middle": "assets/backgrounds/episode_2/ground_tile_4.png"},
-                "y_offset": 0,
-            },
-            
-        },
-        "world_width": 5760,
-        "world_height": 1080,
-        "player_start": (128, 900),
-        "lane_top": 540,
-        "lane_bottom": 940,
-        "waves": [
-            {
-                "trigger_x": 1500,
-                "max_active": 3,
-                "spawns": [
-                    {
-                        "enemy_type": "ferris",
-                        "count": 2
-                    },
-                ],
-            },
-            {
-                "trigger_x": 3000,
-                "max_active": 4,
-                "spawns": [
-                    {
-                        "enemy_type": "ferris",
-                        "count": 2
-                    },
-                    {
-                        "enemy_type": "gneiss",
-                        "side": "left",
-                        "count": 2
-                    }
-                ],
-            },
-            {
-                "trigger_x": 5000,
-                "max_active": 4,
-                "spawns": [
-                    {
-                        "enemy_type": "gneiss",
-                        "count": 2
-                    },
-                    {
-                        "enemy_type": "black_elmer",
-                        "side": "left",
-                        "count": 1
-                    },
-                ],
-            },
-            
-        ],
-        "weapons": [
-        ],
-        "objects": [
-        
-        ],
-        "completion": "clear_waves_then_exit",
-        "exit_rect": (5500, 540, 384, 384),
-    },
+
 
     {
         "id": "episode_1_stage_1_rooftop",
@@ -310,5 +236,73 @@ STAGES = [
         "exit_rect": (2500, 620, 140, 460),
     },
     
-   
+       {
+        "id": "episode_2_stage_1_woods",
+        "name": "Rooftop Approach",
+        "background": {
+            "far": {
+                "tiles": {"middle": "assets/backgrounds/episode_2/far_tile.png"},
+                "y_offset": 0,
+            },
+            "ground": {
+                "tiles": {"middle": "assets/backgrounds/episode_2/ground_tile_4.png"},
+                "y_offset": 0,
+            },
+        },
+        "world_width": 5760,
+        "world_height": 1080,
+        "player_start": (128, 900),
+        "lane_top": 540,
+        "lane_bottom": 940,
+        "waves": [
+            {
+                "trigger_x": 1500,
+                "max_active": 3,
+                "spawns": [
+                    {
+                        "enemy_type": "ferris",
+                        "count": 2
+                    },
+                ],
+            },
+            {
+                "trigger_x": 3000,
+                "max_active": 4,
+                "spawns": [
+                    {
+                        "enemy_type": "ferris",
+                        "count": 2
+                    },
+                    {
+                        "enemy_type": "gneiss",
+                        "side": "left",
+                        "count": 2
+                    }
+                ],
+            },
+            {
+                "trigger_x": 5000,
+                "max_active": 4,
+                "spawns": [
+                    {
+                        "enemy_type": "gneiss",
+                        "count": 2
+                    },
+                    {
+                        "enemy_type": "black_elmer",
+                        "side": "left",
+                        "count": 1
+                    },
+                ],
+            },
+            
+        ],
+        "weapons": [
+        ],
+        "objects": [
+        
+        ],
+        "completion": "clear_waves_then_exit",
+        "exit_rect": (5500, 540, 384, 384),
+    },
 ]
