@@ -122,13 +122,7 @@ def main():
             character.update_attack(dt)
 
         # Phase 4: reactions. Cross-character: hitbox vs hurtbox resolution.
-        # The stage exit only joins combat once there's nothing left to
-        # fight - matches the "clear waves, then break through" flow - so
-        # it can't be opened early just by reusing the normal combat pass.
-        combat_targets = characters
-        if stage.current_wave is None:
-            combat_targets = characters + [stage.exit]
-        combat_manager.resolve(combat_targets)
+        combat_manager.resolve(characters)
 
         # Sync animation to whatever state the phases above landed on.
         for character in characters:

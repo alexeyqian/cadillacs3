@@ -11,30 +11,21 @@ STAGES = [
                 "tiles": {"middle": "assets/backgrounds/episode_2/far_tile.png"},
                 "y_offset": 0,
             },
-            "far_mid": {
-                "tiles": {"middle": "assets/backgrounds/episode_2/far_mid_tile.png"},
+            
+            "ground": {
+                "tiles": {"middle": "assets/backgrounds/episode_2/ground_tile_4.png"},
                 "y_offset": 0,
             },
-            "ground": {
-                "tiles": {"middle": "assets/backgrounds/episode_2/ground_tile.png"},
-                "y_offset": 522,
-            },
-            "front": {
-                "tiles": {"middle": "assets/backgrounds/episode_2/front_tile.png"},
-                "y_offset": 910,
-            },
+            
         },
-        "water_zone_start_x": 6480,
-        "water_zone_end_x": 9384,
-        "water_splash": "assets/backgrounds/episode_2/water_splash.png",
-        "world_width": 11664,
+        "world_width": 5760,
         "world_height": 1080,
-        "player_start": (160, 620),
-        "lane_top": 520,
-        "lane_bottom": 798,
+        "player_start": (128, 900),
+        "lane_top": 540,
+        "lane_bottom": 940,
         "waves": [
             {
-                "trigger_x": 2600,
+                "trigger_x": 1500,
                 "max_active": 3,
                 "spawns": [
                     {
@@ -44,7 +35,7 @@ STAGES = [
                 ],
             },
             {
-                "trigger_x": 5000,
+                "trigger_x": 3000,
                 "max_active": 4,
                 "spawns": [
                     {
@@ -59,7 +50,7 @@ STAGES = [
                 ],
             },
             {
-                "trigger_x": 7400,
+                "trigger_x": 5000,
                 "max_active": 4,
                 "spawns": [
                     {
@@ -73,29 +64,15 @@ STAGES = [
                     },
                 ],
             },
-            {
-                "trigger_x": 10680,
-                "max_active": 4,
-                "spawns": [
-                    {
-                        "enemy_type": "gneiss",
-                        "count": 2
-                    },
-                    {
-                        "enemy_type": "black_elmer",
-                        "side": "left",
-                        "count": 1
-                    },
-                ],
-            },
+            
         ],
         "weapons": [
         ],
         "objects": [
-           
+        
         ],
         "completion": "clear_waves_then_exit",
-        "exit_rect": (11500, 340, 100, 260),
+        "exit_rect": (5500, 540, 384, 384),
     },
 
     {

@@ -39,6 +39,11 @@ class Stage:
         self.warning_manager.update(dt)
         self.exit.update(dt)
 
+        # The exit only responds to being touched once there's nothing
+        # left to fight - matches the "clear waves, then leave" flow.
+        if self.current_wave is None:
+            self.exit.try_open(self.player.get_collision_rect())
+
     def is_complete(self):
         if self.completion == "clear_waves_then_exit" and self.current_wave is not None:
             return False
