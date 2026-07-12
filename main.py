@@ -2,6 +2,7 @@ import pygame
 from engine.timer_manager import TimerManager
 from game.settings import *
 from game.colors import *
+from game.display import create_display, present_screen
 from game.camera import Camera
 from game.entities.mustapha_player import MustaphaPlayer
 from game.world.stage import Stage
@@ -17,8 +18,14 @@ from game.input_snapshot import InputReader
 
 def main():
     pygame.init()
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    pygame.display.set_caption("Basic Pygame Window")
+    # window is the real OS window, scaled to fit the current screen at
+    # launch (any size/aspect) while staying borderless; screen is the
+    # fixed SCREEN_WIDTH x SCREEN_HEIGHT logical surface every draw call
+    # in this file actually targets - see game/display.py. This keeps
+    # every bit of gameplay math (camera clamps, background tiling, HUD
+    # layout, ...) working in one fixed coordinate space regardless of
+    # the player's actual screen size.
+    window, screen = create_display()
 
     clock = pygame.time.Clock()
     camera = Camera()
@@ -66,7 +73,7 @@ def main():
             # every gameplay update phase below.
             draw(stage, screen)
             pause_menu.draw(screen)
-            pygame.display.flip()
+            present_screen(window, screen)
             continue
 
         if stage.intro.is_playing:
@@ -76,7 +83,7 @@ def main():
             stage.intro.update(dt)
             TimerManager.update(dt)
             draw(stage, screen)
-            pygame.display.flip()
+            present_screen(window, screen)
             continue
 
         # Update game state
@@ -141,7 +148,7 @@ def main():
         camera.update(player, stage.world_width)
         TimerManager.update(dt)
         draw(stage, screen)
-        pygame.display.flip()
+        present_screen(window, screen)
 
     pygame.quit()
 
