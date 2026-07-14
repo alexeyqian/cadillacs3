@@ -58,6 +58,7 @@ ENEMY_CONFIGS = {
     "ferris": EnemyConfig(
         enemy_id="ferris",
         display_name="Ferris",
+        can_run=True,
     ),
 
     "gneiss": EnemyConfig(
@@ -66,6 +67,7 @@ ENEMY_CONFIGS = {
         sprite_scale=1,
         max_hp=int(ENEMY_MAX_HP * GNEISS_SCALER),
         speed=int(ENEMY_SPEED),
+        can_run=True,
 
         attack=replace(
             DEFAULT_ENEMY_ATTACK_DATA,
@@ -84,6 +86,7 @@ ENEMY_CONFIGS = {
         display_name="Blade",
         max_hp=int(ENEMY_MAX_HP * 1.5),
         speed=int(ENEMY_SPEED),
+        can_run=True,
 
         attack=replace(
             DEFAULT_ENEMY_ATTACK_DATA,

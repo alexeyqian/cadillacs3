@@ -165,6 +165,13 @@ ENEMY_FLANK_OFFSET_Z = 36
 ENEMY_FLANK_DECISION_DURATION = 20
 ENEMY_FLANK_Z_TOLERANCE = 18
 
+# How often (frames) an enemy re-rolls whether it's running or walking while
+# closing in on the player, and the odds it rolls "running" each time.
+# Re-rolling on a timer (rather than every frame) keeps it from flickering
+# between the two speeds/animations as it closes distance.
+ENEMY_RUN_DECISION_DURATION = 90
+ENEMY_RUN_CHANCE = 0.35
+
 ######## stage exit ########
 # How long the exit's closed -> open transition takes once the player
 # touches it (seconds). Applies whether the stage's exit is dressed up as
