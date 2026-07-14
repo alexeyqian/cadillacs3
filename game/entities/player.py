@@ -5,8 +5,10 @@ from game.entities.character import Character
 from game.entities.player_config import get_player_config
 from game.entities.character_renderer import CharacterRenderer
 from game.entities.attack_data import (
+    AttackPhase,
     DEFAULT_PLAYER_COMBO_ATTACKS,
     DEFAULT_PLAYER_RUN_ATTACK_DATA,
+    DEFAULT_PLAYER_GRAB_KNEE_DATA,
 )
 
 from game.components.interaction_component import InteractionComponent
@@ -56,6 +58,20 @@ class Player(Character):
         self.intent.running = input.running
         self.intent.wants_jump = input.jump_pressed
         self.intent.wants_attack = input.attack_pressed
+
+    def update_attack(self, dt):
+        grab = self.get_component(GrabController)
+        # Route through the grab flow whenever it's holding someone, or while
+        # a knee swing it started is still finishing (target may have died
+        # or been released mid-swing - see GrabController.update).
+        mid_knee_swing = (
+            self.attack_phase != AttackPhase.FINISHED
+            and self.current_attack is DEFAULT_PLAYER_GRAB_KNEE_DATA
+        )
+        if grab.grabbed_target is not None or mid_knee_swing:
+            grab.update(dt, self.intent.wants_attack)
+            return
+        super().update_attack(dt)
 
 
 

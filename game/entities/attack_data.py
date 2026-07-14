@@ -106,6 +106,18 @@ DEFAULT_PLAYER_COMBO_ATTACKS = [
     DEFAULT_PLAYER_ATTACK_3_DATA,
 ]
 
+DEFAULT_PLAYER_GRAB_KNEE_DATA = AttackData(
+    name="grab_knee",
+    damage=PLAYER_GRAB_KNEE_DAMAGE,
+    # *_DURATION constants are frame counts; the "grab_knee" clip's own
+    # frame_durations (see mustapha_data.py) are tuned 1:1 with these so the
+    # windup/active/recovery pose lines up with the animation frame shown.
+    windup=PLAYER_GRAB_KNEE_WINDUP_DURATION / FPS,
+    active=PLAYER_GRAB_KNEE_ACTIVE_DURATION / FPS,
+    recovery=PLAYER_GRAB_KNEE_RECOVERY_DURATION / FPS,
+)
+
+
 DEFAULT_PLAYER_RUN_ATTACK_DATA = AttackData(
     name="run_attack",
     delay=0,

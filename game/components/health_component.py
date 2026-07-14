@@ -9,8 +9,8 @@ class HealthComponent:
         self.health = max_health
         self.invuln_timer = None
 
-    def take_damage(self, amount, knockback):
-        if self.invuln_timer and self.invuln_timer.is_active:
+    def take_damage(self, amount, knockback, ignore_invuln=False):
+        if not ignore_invuln and self.invuln_timer and self.invuln_timer.is_active:
             return
 
         stats = self.owner.get_component(StatsComponent)

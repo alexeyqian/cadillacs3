@@ -5,6 +5,7 @@ from game.colors import *
 from game.display import create_display, present_screen
 from game.camera import Camera
 from game.entities.mustapha_player import MustaphaPlayer
+from game.controllers.grab_controller import GrabController
 from game.world.stage import Stage
 from game.world.stage_manager import StageManager
 from game.managers.combat_manager import CombatManager
@@ -101,6 +102,11 @@ def main():
         # enemy reads them in update_intention - keeps the crowd from
         # instantly mobbing the player (see EnemyAIManager).
         enemy_ai_manager.resolve(dt, player, stage.enemies)
+
+        # Auto-grab: locks on the moment an enemy is within reach, ahead of
+        # this frame's intention/movement/attack phases so a fresh grab
+        # freezes movement the same frame it starts.
+        player.get_component(GrabController).try_grab(stage.enemies)
 
         # Phase 1: decide. Reads input/AI state only, nothing moves yet,
         # so order across characters doesn't matter.

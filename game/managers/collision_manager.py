@@ -25,6 +25,13 @@ class CollisionManager:
                 if not box_b:
                     continue
 
+                # A held target is deliberately kept right next to its
+                # grabber (see GrabController) - pushing them apart here
+                # would fight that every frame and drag both into a runaway
+                # drift as each push gets immediately re-snapped back.
+                if a.is_grabbed or b.is_grabbed:
+                    continue
+
                 self._separate(a, b, box_a.get_rect(), box_b.get_rect())
 
     def _separate(self, a, b, rect_a, rect_b):

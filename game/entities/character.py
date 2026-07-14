@@ -48,6 +48,10 @@ class Character(Entity):
         self.sprite_scale = 1.0
         self.alive = True
 
+        # True while held by a GrabController - excluded from CombatManager's
+        # hitbox/hurtbox scan so only the grab itself can damage/release it.
+        self.is_grabbed = False
+
         # State machine: gates which actions are currently allowed.
         self.state = "idle"
         self.hit_stun_timer = None

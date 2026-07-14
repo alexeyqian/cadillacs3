@@ -20,6 +20,11 @@ class CombatManager:
             for target in characters:
                 if target is attacker or not target.alive:
                     continue
+                # Held targets only take damage/get released through the
+                # grab itself (see GrabController) - otherwise a bystander's
+                # hitbox could stun/knock them out of the grab mid-combo.
+                if target.is_grabbed:
+                    continue
                 if target in hitbox.hits:
                     continue
                 health = target.get_component(HealthComponent)

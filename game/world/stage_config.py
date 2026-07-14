@@ -39,13 +39,13 @@ STAGES = [
         "waves": [
             {
                 "trigger_x": 1000,
-                "max_active": 2,
+                "max_active": 1,
                 "spawns": [
                     {"enemy_type": "ferris", "side": "right", "count": 2, "delay": 60},
                 ],
             },
             {
-                "trigger_x": 2000,
+                "trigger_x": 2500,
                 "max_active": 4,
                 "spawns": [
                     {
@@ -56,27 +56,8 @@ STAGES = [
                         "enemy_type": "gneiss",
                         "side": "left",
                         "count": 2
+                        #"capability_overrides": {"can_run": True},
                     }
-                ],
-            },
-            {
-                "trigger_x": 3000,
-                "max_active": 4,
-                "spawns": [
-                    {
-                        "enemy_type": "gneiss",
-                        "count": 2
-                    },
-                    {
-                        # capability_overrides lets a single spawn deviate from
-                        # its archetype's default in enemy_config.py - black_elmer
-                        # is normally walk-only (can_run=False), but this one
-                        # charges in for a surprise beat closing out the stage.
-                        "enemy_type": "black_elmer",
-                        "side": "left",
-                        "count": 1,
-                        "capability_overrides": {"can_run": True},
-                    },
                 ],
             },
         ],
