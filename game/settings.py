@@ -138,18 +138,28 @@ PLAYER_GRAB_KNEE_DAMAGE=int(FIST_DAMAGE*0.75)
 # for another attack press - matches the classic "grab, knee x N, toss"
 # beat-em-up combo rather than letting it continue indefinitely.
 PLAYER_GRAB_KNEE_HIT_COUNT = 3
-# once this many knees land, pressing away from the target throws it
-# backward immediately instead of waiting for the auto-throw at
-# PLAYER_GRAB_KNEE_HIT_COUNT - only reachable before the last knee, since
-# the auto-throw already fires the instant that one lands.
-PLAYER_GRAB_BACK_THROW_MIN_KNEES = 2
+# pressing a direction (toward or away from the target) throws it that way
+# immediately, once at least this many knees have landed - 0 means it's
+# available the instant the grab starts, with no knees required. Only
+# reachable before the last knee of PLAYER_GRAB_KNEE_HIT_COUNT, since the
+# auto-throw already fires the instant that one lands.
+PLAYER_GRAB_THROW_MIN_KNEES = 0
+# If the player takes no action (knee or directional throw) within this
+# long after grabbing (or after the last knee), the target breaks free
+# instead of being held forever.
+PLAYER_GRAB_HOLD_TIMEOUT = 90
 THROWN_DAMAGE=int(FIST_DAMAGE*1.5)
-THROWN_KNOCKBACK_X = 800
+# Big relative to normal hit knockback (ATTACK_1_KNOCKBACK_VELOCITY=100) on
+# purpose - a throw should visibly launch the target several character-widths
+# away, not just stagger it.
+THROWN_KNOCKBACK_X = 1400
 THROWN_KNOCKBACK_Z = -400
 # How long the thrown target slides/lies in "hit" before it can act again,
 # and how long the player holds the "throw" pose before returning to idle -
-# both reuse the existing hit-stun/set_state("idle") timer pattern.
-THROWN_STUN_DURATION = 30
+# both reuse the existing hit-stun/set_state("idle") timer pattern. Longer
+# than a normal hit-stun so the full knockback has time to travel before
+# the target can act (and be re-grabbed) again.
+THROWN_STUN_DURATION = 40
 PLAYER_THROW_POSE_DURATION = 16
 # weapons
 KNIFE_DAMAGE=int(FIST_DAMAGE*1.5)
