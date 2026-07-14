@@ -112,7 +112,7 @@ MUSTAPHA_ANIMATIONS = {
     },
     "throw": {
         "file": "assets/player/mustapha_throw_3x.png",
-        "frames_count": 2,
+        "frames_count": 3,
         "frame_width":256,
         "frame_height":256,
     },

@@ -138,9 +138,14 @@ PLAYER_GRAB_KNEE_DAMAGE=int(FIST_DAMAGE*0.75)
 # for another attack press - matches the classic "grab, knee x N, toss"
 # beat-em-up combo rather than letting it continue indefinitely.
 PLAYER_GRAB_KNEE_HIT_COUNT = 3
+# once this many knees land, pressing away from the target throws it
+# backward immediately instead of waiting for the auto-throw at
+# PLAYER_GRAB_KNEE_HIT_COUNT - only reachable before the last knee, since
+# the auto-throw already fires the instant that one lands.
+PLAYER_GRAB_BACK_THROW_MIN_KNEES = 2
 THROWN_DAMAGE=int(FIST_DAMAGE*1.5)
-THROWN_KNOCKBACK_X = 500
-THROWN_KNOCKBACK_Z = -200
+THROWN_KNOCKBACK_X = 800
+THROWN_KNOCKBACK_Z = -400
 # How long the thrown target slides/lies in "hit" before it can act again,
 # and how long the player holds the "throw" pose before returning to idle -
 # both reuse the existing hit-stun/set_state("idle") timer pattern.

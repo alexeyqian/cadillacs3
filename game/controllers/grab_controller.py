@@ -7,6 +7,7 @@ from game.components.health_component import HealthComponent
 from game.settings import (
     PLAYER_GRAB_RANGE,
     PLAYER_GRAB_KNEE_HIT_COUNT,
+    PLAYER_GRAB_BACK_THROW_MIN_KNEES,
     THROWN_DAMAGE,
     THROWN_KNOCKBACK_X,
     THROWN_KNOCKBACK_Z,
@@ -32,6 +33,10 @@ class GrabController:
         self.grabbed_target: Optional[Character] = None
         self.knee_hits_landed = 0
         self._damage_applied_this_swing = False
+        # Edge-tracks the "press away to back-throw" input (see
+        # _check_back_throw_pressed) so a direction key already held when
+        # the knee threshold is crossed doesn't fire it immediately.
+        self._back_throw_held = False
 
     def try_grab(self, targets: List[Character]):
         owner = self.owner
@@ -57,6 +62,7 @@ class GrabController:
         self.grabbed_target = target
         self.knee_hits_landed = 0
         self._damage_applied_this_swing = False
+        self._back_throw_held = False
 
         owner.vx = owner.vz = 0
         owner.set_state("grab")
@@ -96,8 +102,26 @@ class GrabController:
         if self.grabbed_target is None:
             return
 
+        # Tracked unconditionally (not just once the knee threshold is met)
+        # so a direction key already held from before the threshold crossed
+        # reads as "still held", not a fresh press the instant it opens.
+        back_throw_pressed = self._check_back_throw_pressed()
+        if self.knee_hits_landed >= PLAYER_GRAB_BACK_THROW_MIN_KNEES and back_throw_pressed:
+            self.throw_target(direction=-owner.facing)
+            return
+
         if wants_attack:
             self._start_knee()
+
+    def _check_back_throw_pressed(self):
+        """Rising-edge check on "holding the direction away from the
+        target" - a key already held before the knee threshold was
+        crossed shouldn't instantly fire a back-throw."""
+        owner = self.owner
+        is_pressed = owner.intent.move_x == -owner.facing
+        just_pressed = is_pressed and not self._back_throw_held
+        self._back_throw_held = is_pressed
+        return just_pressed
 
     def _start_knee(self):
         owner = self.owner
@@ -142,18 +166,24 @@ class GrabController:
             self._award_score(target)
             self._end_grab()
 
-    def throw_target(self):
+    def throw_target(self, direction=None):
         owner = self.owner
         target = self.grabbed_target
         if target is None:
             return
+        if direction is None:
+            direction = owner.facing
+        # A back-throw sends the target the opposite way from the player's
+        # current facing - flip to match, since CharacterRenderer mirrors
+        # the "throw" sprite purely off owner.facing.
+        owner.facing = direction
 
         health = target.get_component(HealthComponent)
         # Same invuln concern as the knees - the throw follows the last one
         # within a fraction of a second.
         health.take_damage(
             THROWN_DAMAGE,
-            (THROWN_KNOCKBACK_X * owner.facing, THROWN_KNOCKBACK_Z),
+            (THROWN_KNOCKBACK_X * direction, THROWN_KNOCKBACK_Z),
             ignore_invuln=True,
         )
 
@@ -184,3 +214,4 @@ class GrabController:
         self.grabbed_target = None
         self.knee_hits_landed = 0
         self._damage_applied_this_swing = False
+        self._back_throw_held = False
