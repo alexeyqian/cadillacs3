@@ -52,3 +52,5 @@ GNEISS_ANIMATIONS = {
         "loop": False,
     },
 }
+# No dedicated "thrown" reaction art yet - reuse the flinch pose.
+GNEISS_ANIMATIONS["thrown"] = GNEISS_ANIMATIONS["hit"]

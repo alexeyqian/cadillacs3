@@ -94,11 +94,11 @@ class Character(Entity):
             return
         self.state = new_state
 
-    def stun(self, duration):
+    def stun(self, duration, state="hit"):
         if self.hit_stun_timer:
             self.hit_stun_timer.cancel()
         self.cancel_attack()
-        self.set_state("hit")
+        self.set_state(state)
         self.hit_stun_timer = TimerManager.start_timer(duration, lambda: self.set_state("idle"))
 
     def cancel_attack(self):

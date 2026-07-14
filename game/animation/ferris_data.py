@@ -43,6 +43,13 @@ FERRIS_ANIMATIONS = {
         "frame_width": 256,
         "frame_height": 256,
     },
+    "thrown": {
+        "file": "assets/enemies/ferris_thrown_3x.png",
+        "frames_count": 4,
+        "frame_width": 384,
+        "frame_height": 384,
+        "loop": False,
+    },
     "dead": {
         "file": "assets/enemies/ferris_dead_3x.png",
         "frames_count": 1,

@@ -33,3 +33,7 @@ WALTHER_ANIMATIONS = {
         "loop": False,
     },
 }
+# No dedicated grab-reaction art yet - reuse the flinch pose while held/kneed/thrown.
+WALTHER_ANIMATIONS["grabbed"] = WALTHER_ANIMATIONS["hit"]
+WALTHER_ANIMATIONS["grab_kneed"] = WALTHER_ANIMATIONS["hit"]
+WALTHER_ANIMATIONS["thrown"] = WALTHER_ANIMATIONS["hit"]

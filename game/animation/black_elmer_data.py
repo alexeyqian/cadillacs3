@@ -34,5 +34,7 @@ BLACK_ELMER_ANIMATIONS = {
         "loop": False,
     },
 }
-# No dedicated "grabbed" reaction art yet - reuse the flinch pose while held.
+# No dedicated grab-reaction art yet - reuse the flinch pose while held/kneed/thrown.
 BLACK_ELMER_ANIMATIONS["grabbed"] = BLACK_ELMER_ANIMATIONS["hit"]
+BLACK_ELMER_ANIMATIONS["grab_kneed"] = BLACK_ELMER_ANIMATIONS["hit"]
+BLACK_ELMER_ANIMATIONS["thrown"] = BLACK_ELMER_ANIMATIONS["hit"]

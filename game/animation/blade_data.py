@@ -48,3 +48,7 @@ BLADE_ANIMATIONS = {
         "loop": False,
     },
 }
+# No dedicated grab-reaction art yet - reuse the flinch pose while held/kneed/thrown.
+BLADE_ANIMATIONS["grabbed"] = BLADE_ANIMATIONS["hit"]
+BLADE_ANIMATIONS["grab_kneed"] = BLADE_ANIMATIONS["hit"]
+BLADE_ANIMATIONS["thrown"] = BLADE_ANIMATIONS["hit"]
