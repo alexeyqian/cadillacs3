@@ -103,10 +103,11 @@ def main():
         # instantly mobbing the player (see EnemyAIManager).
         enemy_ai_manager.resolve(dt, player, stage.enemies)
 
-        # Auto-grab: locks on the moment an enemy is within reach, ahead of
-        # this frame's intention/movement/attack phases so a fresh grab
-        # freezes movement the same frame it starts.
-        player.get_component(GrabController).try_grab(stage.enemies)
+        # Grab: a deliberate attack press while adjacent to an enemy, ahead
+        # of this frame's intention/movement/attack phases so a fresh grab
+        # freezes movement the same frame it starts. If no target is in
+        # range this same press falls through to a normal punch below.
+        player.get_component(GrabController).try_grab(stage.enemies, input.attack_pressed)
 
         # Phase 1: decide. Reads input/AI state only, nothing moves yet,
         # so order across characters doesn't matter.

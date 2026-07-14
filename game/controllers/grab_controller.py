@@ -7,7 +7,8 @@ from game.components.health_component import HealthComponent
 from game.settings import (
     PLAYER_GRAB_RANGE,
     PLAYER_GRAB_KNEE_HIT_COUNT,
-    PLAYER_GRAB_BACK_THROW_MIN_KNEES,
+    PLAYER_GRAB_THROW_MIN_KNEES,
+    PLAYER_GRAB_HOLD_TIMEOUT,
     THROWN_DAMAGE,
     THROWN_KNOCKBACK_X,
     THROWN_KNOCKBACK_Z,
@@ -24,23 +25,28 @@ _HOLD_OFFSET_X = 40
 
 
 class GrabController:
-    """Auto-grabs the nearest enemy in range, then lets the player knee it
-    (reusing Character's normal windup/active/recovery attack machinery)
-    for a fixed number of hits before automatically throwing it - the
-    Cadillacs & Dinosaurs-style grab combo."""
+    """Presses attack while adjacent to grab the nearest enemy in range,
+    then lets the player knee it (reusing Character's normal
+    windup/active/recovery attack machinery) for a fixed number of hits
+    before automatically throwing it - the Cadillacs & Dinosaurs-style
+    grab combo. Requiring a deliberate attack press (rather than grabbing
+    on proximity alone) matches how the genre's original arcade games
+    disambiguate "grab" from "just walked next to someone"."""
 
     def __init__(self):
         self.grabbed_target: Optional[Character] = None
         self.knee_hits_landed = 0
         self._damage_applied_this_swing = False
-        # Edge-tracks the "press away to back-throw" input (see
-        # _check_back_throw_pressed) so a direction key already held when
-        # the knee threshold is crossed doesn't fire it immediately.
-        self._back_throw_held = False
+        # The same attack press that triggers the grab would otherwise also
+        # read as "wants_attack" the instant grab.update() runs this same
+        # frame, throwing in an unrequested first knee - suppressed once,
+        # then cleared, so the player has to press attack again for it.
+        self._suppress_next_attack = False
+        self._hold_timer = 0.0
 
-    def try_grab(self, targets: List[Character]):
+    def try_grab(self, targets: List[Character], wants_attack: bool):
         owner = self.owner
-        if self.grabbed_target is not None or not owner.can_act():
+        if not wants_attack or self.grabbed_target is not None or not owner.can_act():
             return False
 
         for target in targets:
@@ -62,7 +68,8 @@ class GrabController:
         self.grabbed_target = target
         self.knee_hits_landed = 0
         self._damage_applied_this_swing = False
-        self._back_throw_held = False
+        self._suppress_next_attack = True
+        self._hold_timer = PLAYER_GRAB_HOLD_TIMEOUT / FPS
 
         owner.vx = owner.vz = 0
         owner.set_state("grab")
@@ -102,30 +109,37 @@ class GrabController:
         if self.grabbed_target is None:
             return
 
-        # Tracked unconditionally (not just once the knee threshold is met)
-        # so a direction key already held from before the threshold crossed
-        # reads as "still held", not a fresh press the instant it opens.
-        back_throw_pressed = self._check_back_throw_pressed()
-        if self.knee_hits_landed >= PLAYER_GRAB_BACK_THROW_MIN_KNEES and back_throw_pressed:
-            self.throw_target(direction=-owner.facing)
-            return
-
-        if wants_attack:
+        if wants_attack and not self._suppress_next_attack:
+            # Attack is already edge-triggered (see InputReader), so this
+            # only fires once per press - no separate debounce needed on
+            # the direction itself. Hold a direction + press attack throws
+            # that way (matches the genre's "direction + punch" throw
+            # command); attack with no direction held knees instead.
+            direction = owner.intent.move_x
+            if self.knee_hits_landed >= PLAYER_GRAB_THROW_MIN_KNEES and direction != 0:
+                self.throw_target(direction=direction)
+                return
             self._start_knee()
+        self._suppress_next_attack = False
 
-    def _check_back_throw_pressed(self):
-        """Rising-edge check on "holding the direction away from the
-        target" - a key already held before the knee threshold was
-        crossed shouldn't instantly fire a back-throw."""
+        # No action taken this "idle hold" tick - count down toward an
+        # automatic release so the target isn't held forever.
+        self._hold_timer -= dt
+        if self._hold_timer <= 0:
+            self._release_on_timeout()
+
+    def _release_on_timeout(self):
         owner = self.owner
-        is_pressed = owner.intent.move_x == -owner.facing
-        just_pressed = is_pressed and not self._back_throw_held
-        self._back_throw_held = is_pressed
-        return just_pressed
+        target = self.grabbed_target
+        if owner.state == "grab":
+            owner.set_state("idle")
+        target.set_state("idle")
+        self._end_grab()
 
     def _start_knee(self):
         owner = self.owner
         self._damage_applied_this_swing = False
+        self._hold_timer = PLAYER_GRAB_HOLD_TIMEOUT / FPS
         owner.current_attack = DEFAULT_PLAYER_GRAB_KNEE_DATA
         owner.attack_phase = AttackPhase.WINDUP
         owner.attack_timer = 0.0
@@ -214,4 +228,5 @@ class GrabController:
         self.grabbed_target = None
         self.knee_hits_landed = 0
         self._damage_applied_this_swing = False
-        self._back_throw_held = False
+        self._suppress_next_attack = False
+        self._hold_timer = 0.0
