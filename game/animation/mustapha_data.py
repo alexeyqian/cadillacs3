@@ -104,11 +104,11 @@ MUSTAPHA_ANIMATIONS = {
     },
     "grab_knee": {
         "file": "assets/player/mustapha_grab_knee_3x.png",
-        "frames_count": 3,
+        "frames_count": 1,
         "frame_width":256,
         "frame_height":256,
         "hitbox": (64, -180, 64, 100),
-        "frame_durations": (6,4,4)
+        "frame_durations": (8,)
     },
     "throw": {
         "file": "assets/player/mustapha_throw_3x.png",

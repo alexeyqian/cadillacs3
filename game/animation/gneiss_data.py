@@ -11,6 +11,12 @@ GNEISS_ANIMATIONS = {
         "frame_width": 256,
         "frame_height": 256,
     },
+    "run": {
+        "file": "assets/enemies/gneiss_run_3x.png",
+        "frames_count": 6,
+        "frame_width": 256,
+        "frame_height": 256,
+    },
     "attack": {
         "file": "assets/enemies/gneiss_attack_3x.png",
         "frames_count": 3,
@@ -21,6 +27,18 @@ GNEISS_ANIMATIONS = {
     },
     "hit": {
         "file": "assets/enemies/gneiss_hit_3x.png",
+        "frames_count": 1,
+        "frame_width": 256,
+        "frame_height": 256,
+    },
+    "grabbed": {
+        "file": "assets/enemies/gneiss_grabbed_3x.png",
+        "frames_count": 1,
+        "frame_width": 256,
+        "frame_height": 256,
+    },
+    "grab_kneed": {
+        "file": "assets/enemies/gneiss_grab_kneed_3x.png",
         "frames_count": 1,
         "frame_width": 256,
         "frame_height": 256,
