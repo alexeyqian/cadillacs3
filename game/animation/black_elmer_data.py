@@ -34,3 +34,5 @@ BLACK_ELMER_ANIMATIONS = {
         "loop": False,
     },
 }
+# No dedicated "grabbed" reaction art yet - reuse the flinch pose while held.
+BLACK_ELMER_ANIMATIONS["grabbed"] = BLACK_ELMER_ANIMATIONS["hit"]
