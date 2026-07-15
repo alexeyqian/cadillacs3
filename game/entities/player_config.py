@@ -1,7 +1,8 @@
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 from game.settings import *
 from game.animation.mustapha_data import MUSTAPHA_ANIMATIONS
 from game.entities.attack_data import (
+    make_attack_data,
     DEFAULT_PLAYER_ATTACK_1_DATA,
     DEFAULT_PLAYER_ATTACK_2_DATA,
     DEFAULT_PLAYER_ATTACK_3_DATA,
@@ -31,18 +32,18 @@ class PlayerConfig:
 # "attack2"/"attack3" entries, layered onto the generic timing/damage
 # templates from attack_data.py.
 MUSTAPHA_COMBO_ATTACKS = [
-    replace(DEFAULT_PLAYER_ATTACK_1_DATA,
+    make_attack_data(base=DEFAULT_PLAYER_ATTACK_1_DATA,
         hitbox_offset_x=64, hitbox_offset_y=-256, hitbox_w=128, hitbox_h=100),
-    replace(DEFAULT_PLAYER_ATTACK_2_DATA,
+    make_attack_data(base=DEFAULT_PLAYER_ATTACK_2_DATA,
         hitbox_offset_x=64, hitbox_offset_y=-192, hitbox_w=128, hitbox_h=100),
-    replace(DEFAULT_PLAYER_ATTACK_3_DATA,
+    make_attack_data(base=DEFAULT_PLAYER_ATTACK_3_DATA,
         hitbox_offset_x=64, hitbox_offset_y=-192, hitbox_w=128, hitbox_h=100),
 ]
 
-MUSTAPHA_RUN_ATTACK_DATA = replace(DEFAULT_PLAYER_RUN_ATTACK_DATA,
+MUSTAPHA_RUN_ATTACK_DATA = make_attack_data(base=DEFAULT_PLAYER_RUN_ATTACK_DATA,
     hitbox_offset_x=50, hitbox_offset_y=-230, hitbox_w=128, hitbox_h=100)
 
-MUSTAPHA_GRAB_KNEE_DATA = replace(DEFAULT_PLAYER_GRAB_KNEE_DATA,
+MUSTAPHA_GRAB_KNEE_DATA = make_attack_data(base=DEFAULT_PLAYER_GRAB_KNEE_DATA,
     hitbox_offset_x=64, hitbox_offset_y=-180, hitbox_w=128, hitbox_h=100)
 
 

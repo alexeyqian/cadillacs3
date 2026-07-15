@@ -1,7 +1,7 @@
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 from typing import Optional
 from game.settings import *
-from game.entities.attack_data import AttackData, DEFAULT_ENEMY_ATTACK_DATA
+from game.entities.attack_data import AttackData, DEFAULT_ENEMY_ATTACK_DATA, make_attack_data
 
 
 GNEISS_SCALER=1.2
@@ -60,8 +60,8 @@ ENEMY_CONFIGS = {
         display_name="Ferris",
         can_run=True,
 
-        attack=replace(
-            DEFAULT_ENEMY_ATTACK_DATA,
+        attack=make_attack_data(
+            base=DEFAULT_ENEMY_ATTACK_DATA,
             hitbox_offset_x=96, hitbox_offset_y=-200, hitbox_w=96, hitbox_h=50,
         ),
     ),
@@ -74,14 +74,13 @@ ENEMY_CONFIGS = {
         speed=int(ENEMY_SPEED),
         can_run=True,
 
-        attack=replace(
-            DEFAULT_ENEMY_ATTACK_DATA,
+        attack=make_attack_data(
+            base=DEFAULT_ENEMY_ATTACK_DATA,
             damage=int(ENEMY_ATTACK_DAMAGE * GNEISS_SCALER),
-            delay=int(ENEMY_ATTACK_DELAY * 0.8),
-            cooldown=int(ENEMY_ATTACK_COOLDOWN * 0.8) / FPS,
-            windup=ENEMY_ATTACK_WINDUP / FPS,
-            active=ENEMY_ATTACK_ACTIVE / FPS,
-            recovery=ENEMY_ATTACK_RECOVERY / FPS,
+            cooldown=int(ENEMY_ATTACK_COOLDOWN * 0.8),
+            windup=ENEMY_ATTACK_WINDUP,
+            active=ENEMY_ATTACK_ACTIVE,
+            recovery=ENEMY_ATTACK_RECOVERY,
             hitbox_offset_x=96, hitbox_offset_y=-200, hitbox_w=96, hitbox_h=50,
         ),
         score_points=int(ENEMY_SCORE_POINTS*GNEISS_SCALER),
@@ -94,20 +93,19 @@ ENEMY_CONFIGS = {
         speed=int(ENEMY_SPEED),
         can_run=True,
 
-        attack=replace(
-            DEFAULT_ENEMY_ATTACK_DATA,
+        attack=make_attack_data(
+            base=DEFAULT_ENEMY_ATTACK_DATA,
             damage=int(ENEMY_ATTACK_DAMAGE * 1.5),
-            delay=int(ENEMY_ATTACK_DELAY * 0.8),
-            cooldown=int(ENEMY_ATTACK_COOLDOWN * 0.8) / FPS,
-            windup=ENEMY_ATTACK_WINDUP / FPS,
-            active=ENEMY_ATTACK_ACTIVE / FPS,
-            recovery=ENEMY_ATTACK_RECOVERY / FPS,
+            cooldown=int(ENEMY_ATTACK_COOLDOWN * 0.8),
+            windup=ENEMY_ATTACK_WINDUP,
+            active=ENEMY_ATTACK_ACTIVE,
+            recovery=ENEMY_ATTACK_RECOVERY,
             hitbox_offset_x=24, hitbox_offset_y=-240, hitbox_w=170, hitbox_h=100,
         ),
         # Not yet wired to a triggerable jump-attack state (see can_jump_attack) -
         # geometry kept here so it's ready once that's hooked up.
-        jump_attack=replace(
-            DEFAULT_ENEMY_ATTACK_DATA,
+        jump_attack=make_attack_data(
+            base=DEFAULT_ENEMY_ATTACK_DATA,
             hitbox_offset_x=64, hitbox_offset_y=-354, hitbox_w=85, hitbox_h=100,
         ),
         score_points=int(ENEMY_SCORE_POINTS*1.5),
@@ -128,14 +126,13 @@ ENEMY_CONFIGS = {
 
         attack_range=int(ENEMY_ATTACK_RANGE * BLACK_ELMER_SCALER),
         attack_lane_range=int(ENEMY_ATTACK_LANE_RANGE * BLACK_ELMER_SCALER),
-        attack=replace(
-            DEFAULT_ENEMY_ATTACK_DATA,
+        attack=make_attack_data(
+            base=DEFAULT_ENEMY_ATTACK_DATA,
             damage=ENEMY_ATTACK_DAMAGE * BLACK_ELMER_SCALER,
-            delay=int(ENEMY_ATTACK_DELAY * BLACK_ELMER_SCALER),
-            cooldown=int(ENEMY_ATTACK_COOLDOWN * BLACK_ELMER_SCALER) / FPS,
-            windup=int(ENEMY_ATTACK_WINDUP*BLACK_ELMER_SCALER) / FPS,
-            active=int(ENEMY_ATTACK_ACTIVE*BLACK_ELMER_SCALER) / FPS,
-            recovery=int(ENEMY_ATTACK_RECOVERY*BLACK_ELMER_SCALER) / FPS,
+            cooldown=int(ENEMY_ATTACK_COOLDOWN * BLACK_ELMER_SCALER),
+            windup=int(ENEMY_ATTACK_WINDUP*BLACK_ELMER_SCALER),
+            active=int(ENEMY_ATTACK_ACTIVE*BLACK_ELMER_SCALER),
+            recovery=int(ENEMY_ATTACK_RECOVERY*BLACK_ELMER_SCALER),
             lane_reach=1,
             hitbox_offset_x=92, hitbox_offset_y=-185, hitbox_w=100, hitbox_h=100,
         ),
@@ -156,14 +153,13 @@ ENEMY_CONFIGS = {
         speed=int(ENEMY_SPEED * 0.7),
         attack_range=int(ENEMY_ATTACK_RANGE * WALTHER_SCALER),
         attack_lane_range=int(ENEMY_ATTACK_LANE_RANGE * WALTHER_SCALER),
-        attack=replace(
-            DEFAULT_ENEMY_ATTACK_DATA,
+        attack=make_attack_data(
+            base=DEFAULT_ENEMY_ATTACK_DATA,
             damage=ENEMY_ATTACK_DAMAGE * WALTHER_SCALER,
-            delay=int(ENEMY_ATTACK_DELAY * 1),
-            cooldown=int(ENEMY_ATTACK_COOLDOWN * WALTHER_SCALER) / FPS,
-            windup=int(ENEMY_ATTACK_WINDUP*WALTHER_SCALER) / FPS,
-            active=int(ENEMY_ATTACK_ACTIVE*WALTHER_SCALER) / FPS,
-            recovery=int(ENEMY_ATTACK_RECOVERY*WALTHER_SCALER) / FPS,
+            cooldown=int(ENEMY_ATTACK_COOLDOWN * WALTHER_SCALER),
+            windup=int(ENEMY_ATTACK_WINDUP*WALTHER_SCALER),
+            active=int(ENEMY_ATTACK_ACTIVE*WALTHER_SCALER),
+            recovery=int(ENEMY_ATTACK_RECOVERY*WALTHER_SCALER),
             lane_reach=1,
             hitbox_offset_x=64, hitbox_offset_y=-264, hitbox_w=128, hitbox_h=100,
         ),
