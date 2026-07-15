@@ -124,7 +124,10 @@ class Stage:
         self.current_wave_index = 0
         self.current_wave = self.waves[0] if self.waves else None
 
-        self.background = Background(stage_data["background"], self.world_width)
+        self.background = Background(
+            stage_data["background"], self.world_width,
+            lane_top=self.lane_top, lane_bottom=self.lane_bottom,
+        )
 
     def _build_waves(self, wave_configs):
         waves = []

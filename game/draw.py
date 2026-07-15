@@ -13,9 +13,9 @@ _debug_font = None
 _hud_font = None
 _warning_font = None
 
-# Spacing (world/screen z pixels) between the lane-row guide lines drawn
-# on the ground band when NO_IMAGES_FOR_STAGE is on.
-_LANE_LINE_SPACING = 60
+# How many equal-height lanes to divide the ground's walkable z-range into
+# when NO_IMAGES_FOR_STAGE is on.
+_LANE_COUNT = 4
 
 
 def draw(stage, screen):
@@ -39,15 +39,16 @@ def _draw_world(stage, screen):
     stage.background.draw_front(screen, camera.x)
 
 def _draw_lanes(stage, screen):
-    """Debug overlay marking the walkable z-range (lane_top/lane_bottom) -
-    z maps straight to screen y with no camera scroll on that axis, so
-    these are just horizontal lines spanning the full screen width."""
+    """Debug overlay dividing the walkable z-range (lane_top/lane_bottom)
+    into _LANE_COUNT equal lanes - z maps straight to screen y with no
+    camera scroll on that axis, so these are just horizontal lines
+    spanning the full screen width."""
     pygame.draw.line(screen, WHITE_COLOR, (0, stage.lane_top), (SCREEN_WIDTH, stage.lane_top), 2)
     pygame.draw.line(screen, WHITE_COLOR, (0, stage.lane_bottom), (SCREEN_WIDTH, stage.lane_bottom), 2)
-    y = stage.lane_top + _LANE_LINE_SPACING
-    while y < stage.lane_bottom:
+    lane_height = (stage.lane_bottom - stage.lane_top) / _LANE_COUNT
+    for i in range(1, _LANE_COUNT):
+        y = stage.lane_top + i * lane_height
         pygame.draw.line(screen, (200, 200, 200), (0, y), (SCREEN_WIDTH, y), 1)
-        y += _LANE_LINE_SPACING
 
 # todo: in future, just show an png file as arrow
 def _draw_exit_arrow(stage, screen, camera_x):

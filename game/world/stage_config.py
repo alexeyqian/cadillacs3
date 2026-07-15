@@ -18,7 +18,7 @@ STAGES = [
                 "trigger_x": 1500,
                 "max_active": 1,
                 "spawns": [
-                    {"enemy_type": "ferris", "side": "right", "count": 2, "delay": 60},
+                    {"enemy_type": "black_elmer", "side": "right", "count": 1, "delay": 60},
                 ],
             }
         ],

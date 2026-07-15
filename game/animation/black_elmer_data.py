@@ -25,7 +25,7 @@ BLACK_ELMER_ANIMATIONS = {
         "frame_height": 384,
         "frame_durations": (4,8,6)
     },
-    "attack": {
+    "run_attack": {
         "file": "assets/enemies/black_elmer_run_attack_3x.png",
         "frames_count": 9,
         "frame_width": 384,

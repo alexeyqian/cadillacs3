@@ -34,7 +34,7 @@ class Background:
         }
     """
 
-    def __init__(self, layer_configs, world_width):
+    def __init__(self, layer_configs, world_width, lane_top=None, lane_bottom=None):
         self.layers = {}
         max_camera_x = max(0, world_width - SCREEN_WIDTH)
 
@@ -47,11 +47,10 @@ class Background:
         else:
             layer_names = [name for name in LAYER_NAMES if layer_configs.get(name)]
 
-        # Ignores each config's own y_offset (tuned for real cropped art,
-        # meaningless for a solid color) and instead stacks all the layers
-        # into equal horizontal bands, so they're all visible at once
-        # instead of overdrawing each other at y=0.
-        band_height = SCREEN_HEIGHT // len(layer_names) if NO_IMAGES_FOR_STAGE and layer_names else None
+        band_bounds = (
+            self._compute_debug_bands(layer_names, lane_top, lane_bottom)
+            if NO_IMAGES_FOR_STAGE else {}
+        )
 
         for name in layer_names:
             config = layer_configs.get(name) or {}
@@ -62,9 +61,9 @@ class Background:
             # layer and leave gaps in a fast one.
             required_width = max_camera_x * scroll_factor + SCREEN_WIDTH
             if NO_IMAGES_FOR_STAGE:
-                y_offset = layer_names.index(name) * band_height
+                y_offset, band_height = band_bounds[name]
             else:
-                y_offset = config.get("y_offset", 0)
+                y_offset, band_height = config.get("y_offset", 0), None
             self.layers[name] = BackgroundLayer(
                 scroll_factor,
                 image=config.get("image"),
@@ -74,6 +73,32 @@ class Background:
                 layer_name=name,
                 band_height=band_height,
             )
+
+    @staticmethod
+    def _compute_debug_bands(layer_names, lane_top, lane_bottom):
+        """"ground" is sized to exactly the stage's walkable lane range
+        (not an arbitrary slice), so the lane overlay (see draw.py) lines
+        up with it. Layers before "ground" (far/far_mid/near) evenly split
+        the space above lane_top - near ends exactly where ground begins;
+        layers after it (front) evenly split the space below lane_bottom -
+        ground ends exactly where front begins."""
+        top = lane_top if lane_top is not None else int(SCREEN_HEIGHT * 0.4)
+        bottom = lane_bottom if lane_bottom is not None else int(SCREEN_HEIGHT * 0.75)
+
+        ground_index = layer_names.index("ground") if "ground" in layer_names else len(layer_names)
+        before = layer_names[:ground_index]
+        after = layer_names[ground_index + 1:]
+
+        bounds = {}
+        before_height = top // len(before) if before else 0
+        for i, name in enumerate(before):
+            bounds[name] = (i * before_height, before_height)
+        if "ground" in layer_names:
+            bounds["ground"] = (top, bottom - top)
+        after_height = (SCREEN_HEIGHT - bottom) // len(after) if after else 0
+        for i, name in enumerate(after):
+            bounds[name] = (bottom + i * after_height, after_height)
+        return bounds
 
     def draw_background(self, screen, camera_x):
         """far/far_mid/near/ground, in back-to-front order - everything

@@ -144,8 +144,8 @@ ENEMY_CONFIGS = {
         # can_run_attack is independent of that, see _roll_close_attack:
         # a deliberate bull-rush special move, not tied to his everyday
         # movement speed.
-        can_run=False,
-        run_speed=int(ENEMY_RUN_SPEED * 0.9),
+        can_run=True,
+        run_speed=int(ENEMY_RUN_SPEED * 0.7),
         can_run_attack=True,
         can_jump=True,
         can_jump_attack=True,

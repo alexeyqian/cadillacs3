@@ -45,7 +45,7 @@ ENEMY_HITBOX_OFFSET_X = int(ENEMY_W/2)
 ENEMY_HITBOX_OFFSET_Y = int(-1*(ENEMY_HURTBOX_H + 70))
 
 ######## debug ########
-SHOW_DEBUG_INFO=False
+SHOW_DEBUG_INFO=True
 # Dev only.
 # None means start from the first stage normally.
 # Can be a stage id, for example: "episode_1_stage_4_ruined_arena"
