@@ -18,14 +18,10 @@ BLADE_ANIMATIONS = {
         "frame_height": 384,
         "frame_durations": (4,8,6)
     },
+    # He only ever jumps to attack (see enemy_config.py's jump_attack,
+    # name="jump") - one clip covers the whole leap, no separate
+    # non-attacking "jump_attack" state to distinguish it from.
     "jump": {
-        "file": "assets/enemies/blade_jump_attack_3x.png",
-        "frames_count": 4,
-        "frame_width": 384,
-        "frame_height": 384,
-        "frame_durations": (2,2,8,6)
-    },
-    "jump_attack": {
         "file": "assets/enemies/blade_jump_attack_3x.png",
         "frames_count": 4,
         "frame_width": 384,

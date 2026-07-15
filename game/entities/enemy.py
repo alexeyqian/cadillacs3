@@ -39,6 +39,10 @@ class Enemy(Character):
         self.move_speed = config.speed
         self.run_speed = config.run_speed
         self.can_run = config.can_run
+        self.jump_power = config.jump_power
+        self.jump_air_move_speed = config.jump_air_move_speed
+        self.can_jump_attack = config.can_jump_attack
+        self.jump_attack_data = config.jump_attack
         self.attack_range = config.attack_range
         self.attack_data = config.attack
         self.score_points = config.score_points
@@ -68,11 +72,15 @@ class Enemy(Character):
                 self.intent.move_z = 0
                 self.intent.running = False
                 self.intent.wants_attack = True
+                # Jump-capable archetypes always jump-attack rather than
+                # throwing a normal punch - see jump_attack_data.
+                self.intent.wants_jump = self.can_jump_attack and self.jump_attack_data is not None
                 return
             self.intent.move_x = 1 if dx > 0 else -1
             self.intent.move_z = 1 if dz > 0 else -1
             self.intent.running = self._roll_running(dt)
             self.intent.wants_attack = False
+            self.intent.wants_jump = False
             return
 
         # No attack slot right now - hold a flanking position around the
@@ -85,6 +93,7 @@ class Enemy(Character):
         self.intent.move_z = 0 if abs(tdz) < ENEMY_FLANK_Z_TOLERANCE else (1 if tdz > 0 else -1)
         self.intent.running = False
         self.intent.wants_attack = False
+        self.intent.wants_jump = False
 
     def _roll_running(self, dt):
         """Re-decide walk vs. run every ENEMY_RUN_DECISION_DURATION frames

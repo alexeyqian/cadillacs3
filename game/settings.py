@@ -72,6 +72,12 @@ GRAVITY = 1500 # pixels per second
 ENEMY_SPEED=int(PLAYER_SPEED*0.5)
 ENEMY_RUN_SPEED=int(PLAYER_SPEED*0.9)
 ENEMY_Y_SPEED=int(ENEMY_SPEED*0.5)
+# Only meaningful for enemies with can_jump_attack=True (see enemy_config.py) -
+# jump-attack hit timing is driven by the attack's own windup/active/recovery
+# clock, not by physics (e.g. detecting landing), so these just need to be
+# tuned to roughly match how long that clock runs.
+ENEMY_JUMP_POWER = PLAYER_JUMP_POWER
+ENEMY_JUMP_AIR_MOVE_SPEED = int(ENEMY_SPEED * 1.5)
 ENEMY_RUN_CHASE_THRESHOLD=400  # pixels; enemy switches to run when farther than this
 PROJECTILE_SPEED=PLAYER_SPEED*3
 ######## player attack ########

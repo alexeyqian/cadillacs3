@@ -32,6 +32,8 @@ class EnemyConfig:
     can_jump: bool = False
     can_jump_attack: bool = False
     jump_attack: Optional[AttackData] = None
+    jump_power: float = ENEMY_JUMP_POWER
+    jump_air_move_speed: float = ENEMY_JUMP_AIR_MOVE_SPEED
 
     attack: AttackData = DEFAULT_ENEMY_ATTACK_DATA
     score_points: int = ENEMY_SCORE_POINTS
@@ -92,6 +94,8 @@ ENEMY_CONFIGS = {
         max_hp=int(ENEMY_MAX_HP * 1.5),
         speed=int(ENEMY_SPEED),
         can_run=True,
+        can_jump=True,
+        can_jump_attack=True,
 
         attack=make_attack_data(
             base=DEFAULT_ENEMY_ATTACK_DATA,
@@ -102,10 +106,17 @@ ENEMY_CONFIGS = {
             recovery=ENEMY_ATTACK_RECOVERY,
             hitbox_offset_x=24, hitbox_offset_y=-240, hitbox_w=170, hitbox_h=100,
         ),
-        # Not yet wired to a triggerable jump-attack state (see can_jump_attack) -
-        # geometry kept here so it's ready once that's hooked up.
+        # Agile knife stab, mid-air - hitbox timed to land during the jump's
+        # ascent/apex (jump_power/GRAVITY gives ~56f of hang time), not on
+        # landing. name="jump" (not a separate "jump_attack") - he only ever
+        # jumps to attack, so there's no distinct non-attacking jump state/
+        # animation to tell apart from it.
         jump_attack=make_attack_data(
             base=DEFAULT_ENEMY_ATTACK_DATA,
+            name="jump",
+            keep_moving=True,
+            damage=int(ENEMY_ATTACK_DAMAGE * 1.5),
+            windup=12, active=8, recovery=12,
             hitbox_offset_x=64, hitbox_offset_y=-354, hitbox_w=85, hitbox_h=100,
         ),
         score_points=int(ENEMY_SCORE_POINTS*1.5),
@@ -121,8 +132,11 @@ ENEMY_CONFIGS = {
         can_run=False,
         run_speed=int(ENEMY_RUN_SPEED * 0.9),
         can_run_attack=False,
-        can_jump=False,
-        can_jump_attack=False,
+        can_jump=True,
+        can_jump_attack=True,
+        # Doesn't leap high - a heavy hop before dropping his full weight,
+        # not an agile jump (contrast blade's ENEMY_JUMP_POWER default).
+        jump_power=int(ENEMY_JUMP_POWER * 0.85),
 
         attack_range=int(ENEMY_ATTACK_RANGE * BLACK_ELMER_SCALER),
         attack_lane_range=int(ENEMY_ATTACK_LANE_RANGE * BLACK_ELMER_SCALER),
@@ -135,6 +149,27 @@ ENEMY_CONFIGS = {
             recovery=int(ENEMY_ATTACK_RECOVERY*BLACK_ELMER_SCALER),
             lane_reach=1,
             hitbox_offset_x=92, hitbox_offset_y=-185, hitbox_w=100, hitbox_h=100,
+        ),
+        # Body-slam: sits his full weight down on whoever's underneath -
+        # wide, centered, low AoE box rather than a forward-reaching poke,
+        # active for a generous window since the impact itself (not precise
+        # timing) is the read. HitboxComponent.get_rect() anchors offset_x
+        # to extend forward from the facing edge, not centered on the body -
+        # offset_x=-width/2 is what makes it straddle him symmetrically
+        # regardless of which way he's facing when he lands. He doesn't
+        # close distance mid-jump (move_x stays 0 while attacking), so the
+        # box's half-width has to reach at least as far as attack_range
+        # (~195px here), or he can trigger the attack from a spot the slam
+        # can't actually cover. name="jump" (not "jump_attack") - he only
+        # ever jumps to slam, so there's no separate non-attacking jump
+        # animation to distinguish it from.
+        jump_attack=make_attack_data(
+            base=DEFAULT_ENEMY_ATTACK_DATA,
+            name="jump",
+            keep_moving=True,
+            damage=ENEMY_ATTACK_DAMAGE * BLACK_ELMER_SCALER,
+            windup=20, active=20, recovery=20,
+            hitbox_offset_x=-220, hitbox_offset_y=-140, hitbox_w=440, hitbox_h=140,
         ),
         # todo: simplify it
         # So Black Elmer only flinches from the heavy punch
@@ -151,7 +186,14 @@ ENEMY_CONFIGS = {
 
         max_hp=ENEMY_MAX_HP * 4,
         speed=int(ENEMY_SPEED * 0.7),
-        attack_range=int(ENEMY_ATTACK_RANGE * WALTHER_SCALER),
+        # attack_range gates when the AI decides it's close enough to swing
+        # (see Enemy.update_intention's in_range check) - it has to stay
+        # within what the punch's hitbox can actually reach (offset_x=64 +
+        # hitbox_w=128 = 192px), or he throws punches from a distance that
+        # can never connect. Scaling it by WALTHER_SCALER (*3, same as his
+        # damage/timing) blew past that - 390 vs a 192px reach - so it's a
+        # fixed value here instead, comfortably under the hitbox's reach.
+        attack_range=170,
         attack_lane_range=int(ENEMY_ATTACK_LANE_RANGE * WALTHER_SCALER),
         attack=make_attack_data(
             base=DEFAULT_ENEMY_ATTACK_DATA,

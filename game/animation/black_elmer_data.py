@@ -36,3 +36,8 @@ BLACK_ELMER_ANIMATIONS = {
 BLACK_ELMER_ANIMATIONS["grabbed"] = BLACK_ELMER_ANIMATIONS["hit"]
 BLACK_ELMER_ANIMATIONS["grab_kneed"] = BLACK_ELMER_ANIMATIONS["hit"]
 BLACK_ELMER_ANIMATIONS["thrown"] = BLACK_ELMER_ANIMATIONS["hit"]
+# No dedicated jump/body-slam art yet - reuse the punch pose as a
+# placeholder. He only ever jumps to slam (see enemy_config.py's
+# jump_attack, name="jump") - one state covers the whole leap, no separate
+# non-attacking "jump_attack" state to distinguish it from.
+BLACK_ELMER_ANIMATIONS["jump"] = BLACK_ELMER_ANIMATIONS["attack"]

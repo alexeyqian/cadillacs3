@@ -68,6 +68,7 @@ class Character(Entity):
         # the one attack for characters without a combo
         self.attack_data = None # single basic attack, used when combo_attacks is empty
         self.run_attack_data = None # used instead of attack_data while intent.running
+        self.jump_attack_data = None # used instead of attack_data while intent.wants_jump
         self.combo_attacks = [] # e.g. [attack1, attack2, attack3]; empty means no combo chain
         self.combo_index = 0 # index into combo_attacks that the next press will start
         self.combo_window_timer = 0.0 # time left to continue the combo before it resets to hit 1
@@ -146,6 +147,10 @@ class Character(Entity):
             self.set_state(self.current_attack.name)
 
     def _try_start_next_attack(self):
+        if self.intent.wants_jump and self.jump_attack_data:
+            self._try_start_attack(self.jump_attack_data)
+            return
+
         if self.intent.running and self.run_attack_data:
             self._try_start_attack(self.run_attack_data)
             return
