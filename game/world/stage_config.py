@@ -1,4 +1,36 @@
 STAGES = [
+    {
+        "id": "test_stage",
+        "name": "For Testing",
+        # no image for background
+        "background": {
+        },
+        "world_width": 4000,
+        "world_height": 1080,
+        "player_start": (160, 620),
+        "lane_top": 540,
+        "lane_bottom": 940,
+        "intro": {
+            "duration": 0.1,
+        },
+        "waves": [
+            {
+                "trigger_x": 1500,
+                "max_active": 1,
+                "spawns": [
+                    {"enemy_type": "ferris", "side": "right", "count": 2, "delay": 60},
+                ],
+            }
+        ],
+        "weapons": [
+
+        ],
+        "objects": [
+            
+        ],
+        "completion": "clear_waves_then_exit",
+        "exit_rect": (3800, 940, 200, 400),
+    },
 
 
     {

@@ -11,12 +11,26 @@ BLACK_ELMER_ANIMATIONS = {
         "frame_width": 256,
         "frame_height": 256
     },
+    "jump": {
+        "file": "assets/enemies/black_elmer_jump_attack_3x.png",
+        "frames_count": 5,
+        "frame_width": 384,
+        "frame_height": 384,
+        "frame_durations": (4,4,5,5,6)
+    },
     "attack": {
         "file": "assets/enemies/black_elmer_attack_3x.png",
         "frames_count": 3,
         "frame_width": 384,
         "frame_height": 384,
         "frame_durations": (4,8,6)
+    },
+    "attack": {
+        "file": "assets/enemies/black_elmer_run_attack_3x.png",
+        "frames_count": 9,
+        "frame_width": 384,
+        "frame_height": 384,
+        "frame_durations": (2,2,2,2,2,2,2,2,2)
     },
     "hit": {
         "file": "assets/enemies/black_elmer_hit_3x.png",
@@ -36,10 +50,3 @@ BLACK_ELMER_ANIMATIONS = {
 BLACK_ELMER_ANIMATIONS["grabbed"] = BLACK_ELMER_ANIMATIONS["hit"]
 BLACK_ELMER_ANIMATIONS["grab_kneed"] = BLACK_ELMER_ANIMATIONS["hit"]
 BLACK_ELMER_ANIMATIONS["thrown"] = BLACK_ELMER_ANIMATIONS["hit"]
-# No dedicated jump/body-slam art yet - reuse the punch pose as a
-# placeholder. He only ever jumps to slam (see enemy_config.py's
-# jump_attack, name="jump") - one state covers the whole leap, no separate
-# non-attacking "jump_attack" state to distinguish it from.
-BLACK_ELMER_ANIMATIONS["jump"] = BLACK_ELMER_ANIMATIONS["attack"]
-# No dedicated charge-attack art yet - reuse the standing punch pose.
-BLACK_ELMER_ANIMATIONS["run_attack"] = BLACK_ELMER_ANIMATIONS["attack"]

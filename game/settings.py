@@ -51,6 +51,17 @@ SHOW_DEBUG_INFO=False
 # Can be a stage id, for example: "episode_1_stage_4_ruined_arena"
 #"episode_1_stage_4_ruined_arena"
 START_STAGE=None
+# Skips loading/drawing every stage's real background art - each parallax
+# layer (far/far_mid/near/ground/front) instead renders as its own striped
+# color band, still scrolling at its real scroll_factor, so parallax speed
+# and lane placement can be checked before any art exists (see
+# game/world/background_layer.py, game/draw.py's lane overlay).
+NO_IMAGES_FOR_STAGE=True
+# Skips drawing every character's sprite frame - only their collision box
+# (blue), hurtbox (green), and hitbox (red, while active) are drawn, same
+# boxes SHOW_DEBUG_INFO already draws, just without needing a sprite frame
+# underneath them (see CharacterRenderer.draw).
+NO_IMAGES_FOR_CHARACTOR=False
 
 ######## health and score ########
 PLAYER_LIVES=1 #3

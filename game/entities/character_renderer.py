@@ -1,5 +1,5 @@
 import pygame
-from game.settings import SHOW_DEBUG_INFO, DEAD_FLASH_INTERVAL_FRAMES
+from game.settings import SHOW_DEBUG_INFO, NO_IMAGES_FOR_CHARACTOR, DEAD_FLASH_INTERVAL_FRAMES
 from game.colors import *
 from game.camera import world_to_screen
 from game.components.health_component import HealthComponent
@@ -50,13 +50,13 @@ class CharacterRenderer:
 
         screen_x, screen_y = world_to_screen(sprite_world_x, owner.y, owner.z, camera_x)
         frame_rect = pygame.Rect(screen_x, screen_y + offset_y, image.get_width(), image.get_height())
-        if self._is_sprite_visible():
+        if not NO_IMAGES_FOR_CHARACTOR and self._is_sprite_visible():
             screen.blit(image, frame_rect.topleft)
 
         if self.show_health_bar:
             self._draw_health_bar(screen, camera_x, frame_rect)
-        
-        if SHOW_DEBUG_INFO:
+
+        if SHOW_DEBUG_INFO or NO_IMAGES_FOR_CHARACTOR:
             self._draw_debug_boxes(screen, camera_x)
 
     def _is_sprite_visible(self):

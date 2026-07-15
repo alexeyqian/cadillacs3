@@ -1,5 +1,5 @@
 from game.colors import BLACK_COLOR
-from game.settings import SCREEN_WIDTH
+from game.settings import SCREEN_WIDTH, SCREEN_HEIGHT, NO_IMAGES_FOR_STAGE
 from game.world.background_layer import BackgroundLayer
 
 # Layers are listed back-to-front - this is both the draw order for
@@ -37,22 +37,42 @@ class Background:
     def __init__(self, layer_configs, world_width):
         self.layers = {}
         max_camera_x = max(0, world_width - SCREEN_WIDTH)
-        for name in LAYER_NAMES:
-            config = layer_configs.get(name)
-            if not config:
-                continue
+
+        # NO_IMAGES_FOR_STAGE needs no per-stage config at all - draws all 5
+        # layers with default scroll factors, so a stage can test parallax/
+        # lanes with "background": {} and no art. Otherwise, only the
+        # layers a stage actually configures are built.
+        if NO_IMAGES_FOR_STAGE:
+            layer_names = list(LAYER_NAMES)
+        else:
+            layer_names = [name for name in LAYER_NAMES if layer_configs.get(name)]
+
+        # Ignores each config's own y_offset (tuned for real cropped art,
+        # meaningless for a solid color) and instead stacks all the layers
+        # into equal horizontal bands, so they're all visible at once
+        # instead of overdrawing each other at y=0.
+        band_height = SCREEN_HEIGHT // len(layer_names) if NO_IMAGES_FOR_STAGE and layer_names else None
+
+        for name in layer_names:
+            config = layer_configs.get(name) or {}
             scroll_factor = config.get("scroll_factor", DEFAULT_SCROLL_FACTORS[name])
             # A layer scrolling slower/faster than gameplay needs a
             # correspondingly smaller/larger image to still cover the full
             # camera range - a plain world_width would over-tile a slow
             # layer and leave gaps in a fast one.
             required_width = max_camera_x * scroll_factor + SCREEN_WIDTH
+            if NO_IMAGES_FOR_STAGE:
+                y_offset = layer_names.index(name) * band_height
+            else:
+                y_offset = config.get("y_offset", 0)
             self.layers[name] = BackgroundLayer(
                 scroll_factor,
                 image=config.get("image"),
                 tiles=config.get("tiles"),
                 required_width=required_width,
-                y_offset=config.get("y_offset", 0),
+                y_offset=y_offset,
+                layer_name=name,
+                band_height=band_height,
             )
 
     def draw_background(self, screen, camera_x):
