@@ -254,20 +254,23 @@ class Character(Entity):
             # so it's computed here rather than stored statically on AttackData.
             knockback = (self.current_attack.knockback_velocity * self.facing, 0)
 
-            # todo: use hitbox in attack data instead of animation config
-            frame = self.animation_manager.get_current_frame()
-            animation_hitbox = getattr(frame, "hitbox", None)
-
-            hitbox.activate(
-                self.current_attack.damage,
-                knockback,
-                animation_hitbox[0], # offset_x
-                animation_hitbox[1], # offset_z
-                animation_hitbox[2], # hitbox_w
-                animation_hitbox[3]  # hitbox_h
-                #self.current_attack.hitbox_w,
-                #self.current_attack.hitbox_h
+            # The animation config's "hitbox" entry still wins where present
+            # (unchanged for anything that hasn't migrated). Once an attack
+            # no longer has one there (see player_config.py's mustapha combo
+            # attacks), its AttackData's own hitbox fields are used instead -
+            # gameplay tuning, not animation data.
+            #frame = self.animation_manager.get_current_frame()
+            #animation_hitbox = getattr(frame, "hitbox", None)
+            #if animation_hitbox is not None:
+            #    offset_x, offset_z, w, h = animation_hitbox
+            #else:
+            attack = self.current_attack
+            offset_x, offset_z, w, h = (
+                attack.hitbox_offset_x, attack.hitbox_offset_y,
+                attack.hitbox_w, attack.hitbox_h,
             )
+
+            hitbox.activate(self.current_attack.damage, knockback, offset_x, offset_z, w, h)
         elif new_phase != AttackPhase.ACTIVE and hitbox:
             hitbox.deactivate()
 

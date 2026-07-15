@@ -36,11 +36,6 @@ class AttackData:
 
 DEFAULT_PLAYER_ATTACK_1_DATA = AttackData(
     name="attack",
-    hitbox_offset_x=PLAYER_HIT_BOX_OFFSET_X,
-    hitbox_offset_y=PLAYER_HIT_BOX_OFFSET_Y,
-    hitbox_w=PLAYER_HITBOX_W,
-    hitbox_h=PLAYER_HITBOX_H,
-
     delay=0,
     damage=ATTACK_1_DAMAGE,
     # *_DURATION constants are frame counts (fighting-game style frame data);
@@ -59,11 +54,6 @@ DEFAULT_PLAYER_ATTACK_1_DATA = AttackData(
 
 DEFAULT_PLAYER_ATTACK_2_DATA = AttackData(
     name="attack2",
-    hitbox_offset_x=PLAYER_HIT_BOX_OFFSET_X,
-    hitbox_offset_y=PLAYER_HIT_BOX_OFFSET_Y,
-    hitbox_w=PLAYER_HITBOX_W,
-    hitbox_h=PLAYER_HITBOX_H,
-
     delay=0,
     damage=ATTACK_2_DAMAGE,
     windup=ATTACK_2_WINDUP_DURATION / FPS,
@@ -80,11 +70,6 @@ DEFAULT_PLAYER_ATTACK_2_DATA = AttackData(
 
 DEFAULT_PLAYER_ATTACK_3_DATA = AttackData(
     name="attack3",
-    hitbox_offset_x=PLAYER_HIT_BOX_OFFSET_X,
-    hitbox_offset_y=PLAYER_HIT_BOX_OFFSET_Y,
-    hitbox_w=PLAYER_HITBOX_W,
-    hitbox_h=PLAYER_HITBOX_H,
-
     delay=0,
     damage=ATTACK_3_DAMAGE,
     windup=ATTACK_3_WINDUP_DURATION / FPS,
@@ -97,14 +82,6 @@ DEFAULT_PLAYER_ATTACK_3_DATA = AttackData(
     lane_reach=1,
     max_targets=1,
 )
-
-# The 3-hit punch combo, in order. Character.combo_index walks through this
-# list; ATTACK_3's combo_window=0 means there's nothing after it to chain into.
-DEFAULT_PLAYER_COMBO_ATTACKS = [
-    DEFAULT_PLAYER_ATTACK_1_DATA,
-    DEFAULT_PLAYER_ATTACK_2_DATA,
-    DEFAULT_PLAYER_ATTACK_3_DATA,
-]
 
 DEFAULT_PLAYER_GRAB_KNEE_DATA = AttackData(
     name="grab_knee",

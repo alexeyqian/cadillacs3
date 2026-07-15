@@ -2,7 +2,7 @@ import math
 from typing import Optional, List
 
 from game.entities.character import Character
-from game.entities.attack_data import AttackPhase, DEFAULT_PLAYER_GRAB_KNEE_DATA
+from game.entities.attack_data import AttackPhase
 from game.components.health_component import HealthComponent
 from game.settings import (
     PLAYER_GRAB_RANGE,
@@ -140,7 +140,7 @@ class GrabController:
         owner = self.owner
         self._damage_applied_this_swing = False
         self._hold_timer = PLAYER_GRAB_HOLD_TIMEOUT / FPS
-        owner.current_attack = DEFAULT_PLAYER_GRAB_KNEE_DATA
+        owner.current_attack = owner.grab_knee_data
         owner.attack_phase = AttackPhase.WINDUP
         owner.attack_timer = 0.0
         owner.set_state("grab_knee")
@@ -171,7 +171,7 @@ class GrabController:
         # ignore_invuln: consecutive knees land closer together than the
         # normal 0.4s post-hit invuln window, which would otherwise eat
         # every knee after the first.
-        health.take_damage(DEFAULT_PLAYER_GRAB_KNEE_DATA.damage, (0, 0), ignore_invuln=True)
+        health.take_damage(self.owner.grab_knee_data.damage, (0, 0), ignore_invuln=True)
         self.knee_hits_landed += 1
 
         if not target.alive:

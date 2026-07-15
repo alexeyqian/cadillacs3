@@ -4,12 +4,7 @@ from game.settings import *
 from game.entities.character import Character
 from game.entities.player_config import get_player_config
 from game.entities.character_renderer import CharacterRenderer
-from game.entities.attack_data import (
-    AttackPhase,
-    DEFAULT_PLAYER_COMBO_ATTACKS,
-    DEFAULT_PLAYER_RUN_ATTACK_DATA,
-    DEFAULT_PLAYER_GRAB_KNEE_DATA,
-)
+from game.entities.attack_data import AttackPhase
 
 from game.components.interaction_component import InteractionComponent
 from game.components.inventory_component import InventoryComponent
@@ -44,8 +39,9 @@ class Player(Character):
         self.run_speed = config.run_speed
         self.jump_power = config.jump_power
         self.jump_air_move_speed = config.jump_air_move_speed
-        self.combo_attacks = DEFAULT_PLAYER_COMBO_ATTACKS
-        self.run_attack_data = DEFAULT_PLAYER_RUN_ATTACK_DATA
+        self.combo_attacks = config.combo_attacks
+        self.run_attack_data = config.run_attack_data
+        self.grab_knee_data = config.grab_knee_data
 
         self.sprite_scale = config.sprite_scale
 
@@ -66,7 +62,7 @@ class Player(Character):
         # or been released mid-swing - see GrabController.update).
         mid_knee_swing = (
             self.attack_phase != AttackPhase.FINISHED
-            and self.current_attack is DEFAULT_PLAYER_GRAB_KNEE_DATA
+            and self.current_attack is self.grab_knee_data
         )
         if grab.grabbed_target is not None or mid_knee_swing:
             grab.update(dt, self.intent.wants_attack)

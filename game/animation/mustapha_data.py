@@ -37,7 +37,6 @@ MUSTAPHA_ANIMATIONS = {
         "frames_count": 3,
         "frame_width": 384,
         "frame_height": 384,
-        "hitbox": (64, -256, 128, 100),
         "frame_durations": (3,10,5)
     },
     "attack2": {
@@ -46,7 +45,6 @@ MUSTAPHA_ANIMATIONS = {
         "frame_width": 384,
         "frame_height": 384,
         "frame_durations": (4,10,6),
-        "hitbox": (64, -192, 128, 100),
     },
     "attack3": {
         "file": "assets/player/mustapha_attack3_3x.png",
@@ -54,7 +52,6 @@ MUSTAPHA_ANIMATIONS = {
         "frame_width": 384,
         "frame_height": 384,
         "frame_durations": (5,10,8),
-        "hitbox": (64, -192, 128, 100),
     },
     # Weapon attacks — replace files with dedicated sheets when art is ready.
     "ATTACK_KNIFE": {
@@ -78,7 +75,6 @@ MUSTAPHA_ANIMATIONS = {
         "frames_count": 3,
         "frame_width":384,
         "frame_height":384,
-        "hitbox": (50, -230, 128, 100),
         "frame_durations": (4,15,6)
     },
     "jump_attack": {
@@ -107,7 +103,6 @@ MUSTAPHA_ANIMATIONS = {
         "frames_count": 1,
         "frame_width":256,
         "frame_height":256,
-        "hitbox": (64, -180, 64, 100),
         "frame_durations": (8,)
     },
     "throw": {
