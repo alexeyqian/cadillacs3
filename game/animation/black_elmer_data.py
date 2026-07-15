@@ -41,3 +41,5 @@ BLACK_ELMER_ANIMATIONS["thrown"] = BLACK_ELMER_ANIMATIONS["hit"]
 # jump_attack, name="jump") - one state covers the whole leap, no separate
 # non-attacking "jump_attack" state to distinguish it from.
 BLACK_ELMER_ANIMATIONS["jump"] = BLACK_ELMER_ANIMATIONS["attack"]
+# No dedicated charge-attack art yet - reuse the standing punch pose.
+BLACK_ELMER_ANIMATIONS["run_attack"] = BLACK_ELMER_ANIMATIONS["attack"]

@@ -96,6 +96,7 @@ ENEMY_CONFIGS = {
         can_run=True,
         can_jump=True,
         can_jump_attack=True,
+        can_run_attack=True,
 
         attack=make_attack_data(
             base=DEFAULT_ENEMY_ATTACK_DATA,
@@ -105,6 +106,16 @@ ENEMY_CONFIGS = {
             active=ENEMY_ATTACK_ACTIVE,
             recovery=ENEMY_ATTACK_RECOVERY,
             hitbox_offset_x=24, hitbox_offset_y=-240, hitbox_w=170, hitbox_h=100,
+        ),
+        # Charging slash - keep_moving=True closes the last stretch of
+        # distance through the hit, matching a running attack's momentum.
+        run_attack=make_attack_data(
+            base=DEFAULT_ENEMY_ATTACK_DATA,
+            name="run_attack",
+            keep_moving=True,
+            damage=int(ENEMY_ATTACK_DAMAGE * 1.5),
+            windup=8, active=8, recovery=10,
+            hitbox_offset_x=30, hitbox_offset_y=-230, hitbox_w=160, hitbox_h=100,
         ),
         # Agile knife stab, mid-air - hitbox timed to land during the jump's
         # ascent/apex (jump_power/GRAVITY gives ~56f of hang time), not on
@@ -129,9 +140,13 @@ ENEMY_CONFIGS = {
 
         max_hp=ENEMY_MAX_HP * 2,
         speed=int(ENEMY_SPEED * 0.7),
+        # Doesn't jog while closing distance (heavy, always walks) - but
+        # can_run_attack is independent of that, see _roll_close_attack:
+        # a deliberate bull-rush special move, not tied to his everyday
+        # movement speed.
         can_run=False,
         run_speed=int(ENEMY_RUN_SPEED * 0.9),
-        can_run_attack=False,
+        can_run_attack=True,
         can_jump=True,
         can_jump_attack=True,
         # Doesn't leap high - a heavy hop before dropping his full weight,
@@ -149,6 +164,16 @@ ENEMY_CONFIGS = {
             recovery=int(ENEMY_ATTACK_RECOVERY*BLACK_ELMER_SCALER),
             lane_reach=1,
             hitbox_offset_x=92, hitbox_offset_y=-185, hitbox_w=100, hitbox_h=100,
+        ),
+        # Shoulder charge - keep_moving=True lets him plow the last bit of
+        # distance into the hit.
+        run_attack=make_attack_data(
+            base=DEFAULT_ENEMY_ATTACK_DATA,
+            name="run_attack",
+            keep_moving=True,
+            damage=ENEMY_ATTACK_DAMAGE * BLACK_ELMER_SCALER,
+            windup=15, active=15, recovery=20,
+            hitbox_offset_x=50, hitbox_offset_y=-180, hitbox_w=150, hitbox_h=110,
         ),
         # Body-slam: sits his full weight down on whoever's underneath -
         # wide, centered, low AoE box rather than a forward-reaching poke,

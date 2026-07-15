@@ -46,3 +46,5 @@ BLADE_ANIMATIONS = {
 BLADE_ANIMATIONS["grabbed"] = BLADE_ANIMATIONS["hit"]
 BLADE_ANIMATIONS["grab_kneed"] = BLADE_ANIMATIONS["hit"]
 BLADE_ANIMATIONS["thrown"] = BLADE_ANIMATIONS["hit"]
+# No dedicated charge-attack art yet - reuse the standing punch pose.
+BLADE_ANIMATIONS["run_attack"] = BLADE_ANIMATIONS["attack"]

@@ -185,6 +185,18 @@ ENEMY_ATTACK_COOLDOWN=20
 ENEMY_ATTACK_HIT_STUN_DURATION=int(ATTACK_1_HIT_STUN_DURATION*0.5)
 ENEMY_ATTACK_KNOCKBACK_VELOCITY=int(ATTACK_1_KNOCKBACK_VELOCITY*0.5)
 
+# Which close-range attack an in-range enemy uses (normal punch / jump
+# attack / run-charge attack, whichever it actually has) - re-rolled every
+# ENEMY_ATTACK_CHOICE_DECISION_DURATION frames rather than every tick, same
+# reasoning as ENEMY_RUN_DECISION_DURATION: commit to one choice for a
+# beat instead of flickering between attacks. Weighted so the normal punch
+# stays the common case and jump/run read as occasional variety, not the
+# default.
+ENEMY_ATTACK_CHOICE_DECISION_DURATION = 90
+ENEMY_NORMAL_ATTACK_WEIGHT = 2
+ENEMY_JUMP_ATTACK_WEIGHT = 1
+ENEMY_RUN_ATTACK_WEIGHT = 1
+
 
 # Only a small number of regular melee enemies 
 # should enter ATTACK at the same time.

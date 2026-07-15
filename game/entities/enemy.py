@@ -28,6 +28,11 @@ class Enemy(Character):
         self._run_decision_timer = 0
         self._is_running = False
 
+        # Which close-range attack (normal/jump/run) to use once in range -
+        # re-rolled on a timer rather than every frame, see _roll_close_attack().
+        self._attack_choice_timer = 0
+        self._attack_choice = "normal"
+
         config = get_enemy_config(enemy_type)
         self._load_from_config(config)
         self.renderer = CharacterRenderer(self, show_health_bar=True)
@@ -43,6 +48,8 @@ class Enemy(Character):
         self.jump_air_move_speed = config.jump_air_move_speed
         self.can_jump_attack = config.can_jump_attack
         self.jump_attack_data = config.jump_attack
+        self.can_run_attack = config.can_run_attack
+        self.run_attack_data = config.run_attack
         self.attack_range = config.attack_range
         self.attack_data = config.attack
         self.score_points = config.score_points
@@ -68,13 +75,23 @@ class Enemy(Character):
         if self.has_attack_slot:
             # Cleared to close in and attack directly.
             if in_range:
+                choice = self._roll_close_attack(dt)
+                if choice == "run":
+                    # run_attack_data has keep_moving=True - keep closing
+                    # the last bit of distance through the hit instead of
+                    # planting first.
+                    self.intent.move_x = 1 if dx > 0 else -1
+                    self.intent.move_z = 1 if dz > 0 else -1
+                    self.intent.running = True
+                    self.intent.wants_attack = True
+                    self.intent.wants_jump = False
+                    return
+
                 self.intent.move_x = 0
                 self.intent.move_z = 0
                 self.intent.running = False
                 self.intent.wants_attack = True
-                # Jump-capable archetypes always jump-attack rather than
-                # throwing a normal punch - see jump_attack_data.
-                self.intent.wants_jump = self.can_jump_attack and self.jump_attack_data is not None
+                self.intent.wants_jump = (choice == "jump")
                 return
             self.intent.move_x = 1 if dx > 0 else -1
             self.intent.move_z = 1 if dz > 0 else -1
@@ -108,6 +125,31 @@ class Enemy(Character):
             self._run_decision_timer = ENEMY_RUN_DECISION_DURATION / FPS
             self._is_running = random.random() < ENEMY_RUN_CHANCE
         return self._is_running
+
+    def _roll_close_attack(self, dt):
+        """Re-decide which close-range attack to use ("normal"/"jump"/"run")
+        every ENEMY_ATTACK_CHOICE_DECISION_DURATION frames instead of every
+        tick - same reasoning as _roll_running: commit to one choice for a
+        beat rather than flickering. Weighted so archetypes without
+        jump/run capability always land on "normal" (the only option), and
+        capable ones still throw a normal punch most of the time."""
+        self._attack_choice_timer -= dt
+        if self._attack_choice_timer > 0:
+            return self._attack_choice
+
+        self._attack_choice_timer = ENEMY_ATTACK_CHOICE_DECISION_DURATION / FPS
+
+        options = ["normal"]
+        weights = [ENEMY_NORMAL_ATTACK_WEIGHT]
+        if self.can_jump_attack and self.jump_attack_data is not None:
+            options.append("jump")
+            weights.append(ENEMY_JUMP_ATTACK_WEIGHT)
+        if self.can_run_attack and self.run_attack_data is not None:
+            options.append("run")
+            weights.append(ENEMY_RUN_ATTACK_WEIGHT)
+
+        self._attack_choice = random.choices(options, weights=weights, k=1)[0]
+        return self._attack_choice
 
     def is_ready_to_remove(self):
         return not self.alive and self.animation_manager.is_finished()
