@@ -219,6 +219,24 @@ ENEMY_FLANK_OFFSET_Z = 36
 ENEMY_FLANK_DECISION_DURATION = 20
 ENEMY_FLANK_Z_TOLERANCE = 18
 
+# While an attack-slotted enemy is still closing distance (not yet
+# in_range), how far off the player's z it tolerates before bothering to
+# correct - scaled per-enemy off its own attack_range (not a flat pixel
+# value) so a longer-reach enemy gets a proportionally wider band. Without
+# this, every chasing enemy beelines onto the player's exact z, collapsing
+# them onto the same row (a visible "conga line") and flickering move_z
+# direction in response to the player's every wobble.
+# 1.0 (i.e. "don't correct until as far off as attack_range itself") looks
+# right on paper but isn't safe in practice: in_range is a circular
+# (sqrt(dx^2+dz^2)) distance check, while the real hitbox is a narrow
+# rectangular band (e.g. ferris's hitbox_h=50 vs its attack_range=130) -
+# at 1.0, an enemy can satisfy "in range" while dz is still much larger
+# than the hitbox's actual z-coverage, and just whiff every attack.
+# Verified empirically (headless sim, all 5 archetypes, dz swept 300-800):
+# 0.4 reliably still connects; 0.5+ starts missing for the narrower-hitbox
+# archetypes (ferris/gneiss/walther).
+ENEMY_CHASE_Z_TOLERANCE_FACTOR = 0.4
+
 # How often (frames) an enemy re-rolls whether it's running or walking while
 # closing in on the player, and the odds it rolls "running" each time.
 # Re-rolling on a timer (rather than every frame) keeps it from flickering

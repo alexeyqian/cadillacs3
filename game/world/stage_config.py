@@ -29,7 +29,7 @@ STAGES = [
             
         ],
         "completion": "clear_waves_then_exit",
-        "exit_rect": (3800, 940, 200, 400),
+        "exit_rect": (3800, 540, 200, 400),
     },
 
 

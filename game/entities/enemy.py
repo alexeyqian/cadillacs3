@@ -42,8 +42,8 @@ class Enemy(Character):
         self.display_name = config.display_name
 
         self.move_speed = config.speed
-        self.run_speed = config.run_speed
         self.can_run = config.can_run
+        self.run_speed = config.run_speed
         self.jump_power = config.jump_power
         self.jump_air_move_speed = config.jump_air_move_speed
         self.can_jump_attack = config.can_jump_attack
@@ -93,8 +93,14 @@ class Enemy(Character):
                 self.intent.wants_attack = True
                 self.intent.wants_jump = (choice == "jump")
                 return
+            # Still closing distance - chase x directly, but don't beeline
+            # onto the player's exact z (see ENEMY_CHASE_Z_TOLERANCE_FACTOR):
+            # keeps a crowd from collapsing onto the same row while
+            # approaching, and from flickering move_z with the player's
+            # every wobble.
+            chase_z_tolerance = self.attack_range * ENEMY_CHASE_Z_TOLERANCE_FACTOR
             self.intent.move_x = 1 if dx > 0 else -1
-            self.intent.move_z = 1 if dz > 0 else -1
+            self.intent.move_z = 0 if abs(dz) < chase_z_tolerance else (1 if dz > 0 else -1)
             self.intent.running = self._roll_running(dt)
             self.intent.wants_attack = False
             self.intent.wants_jump = False
