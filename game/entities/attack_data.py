@@ -113,10 +113,6 @@ DEFAULT_PLAYER_RUN_ATTACK_DATA = AttackData(
 
 DEFAULT_ENEMY_ATTACK_DATA = AttackData(
     name="attack",
-    hitbox_offset_x=ENEMY_HITBOX_OFFSET_X,
-    hitbox_offset_y=ENEMY_HITBOX_OFFSET_Y,
-    hitbox_w=ENEMY_HITBOX_W,
-    hitbox_h=ENEMY_HITBOX_H,
     delay=ENEMY_ATTACK_DELAY,
     damage=ENEMY_ATTACK_DAMAGE,
     windup=ENEMY_ATTACK_WINDUP / FPS,

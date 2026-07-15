@@ -59,6 +59,11 @@ ENEMY_CONFIGS = {
         enemy_id="ferris",
         display_name="Ferris",
         can_run=True,
+
+        attack=replace(
+            DEFAULT_ENEMY_ATTACK_DATA,
+            hitbox_offset_x=96, hitbox_offset_y=-200, hitbox_w=96, hitbox_h=50,
+        ),
     ),
 
     "gneiss": EnemyConfig(
@@ -77,10 +82,11 @@ ENEMY_CONFIGS = {
             windup=ENEMY_ATTACK_WINDUP,
             active=ENEMY_ATTACK_ACTIVE,
             recovery=ENEMY_ATTACK_RECOVERY,
+            hitbox_offset_x=96, hitbox_offset_y=-200, hitbox_w=96, hitbox_h=50,
         ),
         score_points=int(ENEMY_SCORE_POINTS*GNEISS_SCALER),
     ),
-    
+
     "blade": EnemyConfig(
         enemy_id="blade",
         display_name="Blade",
@@ -96,6 +102,13 @@ ENEMY_CONFIGS = {
             windup=ENEMY_ATTACK_WINDUP,
             active=ENEMY_ATTACK_ACTIVE,
             recovery=ENEMY_ATTACK_RECOVERY,
+            hitbox_offset_x=24, hitbox_offset_y=-240, hitbox_w=170, hitbox_h=100,
+        ),
+        # Not yet wired to a triggerable jump-attack state (see can_jump_attack) -
+        # geometry kept here so it's ready once that's hooked up.
+        jump_attack=replace(
+            DEFAULT_ENEMY_ATTACK_DATA,
+            hitbox_offset_x=64, hitbox_offset_y=-354, hitbox_w=85, hitbox_h=100,
         ),
         score_points=int(ENEMY_SCORE_POINTS*1.5),
     ),
@@ -124,6 +137,7 @@ ENEMY_CONFIGS = {
             active=int(ENEMY_ATTACK_ACTIVE*BLACK_ELMER_SCALER),
             recovery=int(ENEMY_ATTACK_RECOVERY*BLACK_ELMER_SCALER),
             lane_reach=1,
+            hitbox_offset_x=92, hitbox_offset_y=-185, hitbox_w=100, hitbox_h=100,
         ),
         # todo: simplify it
         # So Black Elmer only flinches from the heavy punch
@@ -151,6 +165,7 @@ ENEMY_CONFIGS = {
             active=int(ENEMY_ATTACK_ACTIVE*WALTHER_SCALER),
             recovery=int(ENEMY_ATTACK_RECOVERY*WALTHER_SCALER),
             lane_reach=1,
+            hitbox_offset_x=64, hitbox_offset_y=-264, hitbox_w=128, hitbox_h=100,
         ),
         # So Black Elmer only flinches from the heavy punch
         # light punch hits still reduce HP, but he can keep acting.

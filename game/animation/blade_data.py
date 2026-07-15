@@ -16,7 +16,6 @@ BLADE_ANIMATIONS = {
         "frames_count": 3,
         "frame_width": 384,
         "frame_height": 384,
-        "hitbox": (24, -240, 170, 100),
         "frame_durations": (4,8,6)
     },
     "jump": {
@@ -31,7 +30,6 @@ BLADE_ANIMATIONS = {
         "frames_count": 4,
         "frame_width": 384,
         "frame_height": 384,
-        "hitbox": (64, -354, 85, 100),
         "frame_durations": (2,2,8,6)
     },
     "hit": {

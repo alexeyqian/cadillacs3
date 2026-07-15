@@ -16,9 +16,7 @@ BLACK_ELMER_ANIMATIONS = {
         "frames_count": 3,
         "frame_width": 384,
         "frame_height": 384,
-        "hitbox": (92, -185, 100, 100),
         "frame_durations": (4,8,6)
-        
     },
     "hit": {
         "file": "assets/enemies/black_elmer_hit_3x.png",

@@ -22,7 +22,6 @@ FERRIS_ANIMATIONS = {
         "frames_count": 3,
         "frame_width": 384,
         "frame_height": 384,
-        "hitbox": (96, -200, 96, 50),
         "frame_durations": (4,8,6)
     },
     "hit": {

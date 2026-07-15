@@ -16,7 +16,6 @@ WALTHER_ANIMATIONS = {
         "frames_count": 1,
         "frame_width": 384,
         "frame_height": 384,
-        "hitbox": (64, -264, 128, 100),
         "frame_durations": (4,8,6)
     },
     "hit": {
